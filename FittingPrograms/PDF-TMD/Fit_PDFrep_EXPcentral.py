@@ -26,7 +26,7 @@ splitUpsilon=True
 ## Use the reduced set of the data
 useReducedSet=True
 ## Use penalty term for too different flavors
-usePenaltyTerm=True
+usePenaltyTerm=False
 
 ## total number of parameters in TMDPDF (7 and 12 case are defined)
 numberOfParameters=12
@@ -51,6 +51,7 @@ print(" RUN: "+runName)
 # Paths
 #######################################
 PathToHarpy="/home/vla18041/LinkData2/arTeMiDe_Repository/artemide-ForPDF/harpy"
+#PathToHarpy="/home/vla18041/LinkData2/arTeMiDe_Repository/artemide/harpy"
 PathToDataProcessor="/home/vla18041/LinkData2/arTeMiDe_Repository/DataProcessor/"
 PathToDataLibrary=PathToDataProcessor+"DataLib/unpolDY/"
 PathToLog=PathToDataProcessor+"FittingPrograms/PDF-TMD/LOGS/"
@@ -119,6 +120,7 @@ SaveToLog('Initialization with : \n'+PathToConstantsFile)
 harpy.initialize(PathToConstantsFile)
 if(numberOfParameters==7):
     initializationArray=[2.0340, 0.0299, 0.2512, 7.7572, 0.2512, 7.7572, 0.2512, 7.7572, 10000.]
+    #initializationArray=[2., 0.0398333,0.184739, 6.22437, 588.193, 2.44327, -2.51106, 0.,  0.] #SV19
 elif(numberOfParameters==12):
     initializationArray=[2.0340, 0.0299, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05,0.05, 0.05, 0.,0.5]
 else:
@@ -356,6 +358,8 @@ if useNormalizedLHCdata:
             s.normalizationMethod='bestChi2'
 #%%
 
+#initialValues=(2., 0.0398333,0.184739, 6.22437, 588.193, 2.44327, -2.51106, 0.,  0.)#SV19
+
 if(PDFinUse=="HERA20"):
     #initialValues=(2.000,  0.033, 0.230, 5.609, 0.252, 8.021, 570.223, 0.000, 0.000) #model 1.0 HERA
     #initialValues=(2.000,  0.033, 0.230, 5.609, 0.252, 8.021, 0.252, 8.021, 570.223) #model 2.0 HERA
@@ -425,6 +429,11 @@ def chi_2(x):
 # Setting-up Minuit
 #######################################
 from iminuit import Minuit
+
+##### model SV19
+# initialErrors=(0.1,       0.002,      0.05,    0.2,  0.05,   0.2,    10.0,   0.1,   0.1)
+# searchLimits=((1.4,4.5), (0.0001,5.0),(0.0,5.0),(0.,50.0),(0.0,1000.),(0.,25.0),(-30.,30.),None, None)
+# parametersToMinimize=(True,     False,    False,    False,    False,     False,  False, True, True)
 
 ##### model 1.0
 #initialErrors=(0.1,       0.002,      0.05,    0.2,  0.05,   0.2,    10.0,   0.1,   0.1)
@@ -712,7 +721,7 @@ for i in range(StartReplica,FinalReplica+1):
     ## save to file
     f=open(replicaFile,"a+")
     print('SAVING >>  ',f.name)
-    ### [total chi^2(cenral), total chi^2 (pseudo data), list of chi^2 for experiments(central), 
+    ### [total chi^2(full data), total chi^2 (fit data), list of chi^2 for experiments(full data), 
     ############# number of PDF, list of NP-parameters],penalty term(if used) ]
     if(usePenaltyTerm): 
         f.write(str([mainDY,repRes[0],mainDY2,i,repRes[1],PenaltyTerm(repRes[1])])+"\n")
