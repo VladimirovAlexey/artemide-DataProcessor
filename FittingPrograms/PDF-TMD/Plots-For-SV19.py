@@ -8,8 +8,6 @@ Created on Fri Sep  3 14:35:35 2021
 
 ##############################
 # Ploting original SV19 fit
-# for 
-#
 ##############################
 
 #######################################
@@ -48,9 +46,11 @@ rSet=DataProcessor.ArtemideReplicaSet.ReadRepFile("/home/vla18041/LinkData2/arTe
 
 rSet.SetReplica()
 
-# #%%
+#%%
+# ##################################################
 # # Plot of TMD vs. b with errorband
 # # at given x, f
+# ##################################################
 
 # xValue=0.05
 # f=2
@@ -70,9 +70,11 @@ rSet.SetReplica()
 # print(list(numpy.mean(tmd0,axis=0)))    
 # print(list(numpy.std(tmd0,axis=0)))
 
-# #%%
+#%%
+# ##################################################
 # # Plot of TMD at fnP=1
 # # with variation band
+# ##################################################
 
 # xValue=0.1
 # f=1
@@ -103,9 +105,11 @@ rSet.SetReplica()
 # harpy.varyScales(1., 1., 1., 1.)
 
 
-# #%%
+#%%
+# ##################################################
 # # Plot of TMD vs. x with errorband
 # # at given x, f
+# ##################################################
 
 # xValues=[
 # 0.0001, 0.00011, 0.00013, 0.00014, 0.00016, 0.00018, 0.0002, 0.00022, \
@@ -133,18 +137,34 @@ rSet.SetReplica()
 # print(list(numpy.std(tmd0,axis=0)))
 
 #%%
+# ##################################
+# ## Save replicas of NNPDFs
+# ##################################
+# import DataProcessor.SaveTMDGrid
+
+# rSet.SetReplica()
+
+# r=9
+
+# for i in range(r*100,(r+1)*100):
+#     harpy.setPDFreplica(i)
+#     rSet.SetReplica()
+#     path='/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/TMD-grids/Grids_optimal/SV19_n3lo_PDFrep/SV19_n3lo_PDFrep'\
+#         +'_'+'{:04d}'.format(i)+'.dat'
+#     DataProcessor.SaveTMDGrid.SaveGrid_optimal(path)
+    
+#%%
 ##################################
-## Save replicas of NNPDFs
+## Save replicas of SV19
 ##################################
 import DataProcessor.SaveTMDGrid
 
 rSet.SetReplica()
 
-r=9
 
-for i in range(r*100,(r+1)*100):
-    harpy.setPDFreplica(i)
-    rSet.SetReplica()
-    path='/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/TMD-grids/Grids_optimal/SV19_n3lo_PDFrep/SV19_n3lo_PDFrep'\
+
+for i in range(rSet.numberOfReplicas):    
+    rSet.SetReplica(i)
+    path='/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/TMD-grids/Grids_optimal/SV19_n3lo/SV19_n3lo'\
         +'_'+'{:04d}'.format(i)+'.dat'
     DataProcessor.SaveTMDGrid.SaveGrid_optimal(path)
