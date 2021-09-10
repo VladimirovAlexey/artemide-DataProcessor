@@ -56,8 +56,6 @@ import harpy
 
 harpy.initialize(PathToConstantsFile)
 
-#%%
-import DataProcessor.ArtemideReplicaSet
 rSet=DataProcessor.ArtemideReplicaSet.ReadRepFile(\
                             "/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/TMD<->PDF/REPS/SV21-"+PDFinUse+"-nnlo.rep")
 rSet.SetReplica()
@@ -231,6 +229,7 @@ setHE=loadThisData(['CDF1', 'CDF2', 'D01', 'D02', 'D02m',
                       'A8-00y04','A8-04y08','A8-08y12','A8-12y16',
                       'A8-16y20','A8-20y24','A8-46Q66','A8-116Q150',
                       'CMS7', 'CMS8', 
+                      'CMS13-00y04','CMS13-04y08','CMS13-08y12','CMS13-12y16','CMS13-16y24',
                       'LHCb7', 'LHCb8', 'LHCb13'])
 
 #### I separate data above and below UPSILON, I create two copies of LE data with different names
@@ -265,52 +264,60 @@ print('PLOT: Loaded ', setPLOT.numberOfSets, 'data sets with ', sum([i.numberOfP
 
 #%%
 
-DataProcessor.harpyInterface.PrintChi2Table(setSV21,printDecomposedChi2=True)
-DataProcessor.harpyInterface.PrintChi2Table(setSV19,printDecomposedChi2=True)
-
-#%%
-
-rSet=DataProcessor.ArtemideReplicaSet.ReadRepFile("/home/vla18041/LinkData2/arTeMiDe_Repository/artemide/Models/SV19/Replicas/"+
-                                                  "DY_n3lo/DY_NNPDF31_n3lo.rep")
-                                                  # "Sivers20_model9case1(noDY-n3lo).rep")
-
-rSet.SetReplica()
-
+#DataProcessor.harpyInterface.PrintChi2Table(setSV21,printDecomposedChi2=True)
+#DataProcessor.harpyInterface.PrintChi2Table(setSV19,printDecomposedChi2=True)
 
 #%%
 # #######################################################
 # ### Makes a file header (USE IT ONLY IF NEED TO REWRITE FILE)
 # #######################################################
-# with open('/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/TMD<->PDF/Figures/SV19-noFIT/chi2-NNPDFrep-fit.dat', 'w') as outfile:
-#         outfile.write(str(['repNum', 'Total', [s.name for s in setDY.sets]])+"\n")
-#         outfile.write(str([0, setDY.numberOfPoints, [s.numberOfPoints for s in setDY.sets]])+"\n")
+# PDFinUse="HERA20"
+# #PDFinUse="NNPDF31"
+# #PDFinUse="CT18"
+# #PDFinUse="MSHT20"
+
+# with open('/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/TMD<->PDF/Figures/SV21/'+PDFinUse+'/chi2-'+PDFinUse+'-SV19.dat', 'w') as outfile:
+#         outfile.write(str(['repNum', 'Total', [s.name for s in setSV19.sets]])+"\n")
+#         outfile.write(str([0, setSV19.numberOfPoints, [s.numberOfPoints for s in setSV19.sets]])+"\n")
+# with open('/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/TMD<->PDF/Figures/SV21/'+PDFinUse+'/chi2-'+PDFinUse+'-SV21.dat', 'w') as outfile:
+#         outfile.write(str(['repNum', 'Total', [s.name for s in setSV21.sets]])+"\n")
+#         outfile.write(str([0, setSV21.numberOfPoints, [s.numberOfPoints for s in setSV21.sets]])+"\n")
 
 #%%
-# # ##################################
-# # ## Save replicas of NNPDFs
-# # ##################################
+# ##################################
+# ## Save replicas of NNPDFs
+# ##################################
 
-# r=21
+import pickle
+import DataProcessor.SaveTMDGrid
 
-# import pickle
+rSet.SetReplica()
 
-# rSet.SetReplica()
-
-# for i in range(r*50,(r+1)*50):  
-#     harpy.setPDFreplica(i)
-#     rSet.SetReplica()
+for i in range(rSet.numberOfReplicas):      
+    rSet.SetReplica(i)
     
-#     chiList=DataProcessor.harpyInterface.ComputeChi2(setDY)    
-#     with open('/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/TMD<->PDF/Figures/SV19-noFIT/chi2-NNPDFrep.dat', 'a') as outfile:
-#         outfile.write(str([i]+list(chiList))+"\n")
+    #### save list of chi2 for full set
+    chiList=DataProcessor.harpyInterface.ComputeChi2(setSV19)    
+    with open('/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/TMD<->PDF/Figures/SV21/'+PDFinUse+'/chi2-'+PDFinUse+'-SV19.dat', 'a') as outfile:
+        outfile.write(str([i]+list(chiList))+"\n")
     
+    #### save list of chi2 for reduced set
+    chiList=DataProcessor.harpyInterface.ComputeChi2(setSV21)    
+    with open('/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/TMD<->PDF/Figures/SV21/'+PDFinUse+'/chi2-'+PDFinUse+'-SV21.dat', 'a') as outfile:
+        outfile.write(str([i]+list(chiList))+"\n")
     
-#     listToSave=DataProcessor.harpyInterface.ComputeXSec(setDYplot)
-#     path='/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/TMD<->PDF/Figures/SV19-noFIT/xSec-NNPDFrep/'\
-#         +'{:04d}'.format(i)+'.pick'
+    #### save cross-section to plot
+    listToSave=DataProcessor.harpyInterface.ComputeXSec(setPLOT)
+    path='/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/TMD<->PDF/Figures/SV19-noFIT/xSec-NNPDFrep/'\
+        +'{:04d}'.format(i)+'.pick'
         
-#     with open(path, "wb") as filehandle:
-#         pickle.dump(listToSave,filehandle)
+    with open(path, "wb") as filehandle:
+        pickle.dump(listToSave,filehandle)
+        
+    #### save TMD-distribution        
+    path='/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/TMD-grids/Grids_optimal/SV21-'+PDFinUse+'_nnlo/SV21-'+PDFinUse+'_nnlo'\
+        +'_'+'{:04d}'.format(i)+'.dat'
+    DataProcessor.SaveTMDGrid.SaveGrid_optimal(path)
 
 #%%
 ##################################

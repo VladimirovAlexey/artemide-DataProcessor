@@ -22,7 +22,7 @@ path_to_save="/home/vla18041/LinkData2/arTeMiDe_Repository/DataProcessor/DataLib
 M_Z=91.1876### mass of Z-boson
 
 #%%
-### pt bins are restored by commons sense and inforation from paper 
+### pt bins are restored by from the covaraince matrix file
 ptBins=[[0., 1.], [1., 2.], [2., 3.], [3., 4.], [4., 5.], [5., 6.], [6., 
   7.], [7., 8.], [8., 9.], [9., 10.], [10., 11.], [11., 12.], [12., 
   13.], [13., 14.], [14., 16.], [16., 18.], [18., 20.], [20., 
@@ -43,9 +43,9 @@ proc_current=[1,1,5]
 s_current=13000.**2
 Q_current=[M_Z-15.,M_Z+15.]
 incCut=True
-cutParam=[25.,25.,-2.4,2.4]
-lumUncertainty=0.025
-corrSys=numpy.sqrt(0.008**2+0.014**2)
+cutParam=[25.,25.,-2.4,2.4]  # begining of sec.6
+lumUncertainty=0.025 # table 2
+corrSys=0.001**2 #### They take Background estimations as fully correlated (table 2)
 
 #%%
 ###############################################################################
@@ -89,9 +89,14 @@ for i in range(len(data_here)):
     p["includeCuts"]=incCut
     p["cutParams"]=cutParam
     p["xSec"]=data_here[i][1]
-    p["uncorrErr"].append((data_here[i][2]-data_here[i][3])/2.)
+    ###### The uncertanty in table is total including correlated
+    ###### I take it and subtract (in quadrature) correlated uncertainty. Result almost coincides with tables
+    ###### The difference between result and tables is that tables for dressed, and only dimuon or di-electron
+    ###### main differeence takes place at large pT
+    unc=(data_here[i][2]-data_here[i][3])/2.
+    p["uncorrErr"].append(numpy.sqrt(unc**2-(p["xSec"]*lumUncertainty)**2))
     p["corrErr"].append(p["xSec"]*corrSys)
-    DataCurrent.AddPoint(p)
+    DataCurrent.AddPoint(p)    
 
 print("Done.  ")
 
@@ -125,7 +130,8 @@ for i in range(len(data_here)):
     p["includeCuts"]=incCut
     p["cutParams"]=cutParam
     p["xSec"]=data_here[i][1]
-    p["uncorrErr"].append((data_here[i][2]-data_here[i][3])/2.)
+    unc=(data_here[i][2]-data_here[i][3])/2.
+    p["uncorrErr"].append(numpy.sqrt(unc**2-(p["xSec"]*lumUncertainty)**2))
     p["corrErr"].append(p["xSec"]*corrSys)
     DataCurrent.AddPoint(p)
 
@@ -161,7 +167,8 @@ for i in range(len(data_here)):
     p["includeCuts"]=incCut
     p["cutParams"]=cutParam
     p["xSec"]=data_here[i][1]
-    p["uncorrErr"].append((data_here[i][2]-data_here[i][3])/2.)
+    unc=(data_here[i][2]-data_here[i][3])/2.
+    p["uncorrErr"].append(numpy.sqrt(unc**2-(p["xSec"]*lumUncertainty)**2))
     p["corrErr"].append(p["xSec"]*corrSys)
     DataCurrent.AddPoint(p)
 
@@ -197,7 +204,8 @@ for i in range(len(data_here)):
     p["includeCuts"]=incCut
     p["cutParams"]=cutParam
     p["xSec"]=data_here[i][1]
-    p["uncorrErr"].append((data_here[i][2]-data_here[i][3])/2.)
+    unc=(data_here[i][2]-data_here[i][3])/2.
+    p["uncorrErr"].append(numpy.sqrt(unc**2-(p["xSec"]*lumUncertainty)**2))
     p["corrErr"].append(p["xSec"]*corrSys)
     DataCurrent.AddPoint(p)
 
@@ -232,7 +240,8 @@ for i in range(len(data_here)):
     p["includeCuts"]=incCut
     p["cutParams"]=cutParam
     p["xSec"]=data_here[i][1]
-    p["uncorrErr"].append((data_here[i][2]-data_here[i][3])/2.)
+    unc=(data_here[i][2]-data_here[i][3])/2.
+    p["uncorrErr"].append(numpy.sqrt(unc**2-(p["xSec"]*lumUncertainty)**2))
     p["corrErr"].append(p["xSec"]*corrSys)
     DataCurrent.AddPoint(p)
 
@@ -282,7 +291,8 @@ for i in range(len(data_here)):
     p["includeCuts"]=incCut
     p["cutParams"]=cutParam
     p["xSec"]=data_here[i][1]
-    p["uncorrErr"].append((data_here[i][2]-data_here[i][3])/2.)
+    unc=(data_here[i][2]-data_here[i][3])/2.
+    p["uncorrErr"].append(unc)
     p["corrErr"].append(p["xSec"]*corrSys)
     DataCurrent.AddPoint(p)
 
@@ -318,7 +328,8 @@ for i in range(len(data_here)):
     p["includeCuts"]=incCut
     p["cutParams"]=cutParam
     p["xSec"]=data_here[i][1]
-    p["uncorrErr"].append((data_here[i][2]-data_here[i][3])/2.)
+    unc=(data_here[i][2]-data_here[i][3])/2.
+    p["uncorrErr"].append(unc)
     p["corrErr"].append(p["xSec"]*corrSys)
     DataCurrent.AddPoint(p)
 
@@ -354,7 +365,8 @@ for i in range(len(data_here)):
     p["includeCuts"]=incCut
     p["cutParams"]=cutParam
     p["xSec"]=data_here[i][1]
-    p["uncorrErr"].append((data_here[i][2]-data_here[i][3])/2.)
+    unc=(data_here[i][2]-data_here[i][3])/2.
+    p["uncorrErr"].append(unc)
     p["corrErr"].append(p["xSec"]*corrSys)
     DataCurrent.AddPoint(p)
 
@@ -390,7 +402,8 @@ for i in range(len(data_here)):
     p["includeCuts"]=incCut
     p["cutParams"]=cutParam
     p["xSec"]=data_here[i][1]
-    p["uncorrErr"].append((data_here[i][2]-data_here[i][3])/2.)
+    unc=(data_here[i][2]-data_here[i][3])/2.
+    p["uncorrErr"].append(unc)
     p["corrErr"].append(p["xSec"]*corrSys)
     DataCurrent.AddPoint(p)
 
@@ -425,7 +438,8 @@ for i in range(len(data_here)):
     p["includeCuts"]=incCut
     p["cutParams"]=cutParam
     p["xSec"]=data_here[i][1]
-    p["uncorrErr"].append((data_here[i][2]-data_here[i][3])/2.)
+    unc=(data_here[i][2]-data_here[i][3])/2.
+    p["uncorrErr"].append(unc)
     p["corrErr"].append(p["xSec"]*corrSys)
     DataCurrent.AddPoint(p)
 
