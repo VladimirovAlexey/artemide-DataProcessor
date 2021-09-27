@@ -16,9 +16,9 @@ Created on Fri Sep  3 14:35:35 2021
 #######################################################################
 
 #PDFinUse="HERA20"
-#PDFinUse="NNPDF31"
+PDFinUse="NNPDF31"
 #PDFinUse="CT18"
-PDFinUse="MSHT20"
+#PDFinUse="MSHT20"
 #PDFinUse="CJ15"
 
 #######################################
@@ -56,8 +56,11 @@ import harpy
 
 harpy.initialize(PathToConstantsFile)
 
+# rSet=DataProcessor.ArtemideReplicaSet.ReadRepFile(\
+#                             "/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/TMD<->PDF/REPS/SV21-"+PDFinUse+"-nnlo.rep")
+    
 rSet=DataProcessor.ArtemideReplicaSet.ReadRepFile(\
-                            "/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/TMD<->PDF/REPS/SV21-"+PDFinUse+"-nnlo.rep")
+                            "/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/TMD<->PDF/REPS/SV21-"+PDFinUse+"-nnlo-EXP.rep")
 rSet.SetReplica()
 
 #%%
@@ -263,23 +266,26 @@ print('SV19: Loaded ', setSV19.numberOfSets, 'data sets with ', sum([i.numberOfP
 print('PLOT: Loaded ', setPLOT.numberOfSets, 'data sets with ', sum([i.numberOfPoints for i in setPLOT.sets]), 'points.')
 
 #%%
+harpy.setNPparameters([2., 0.0276492, 0.271802, 2.38402, 0.352648, 1.73888, 0.0971883, \
+17.6768, 0.100485, 11.6811, 0.278435, 3.35306, 149.2, 0])
+#rSet.SetReplica()
 
-#DataProcessor.harpyInterface.PrintChi2Table(setSV21,printDecomposedChi2=True)
-#DataProcessor.harpyInterface.PrintChi2Table(setSV19,printDecomposedChi2=True)
+DataProcessor.harpyInterface.PrintChi2Table(setSV21,printDecomposedChi2=True)
+DataProcessor.harpyInterface.PrintChi2Table(setSV19,printDecomposedChi2=True)
 
 #%%
 # #######################################################
 # ### Makes a file header (USE IT ONLY IF NEED TO REWRITE FILE)
 # #######################################################
-# PDFinUse="HERA20"
+# #PDFinUse="HERA20"
 # #PDFinUse="NNPDF31"
 # #PDFinUse="CT18"
 # #PDFinUse="MSHT20"
 
-# with open('/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/TMD<->PDF/Figures/SV21/'+PDFinUse+'/chi2-'+PDFinUse+'-SV19.dat', 'w') as outfile:
+# with open('/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/TMD<->PDF/Figures/SV21/'+PDFinUse+'/chi2-'+PDFinUse+'-EXP-SV19.dat', 'w') as outfile:
 #         outfile.write(str(['repNum', 'Total', [s.name for s in setSV19.sets]])+"\n")
 #         outfile.write(str([0, setSV19.numberOfPoints, [s.numberOfPoints for s in setSV19.sets]])+"\n")
-# with open('/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/TMD<->PDF/Figures/SV21/'+PDFinUse+'/chi2-'+PDFinUse+'-SV21.dat', 'w') as outfile:
+# with open('/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/TMD<->PDF/Figures/SV21/'+PDFinUse+'/chi2-'+PDFinUse+'-EXP-SV21.dat', 'w') as outfile:
 #         outfile.write(str(['repNum', 'Total', [s.name for s in setSV21.sets]])+"\n")
 #         outfile.write(str([0, setSV21.numberOfPoints, [s.numberOfPoints for s in setSV21.sets]])+"\n")
 
@@ -298,127 +304,158 @@ for i in range(rSet.numberOfReplicas):
     
     #### save list of chi2 for full set
     chiList=DataProcessor.harpyInterface.ComputeChi2(setSV19)    
-    with open('/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/TMD<->PDF/Figures/SV21/'+PDFinUse+'/chi2-'+PDFinUse+'-SV19.dat', 'a') as outfile:
+    with open('/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/TMD<->PDF/Figures/SV21/'+PDFinUse+'/chi2-'+PDFinUse+'-EXP-SV19.dat', 'a') as outfile:
         outfile.write(str([i]+list(chiList))+"\n")
     
     #### save list of chi2 for reduced set
     chiList=DataProcessor.harpyInterface.ComputeChi2(setSV21)    
-    with open('/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/TMD<->PDF/Figures/SV21/'+PDFinUse+'/chi2-'+PDFinUse+'-SV21.dat', 'a') as outfile:
+    with open('/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/TMD<->PDF/Figures/SV21/'+PDFinUse+'/chi2-'+PDFinUse+'-EXP-SV21.dat', 'a') as outfile:
         outfile.write(str([i]+list(chiList))+"\n")
     
     #### save cross-section to plot
     listToSave=DataProcessor.harpyInterface.ComputeXSec(setPLOT)
-    path='/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/TMD<->PDF/Figures/SV19-noFIT/xSec-NNPDFrep/'\
+    path='/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/TMD<->PDF/Figures/SV21/'+PDFinUse+'/xSec-EXP/'\
         +'{:04d}'.format(i)+'.pick'
         
     with open(path, "wb") as filehandle:
         pickle.dump(listToSave,filehandle)
         
     #### save TMD-distribution        
-    path='/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/TMD-grids/Grids_optimal/SV21-'+PDFinUse+'_nnlo/SV21-'+PDFinUse+'_nnlo'\
+    path='/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/TMD-grids/Grids_optimal/SV21-'+PDFinUse+'_nnlo_EXP/SV21-'+PDFinUse+'_nnlo_EXP'\
         +'_'+'{:04d}'.format(i)+'.dat'
     DataProcessor.SaveTMDGrid.SaveGrid_optimal(path)
 
 #%%
-##################################
-## Save replicas of SV19
-##################################
+# # ######################################
+# # ## Posteriory routine, which collects all pickle files into a single CSV using gaussian statistics
+# # ######################################
+# import glob
 # import pickle
+# import numpy
 
-# rSet.SetReplica()
+# #PDFinUse="HERA20"
+# #PDFinUse="NNPDF31"
+# #PDFinUse="CT18"
+# PDFinUse="MSHT20"
 
+# fileList=glob.glob('/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/TMD<->PDF/Figures/SV21/'+PDFinUse+'/xSec-EXP/*.pick')
+# centralPath='/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/TMD<->PDF/Figures/SV21/'+PDFinUse+'/xSec-EXP/0000.pick'
 
+# with open(centralPath, "rb") as filehandle:
+#     central=pickle.load(filehandle)
 
-# for i in range(rSet.numberOfReplicas):    
-#     rSet.SetReplica(i)
-    
-#     chiList=DataProcessor.harpyInterface.ComputeChi2(setDY)    
-#     with open('/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/TMD<->PDF/Figures/SV19-noFIT/chi2-SV19rep.dat', 'a') as outfile:
-#         outfile.write(str([i]+list(chiList))+"\n")
-    
-    
-#     listToSave=DataProcessor.harpyInterface.ComputeXSec(setDYplot)
-#     path='/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/TMD<->PDF/Figures/SV19-noFIT/xSec-SV19/'\
-#         +'{:04d}'.format(i)+'.pick'
-        
-#     with open(path, "wb") as filehandle:
-#         pickle.dump(listToSave,filehandle)
+# reps=[]
+# for pp in fileList:    
+#     with open(pp, "rb") as filehandle:
+#         reps.append(pickle.load(filehandle))
+
+# central=numpy.mean(reps,axis=0)
+# std=numpy.std(reps,axis=0)
+
+# pointNames=[s["id"] for s in setPLOT.points]
+
+# #with open('/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/TMD<->PDF/Figures/SV19-noFIT/xSec-SV19rep.dat','w') as file:
+# with open('/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/TMD<->PDF/Figures/SV21/'+PDFinUse+'/xSec-'+PDFinUse+'-EXP.dat','w') as file:
+#     file.write("Point id, xSec, Std \n")
+#     for i in range(len(pointNames)):
+#         file.write(pointNames[i]+', '+'{:g}'.format(central[i])+', '+'{:g}'.format(std[i])+" \n")
 
 #%%
-##################################
-## Special case: NNPDF replicas each fitted by SV19
-##################################
-# import pickle
-# import DataProcessor.SaveTMDGrid
-
-# r=3
-
-# for n in range(r*100,(r+1)*100):
-#     #### maximum 920
-#     if(n>920):
-#         break
-    
-#     #### read n'th line from the file
-#     with open('/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/TMD<->PDF/LOGS/NNPDF31/allPDF_centralEXP_full.dat','r') as file:
-#         for i, line in enumerate(file):
-#             if i == n:
-#                 ll=eval(line)    
-#             elif i>n:
-#                 break
-#     #### last two numbers [...., number of PDF-replica,  NP-parameters ]
-#     rep=ll[3]
-#     param=ll[4]
-    
-#     #### set this parameters
-#     harpy.setPDFreplica(rep)
-#     harpy.setNPparameters(param)
-    
-#     #### 1. Save chi^2 list
-#     chiList=DataProcessor.harpyInterface.ComputeChi2(setDY)    
-#     with open('/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/TMD<->PDF/Figures/SV19-noFIT/chi2-NNPDFrep-fit.dat', 'a') as outfile:
-#         outfile.write(str([i]+list(chiList))+"\n")
-    
-#     #### 2. Save values of xSec
-#     listToSave=DataProcessor.harpyInterface.ComputeXSec(setDYplot)
-#     path='/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/TMD<->PDF/Figures/SV19-noFIT/xSec-NNPDFrep-fit/'\
-#         +'{:04d}'.format(i)+'.pick'
-        
-#     with open(path, "wb") as filehandle:
-#         pickle.dump(listToSave,filehandle)
-    
-#     #### 3. Save grid        
-#     path='/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/TMD-grids/Grids_optimal/SV19_n3lo_PDFrep-fit/SV19_n3lo_PDFrep-fit'\
-#     +'_'+'{:04d}'.format(rep)+'.dat'
-#     DataProcessor.SaveTMDGrid.SaveGrid_optimal(path)
-
-#%%
-# ######################################
-# ## Posteriory routine, which collects all pickle files into a single CSV
-# ######################################
+# # ######################################
+# # ## Posteriory routine, which collects all pickle files into a single CSV computing 68%CI
+# # ######################################
 import glob
 import pickle
 import numpy
 
-# fileList=glob.glob('/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/TMD<->PDF/Figures/SV19-noFIT/xSec-SV19/*.pick')
-# centralPath='/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/TMD<->PDF/Figures/SV19-noFIT/xSec-SV19/0000.pick'
+#########################################################
+## Resample data with N/2
+#########################################################
+def Resample(dd):
+    ss=int(numpy.floor(len(dd)/2))
+    ss=max(100,ss)
+    return dd[numpy.random.choice(dd.shape[0], size=ss)]
 
-fileList=glob.glob('/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/TMD<->PDF/Figures/SV19-noFIT/xSec-NNPDFrep/*.pick')
-centralPath='/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/TMD<->PDF/Figures/SV19-noFIT/xSec-NNPDFrep/0000.pick'
+#########################################################
+## Resample data for (d1+d2)/2 with N/2
+#########################################################
+def ResampleSUM(dd1,dd2):    
+    ss=min( max(100,int(numpy.floor(len(dd1)/2))) , max(100,int(numpy.floor(len(dd2)/2))))
+    return (dd1[numpy.random.choice(dd1.shape[0], size=ss)]+dd2[numpy.random.choice(dd2.shape[0], size=ss)])/2
 
-with open(centralPath, "rb") as filehandle:
-    central=pickle.load(filehandle)
+#########################################################
+## Determine Mean, 68%CI by resampling 
+#########################################################
+alpha=68
 
-reps=[]
+def ComputeParametersSUM(dd1,dd2):
+    means=[]
+    lowers=[]
+    uppers=[]    
+    for i in range(1500):
+        sample=ResampleSUM(numpy.array(dd1),numpy.array(dd2))
+        means.append(numpy.mean(sample))
+        lowers.append(numpy.percentile(sample,(100-alpha)/2))
+        uppers.append(numpy.percentile(sample,100-(100-alpha)/2))
+    
+    return [numpy.mean(means),numpy.mean(lowers),numpy.mean(uppers)]
+
+def ComputeParameters(dd):    
+    means=[]
+    lowers=[]
+    uppers=[]    
+    for i in range(1500):
+        sample=Resample(numpy.array(dd))
+        means.append(numpy.mean(sample))
+        lowers.append(numpy.percentile(sample,(100-alpha)/2))
+        uppers.append(numpy.percentile(sample,100-(100-alpha)/2))
+    
+    return [numpy.mean(means),numpy.mean(lowers),numpy.mean(uppers)]
+#%%
+#PDFinUse="HERA20"
+#PDFinUse="NNPDF31"
+#PDFinUse="CT18"
+PDFinUse="MSHT20"
+
+fileList=glob.glob('/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/TMD<->PDF/Figures/SV21/'+PDFinUse+'/xSec/*.pick')
+repsPDF=[]
 for pp in fileList:    
     with open(pp, "rb") as filehandle:
-        reps.append(pickle.load(filehandle))
+        repsPDF.append(pickle.load(filehandle))
+        
+fileList=glob.glob('/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/TMD<->PDF/Figures/SV21/'+PDFinUse+'/xSec-EXP/*.pick')
+repsEXP=[]
+for pp in fileList:    
+    with open(pp, "rb") as filehandle:
+        repsEXP.append(pickle.load(filehandle))
 
-std=numpy.std(reps,axis=0)
 
-pointNames=[s["id"] for s in setDYplot.points]
+pointNames=[s["id"] for s in setPLOT.points]
 
-#with open('/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/TMD<->PDF/Figures/SV19-noFIT/xSec-SV19rep.dat','w') as file:
-with open('/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/TMD<->PDF/Figures/SV19-noFIT/xSec-NNPDFrep.dat','w') as file:
-    file.write("Point id, xSec, Std \n")
+with open('/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/TMD<->PDF/Figures/SV21/'+PDFinUse+'/xSec-'+PDFinUse+'-ALL.dat','w') as file:
+    file.write("Point id, xSec-PDF, std-PDF, 68CI-down-PDF, 68CI-up-PDF, \
+               xSec-EXP, std-EXP, 68CI-down-EXP, 68CI-up-EXP, \
+               xSec-ALL, std-ALL, 68CI-down-ALL, 68CI-up-ALL  \n")
     for i in range(len(pointNames)):
-        file.write(pointNames[i]+', '+'{:g}'.format(central[i])+', '+'{:g}'.format(std[i])+" \n")
+        print(i,'/',len(pointNames))
+        d1=[r[i] for r in repsPDF]
+        d2=[r[i] for r in repsEXP]
+        
+        centralPDF=numpy.mean(d1)
+        stdPDF=numpy.std(d1)
+        
+        centralEXP=numpy.mean(d2)
+        stdEXP=numpy.std(d2)
+        
+        centralALL=(centralPDF+centralEXP)/2
+        stdALL=numpy.sqrt(stdEXP**2+stdPDF**2)
+        
+        ppPDF=ComputeParameters(d1)
+        ppEXP=ComputeParameters(d2)
+        ppALL=ComputeParametersSUM(d1,d2)
+        
+        
+        file.write(pointNames[i]+', '\
+                +'{:g}'.format(centralPDF)+', '+'{:g}'.format(stdPDF)+', '+'{:g}'.format(ppPDF[1])+', '+'{:g}'.format(ppPDF[2])\
+                +'{:g}'.format(centralEXP)+', '+'{:g}'.format(stdEXP)+', '+'{:g}'.format(ppEXP[1])+', '+'{:g}'.format(ppEXP[2])\
+                +'{:g}'.format(centralALL)+', '+'{:g}'.format(stdALL)+', '+'{:g}'.format(ppALL[1])+', '+'{:g}'.format(ppALL[2])+" \n")

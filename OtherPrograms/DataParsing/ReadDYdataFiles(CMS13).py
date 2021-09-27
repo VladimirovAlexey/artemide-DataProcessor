@@ -45,7 +45,7 @@ Q_current=[M_Z-15.,M_Z+15.]
 incCut=True
 cutParam=[25.,25.,-2.4,2.4]  # begining of sec.6
 lumUncertainty=0.025 # table 2
-corrSys=0.001**2 #### They take Background estimations as fully correlated (table 2)
+corrSys=0.001 #### They take Background estimations as fully correlated (table 2)
 
 #%%
 ###############################################################################
@@ -66,6 +66,7 @@ data_here=data_from_f[6:39]
 for i in range(len(data_here)):
     data_here[i]=data_here[i].split(",")
     data_here[i]=[float(j) for j in data_here[i]]
+ 
 
 print("Done.  =>     Create points & append to data set ...")
 DataCurrent=DataProcessor.DataSet.DataSet('CMS13-00y04',"DY")

@@ -329,7 +329,6 @@ class ArtemideReplicaSet:
             
         if(douTMDPDF and self._uTMDPDFend>=self._uTMDPDFstart+1 >0):            
             if(self._c_uTMDPDFend>=self._c_uTMDPDFstart+1 >0):
-                pass
                 harpy.setPDFreplica(r[self._c_uTMDPDFstart])
             harpy.setNPparameters_uTMDPDF(r[self._uTMDPDFstart:self._uTMDPDFend])            
             
