@@ -1,0 +1,40 @@
+P_T^2 distributions of charged hadrons produced in SIDIS off unpolarized protons in COMPASS
+
+1) Genral kinematic cuts
+
+Q^2 > 1 (GeV/c)^2
+0.2 < y < 0.9 
+W > 5 GeV/c^2
+0.003 < X_Bj < 0.130
+theta_gamma < 60 mrad
+0.1 < z < 0.85
+0.1 < P_T / (GeV/c) < 2.0
+
+theta_gamma is the angle between the virtual photon and the muon beam in the laboratory frame:
+the cut is not really effective, because of the W and y cut
+
+
+2) Binning
+
+The P_T^2 distributions (normalised to the first bin in P_T^2 (0.02,0.06 GeV^2/c^2) ) 
+have been measured up to 3.0 GeV^2/c^2 in the following multid bins:
+	1. 4 bins in x, 2 bins in Q^2, 4 bins in z
+	2. 4 bins in x, 4 bins in Q^2, 4 bins in z
+	3. 4 bins in x, 2 bins in Q^2, 4 bins in z, 2 bins in W
+	4. 4 bins in x, 4 bins in Q^2, 4 bins in z, 2 bins in W
+	5. 4 bins in x, 2 bins in Q^2, 7 bins in z
+
+For 1. and 2., the bin limits are
+   x: 0.003, 0.013, 0.020, 0.055, 0.100
+   z: 0.20,  0.30,  0.40,  0.60,  0.80
+   for 1.   Q^2: 1.0, 3.0, 16.0 (GeV/c)^2
+   for 2.   Q^2: 1.0, 1.7, 3.0, 7.0, 16.0  (GeV/c)^2
+
+For 3. and 4. the x, z, and Q^2 binning is the same as 1. and 2., but binning
+the data in W> and < 12 GeV/c^2
+
+For 5. the Q^2 binning is the same as for 1. but it is
+   x:   0.003, 0.012, 0.020, 0.038, 0.130
+   z:   0.10, 0.20, 0.25, 0.30, 0.40, 0.55, 0.70, 0.85
+
+

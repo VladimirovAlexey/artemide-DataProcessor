@@ -276,6 +276,7 @@ def cutFunc(p):
 
 
 #%%
+%time
 #######################################
 # Loading the data set
 #######################################
@@ -319,8 +320,8 @@ setDY=theData.CutData(cutFunc)
 
 setDYfull=theData.CutData(cutFunc0) 
 
-print('Loaded ', setDY.numberOfSets, 'data sets with ', sum([i.numberOfPoints for i in setDY.sets]), 'points.')
-print('Loaded experiments are', [i.name for i in setDY.sets])
+#print('Loaded ', setDY.numberOfSets, 'data sets with ', sum([i.numberOfPoints for i in setDY.sets]), 'points.')
+#print('Loaded experiments are', [i.name for i in setDY.sets])
 
 
 #%%

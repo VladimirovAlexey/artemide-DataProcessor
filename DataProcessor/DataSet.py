@@ -247,27 +247,17 @@ class DataSet:
         
         for i in range(self.numberOfPoints):
             for j in range(self.numberOfPoints):
-                ## diagonal term
-                if i==j:
-                    a=numpy.array(self.points[i]["uncorrErr"])                    
-                    self.V[i][j]+=numpy.sum(a**2)
-                
-                ## correlated errors 
-                a=numpy.array(self.points[i]["corrErr"])
-                b=numpy.array(self.points[j]["corrErr"])
-                
-                self.V[i][j]+=numpy.sum(a*b)
-                
-                ## normalization errors
-                a=numpy.array(self.normErr)*self.points[i]["xSec"]
-                b=numpy.array(self.normErr)*self.points[j]["xSec"]
-                
-                self.V[i][j]+=numpy.sum(a*b)
+                ## diagonal term is uncorrelated error SQUARED, already precalculated
+                if i==j:                    
+                    self.V[i][j]+=self._listOfVariances[i]
+                ## off-diagonal term is correlated errors, already precalculated
+                self.V[i][j]+=numpy.dot(self._listOfCorrErrors[i],self._listOfCorrErrors[j])
        
      
     def _computeListOfCorrErrors(self):
         """
-        Compute the list of correlated errors for each point.
+        Compute the list of correlated errors for each point. 
+        It is equals to [corrErr]+[xSec*normErr]
         """
         dummy=numpy.zeros((self.numberOfPoints,self.numOfCorrErr+self.numOfNormErr))
         
