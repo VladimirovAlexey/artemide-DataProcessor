@@ -34,7 +34,7 @@ elif(tt=='all=0'):
     path_to_constants=MAINPATH+"FittingPrograms/SV19/Constants-files/"+"DY+SIDIS_nnlo_all=0/const-DY+SIDIS_NNPDF31+DSS_nnlo_all=0"
 
 harpy.initialize(path_to_constants)
-
+#%%
 harpy.setNPparameters_TMDR([1.93, 0.0434])
 harpy.setNPparameters_uTMDPDF([0.253434, 9.04351, 346.999, 2.47992, -5.69988, 0.1, 0.])
 harpy.setNPparameters_uTMDFF([0.264,0.479,0.459,0.539]) 

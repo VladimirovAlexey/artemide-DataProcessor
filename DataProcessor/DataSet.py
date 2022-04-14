@@ -576,6 +576,7 @@ class DataSet:
             # update xSec value
             # (old+uncorr*RND+corr*globalRND)*(1+norm)
             ## uncorrelated part
+            
             for err in p["uncorrErr"]:
                 pNew["xSec"]+=numpy.random.normal()*err
             # correlated part
@@ -583,6 +584,7 @@ class DataSet:
                 pNew["xSec"]+=corrRND[i]*p["corrErr"][i]
             # multiply by norm-error-distirbution
             pNew["xSec"]=pNew["xSec"]*resFactor
+            
             
 
             ##the point-errors should be rescaled by normalization factor
@@ -594,6 +596,7 @@ class DataSet:
                 pNew["corrErr"].append(err*resFactor)
             #
             dNew.AddPoint(pNew)
+            
         
         dNew.FinalizeSet()   
         return dNew

@@ -15,11 +15,17 @@ Created on Fri Sep  3 14:35:35 2021
 # Global parameter of a run
 #######################################################################
 
-PDFinUse="HERA20"
+#PDFinUse="HERA20"
 #PDFinUse="NNPDF31"
 #PDFinUse="CT18"
-#PDFinUse="MSHT20"
+PDFinUse="MSHT20"
 #PDFinUse="CJ15"
+
+#CASE="EXP"
+CASE="PDF"
+
+nn=9
+if(CASE=="EXP"): nn=0
 
 #######################################
 # Paths
@@ -55,12 +61,9 @@ import DataProcessor.ArtemideReplicaSet
 import harpy
 
 harpy.initialize(PathToConstantsFile)
-
-# rSet=DataProcessor.ArtemideReplicaSet.ReadRepFile(\
-#                             "/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/TMD<->PDF/REPS/SV21-"+PDFinUse+"-nnlo.rep")
-    
+#%%
 rSet=DataProcessor.ArtemideReplicaSet.ReadRepFile(\
-                            "/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/TMD<->PDF/REPS/SV21-"+PDFinUse+"-nnlo-EXP.rep")
+                            "/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/TMD<->PDF/REPS/SV21-"+PDFinUse+"-nnlo-"+CASE+".rep")
 rSet.SetReplica()
 
 #%%
@@ -220,7 +223,7 @@ def cutFuncPlot(p):
             return False,p
     
 #    return delta<0.5 and p.qT_avarage<80
-    return delta<0.25 , p
+    return (delta<0.35 or p["<qT>"]<10.) , p
 
 #%%
 #######################################
@@ -283,7 +286,7 @@ if(not (PDFinUse == "MSHT20" or PDFinUse == "HERA20" or PDFinUse == "NNPDF31" or
     print("______UNKNOWN SET_______________________________")
     print("________________________________________________")
 
-# rSet.SetReplica(0)
+#rSet.SetReplica(0)
 
 # DataProcessor.harpyInterface.PrintChi2Table(setSV21,printDecomposedChi2=True)
 DataProcessor.harpyInterface.PrintChi2Table(setSV19,printDecomposedChi2=True)
@@ -309,75 +312,81 @@ DataProcessor.harpyInterface.PrintChi2Table(setSV19,printDecomposedChi2=True)
 # ## Save central replica
 # ##################################
 
-import pickle
-import DataProcessor.SaveTMDGrid
+# import pickle
+# import DataProcessor.SaveTMDGrid
 
-if(PDFinUse == "MSHT20"):
-    harpy.setNPparameters([2.,0.0435856, 0.120811, 0.316864, 0.366887, 1.6959, 0.00369852, 56.4383, 0.00123501, 1.09761, 0.107047, 5.07336, 28.6827, 0])
+# if(PDFinUse == "MSHT20"):
+#     harpy.setNPparameters([2.,0.0435856, 0.120811, 0.316864, 0.366887, 1.6959, 0.00369852, 56.4383, 0.00123501, 1.09761, 0.107047, 5.07336, 28.6827, 0])
 
-if(PDFinUse == "HERA20"):
-    harpy.setNPparameters([2.,0.0326349, 0.105422, 8.15213, 0.442909, 0.109655, 0.11605, 6.52881, 0.34749, 0.0498677, 0.491896, 5.22109, 336.538, 0])
+# if(PDFinUse == "HERA20"):
+#     harpy.setNPparameters([2.,0.0326349, 0.105422, 8.15213, 0.442909, 0.109655, 0.11605, 6.52881, 0.34749, 0.0498677, 0.491896, 5.22109, 336.538, 0])
 
-if(PDFinUse == "NNPDF31"):
-    harpy.setNPparameters([2.,0.026075, 0.284306, 2.57804, 0.398623, 1.10417, 0.0874515, 12.5858, 0.0981801, 6.05093, 0.251195, 3.00048, 180.76, 0])
+# if(PDFinUse == "NNPDF31"):
+#     harpy.setNPparameters([2.,0.026075, 0.284306, 2.57804, 0.398623, 1.10417, 0.0874515, 12.5858, 0.0981801, 6.05093, 0.251195, 3.00048, 180.76, 0])
 
-if(PDFinUse == "CT18"):
-    harpy.setNPparameters([2.,0.0439572, 0.0518259, 0.896614, 0.29299, 4.71699, 0.00940138, 55.5163, 0.0012351, 0.371885, 0.0122727, 9.0651, 24.2762, 0])
+# if(PDFinUse == "CT18"):
+#     harpy.setNPparameters([2.,0.0439572, 0.0518259, 0.896614, 0.29299, 4.71699, 0.00940138, 55.5163, 0.0012351, 0.371885, 0.0122727, 9.0651, 24.2762, 0])
 
-if(not (PDFinUse == "MSHT20" or PDFinUse == "HERA20" or PDFinUse == "NNPDF31" or PDFinUse == "CT18")):
-    print("________________________________________________")
-    print("______UNKNOWN SET_______________________________")
-    print("________________________________________________")
+# if(not (PDFinUse == "MSHT20" or PDFinUse == "HERA20" or PDFinUse == "NNPDF31" or PDFinUse == "CT18")):
+#     print("________________________________________________")
+#     print("______UNKNOWN SET_______________________________")
+#     print("________________________________________________")
 
    
     
-#### save cross-section to plot
-listToSave=DataProcessor.harpyInterface.ComputeXSec(setPLOT)
-path='/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/TMD<->PDF/Figures/SV21/'+PDFinUse+'/{:04d}'.format(0)+'.pick'
+# #### save cross-section to plot
+# listToSave=DataProcessor.harpyInterface.ComputeXSec(setPLOT)
+# path='/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/TMD<->PDF/Figures/SV21/'+PDFinUse+'/{:04d}'.format(0)+'.pick'
     
-with open(path, "wb") as filehandle:
-    pickle.dump(listToSave,filehandle)
+# with open(path, "wb") as filehandle:
+#     pickle.dump(listToSave,filehandle)
     
-#### save TMD-distribution        
-path='/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/TMD-grids/Grids_optimal/SV21-'+PDFinUse+'_nnlo_VAR/SV21-'+PDFinUse+'_nnlo_VAR'\
-    +'_'+'{:04d}'.format(0)+'.dat'
-DataProcessor.SaveTMDGrid.SaveGrid_optimal(path)
+# #### save TMD-distribution        
+# path='/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/TMD-grids/Grids_optimal/SV21-'+PDFinUse+'_nnlo_VAR/SV21-'+PDFinUse+'_nnlo_VAR'\
+#     +'_'+'{:04d}'.format(0)+'.dat'
+# DataProcessor.SaveTMDGrid.SaveGrid_optimal(path)
 
 #%%
 # # ##################################
 # # ## Save replicas of NNPDFs
 # # ##################################
 
-# import pickle
-# import DataProcessor.SaveTMDGrid
+import pickle
+import DataProcessor.SaveTMDGrid
 
-# rSet.SetReplica()
+rSet.SetReplica()
 
-# for i in range(rSet.numberOfReplicas):      
-#     rSet.SetReplica(i)
+nmin=nn*100+1
+nmax=nn*100+1+100
+if(nmin>=rSet.numberOfReplicas):
+    sys.exit()
+if(nmax>=rSet.numberOfReplicas): nmax=rSet.numberOfReplicas
+
+for i in range(nmin,nmax):      
+    rSet.SetReplica(i)
     
-#     #### save list of chi2 for full set
-#     chiList=DataProcessor.harpyInterface.ComputeChi2(setSV19)    
-#     with open('/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/TMD<->PDF/Figures/SV21/'+PDFinUse+'/chi2-'+PDFinUse+'-EXP-SV19.dat', 'a') as outfile:
-#         outfile.write(str([i]+list(chiList))+"\n")
+    # #### save list of chi2 for full set
+    # chiList=DataProcessor.harpyInterface.ComputeChi2(setSV19)    
+    # with open('/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/TMD<->PDF/Figures/SV21/'+PDFinUse+'/chi2-'+PDFinUse+'-'+CASE+'-SV19.dat', 'a') as outfile:
+    #     outfile.write(str([i]+list(chiList))+"\n")
     
-#     #### save list of chi2 for reduced set
-#     chiList=DataProcessor.harpyInterface.ComputeChi2(setSV21)    
-#     with open('/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/TMD<->PDF/Figures/SV21/'+PDFinUse+'/chi2-'+PDFinUse+'-EXP-SV21.dat', 'a') as outfile:
-#         outfile.write(str([i]+list(chiList))+"\n")
+    # #### save list of chi2 for reduced set
+    # chiList=DataProcessor.harpyInterface.ComputeChi2(setSV21)    
+    # with open('/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/TMD<->PDF/Figures/SV21/'+PDFinUse+'/chi2-'+PDFinUse+'-'+CASE+'-SV21.dat', 'a') as outfile:
+    #     outfile.write(str([i]+list(chiList))+"\n")
     
-#     #### save cross-section to plot
-#     listToSave=DataProcessor.harpyInterface.ComputeXSec(setPLOT)
-#     path='/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/TMD<->PDF/Figures/SV21/'+PDFinUse+'/xSec-EXP/'\
-#         +'{:04d}'.format(i)+'.pick'
+    #### save cross-section to plot
+    listToSave=DataProcessor.harpyInterface.ComputeXSec(setPLOT)
+    path='/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/TMD<->PDF/Figures/SV21/'+PDFinUse+'/xSec-'+CASE+'/'\
+        +'{:04d}'.format(i)+'.pick'
         
-#     with open(path, "wb") as filehandle:
-#         pickle.dump(listToSave,filehandle)
+    with open(path, "wb") as filehandle:
+        pickle.dump(listToSave,filehandle)
         
-#     #### save TMD-distribution        
-#     path='/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/TMD-grids/Grids_optimal/SV21-'+PDFinUse+'_nnlo_EXP/SV21-'+PDFinUse+'_nnlo_EXP'\
-#         +'_'+'{:04d}'.format(i)+'.dat'
-#     DataProcessor.SaveTMDGrid.SaveGrid_optimal(path)
+    # #### save TMD-distribution        
+    # path='/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/TMD-grids/Grids_optimal/SV21-'+PDFinUse+'_nnlo_EXP/SV21-'+PDFinUse+'_nnlo_'+CASE+\
+    #     +'_'+'{:04d}'.format(i)+'.dat'
+    # DataProcessor.SaveTMDGrid.SaveGrid_optimal(path)
 
 #%%
 # # ######################################
@@ -414,4 +423,145 @@ DataProcessor.SaveTMDGrid.SaveGrid_optimal(path)
 #     for i in range(len(pointNames)):
 #         file.write(pointNames[i]+', '+'{:g}'.format(central[i])+', '+'{:g}'.format(std[i])+" \n")
 
+#%%
+######################################
+## Posteriory routine, which collects all pickle files into a single CSV using bootstrap 68%CI
+## Joined result is by mean=weighted mean, 68%CI->joined
+######################################
 
+import glob
+import pickle
+import numpy
+
+#PDFinUse="HERA20"
+#PDFinUse="NNPDF31"
+#PDFinUse="CT18"
+PDFinUse="MSHT20"
+
+#### compute the 68CI for list of arrays, axis=0
+def Bootstrap68CI(dd):
+    rMin=[]
+    rMax=[]
+    
+    for i in range(2000):
+        indices=numpy.random.choice(range(len(dd)),size=int(len(dd)/2))
+        sample=[dd[i] for i in indices]
+        rMin.append(numpy.quantile(sample, (1-.68)/2,axis=0))
+        rMax.append(numpy.quantile(sample, 1-(1-.68)/2,axis=0))
+        
+    return (numpy.array([numpy.mean(rMin,axis=0),numpy.mean(rMax,axis=0)])).transpose()
+
+#### compute the 68CI for sum of 2 distributions list of arrays, axis=0
+def BootstrapSUM68CI(dd1,dd2):
+    rMin=[]
+    rMax=[]
+    
+    for i in range(2000):        
+        indices1=numpy.random.choice(range(len(dd1)),size=numpy.min([len(dd1),len(dd2)]))
+        indices2=numpy.random.choice(range(len(dd2)),size=numpy.min([len(dd1),len(dd2)]))
+        sample=[dd1[i] for i in indices1]+[dd2[i] for i in indices2]
+        rMin.append(numpy.quantile(sample, (1-.68)/2,axis=0))
+        rMax.append(numpy.quantile(sample, 1-(1-.68)/2,axis=0))
+        
+    return (numpy.array([numpy.mean(rMin,axis=0),numpy.mean(rMax,axis=0)])).transpose()
+        
+
+
+fileListEXP=glob.glob('/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/TMD<->PDF/Figures/SV21/'+PDFinUse+'/xSec-EXP/*.pick')
+fileListPDF=glob.glob('/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/TMD<->PDF/Figures/SV21/'+PDFinUse+'/xSec-PDF/*.pick')
+
+repsEXP=[]
+for pp in fileListEXP:    
+    with open(pp, "rb") as filehandle:
+        repsEXP.append(pickle.load(filehandle))
+    
+repsPDF=[]
+for pp in fileListPDF:    
+    with open(pp, "rb") as filehandle:
+        repsPDF.append(pickle.load(filehandle))
+        
+
+
+## just mean
+EXPmean=numpy.mean(repsEXP,axis=0)
+PDFmean=numpy.mean(repsPDF,axis=0)
+
+## 68 CI's
+EXP68=Bootstrap68CI(repsEXP)
+PDF68=Bootstrap68CI(repsPDF)
+
+## Computing weighted mean
+EXPsigma2=numpy.array([((c[1]-c[0])/2)**(-2) for c in EXP68])
+PDFsigma2=numpy.array([((c[1]-c[0])/2)**(-2) for c in PDF68])
+
+EXPw=EXPsigma2/(EXPsigma2+PDFsigma2)
+PDFw=PDFsigma2/(EXPsigma2+PDFsigma2)
+
+wMean=EXPw*EXPmean+PDFw*PDFmean
+
+## 68 CI for the sum
+SUM68=BootstrapSUM68CI(repsEXP,repsPDF)
+
+pointNames=[s["id"] for s in setPLOT.points]
+
+with open('/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/TMD<->PDF/Figures/SV21/'+PDFinUse+'/xSec-'+PDFinUse+'.dat','w') as file:
+    file.write("Point id, xSec[EXP], 68min[EXP], 68max[EXP], xSec[PDF], 68min[PDF], 68max[PDF], xSec[ALL], 68min[ALL], 68max[ALL] \n")
+    for i in range(len(pointNames)):
+        file.write(pointNames[i]+', '
+                   +'{:g}'.format(EXPmean[i])+', '
+                   +'{:g}'.format(EXP68[i][0])+', '
+                   +'{:g}'.format(EXP68[i][1])+', '
+                   +'{:g}'.format(PDFmean[i])+', '
+                   +'{:g}'.format(PDF68[i][0])+', '
+                   +'{:g}'.format(PDF68[i][1])+', '
+                   +'{:g}'.format(wMean[i])+', '
+                   +'{:g}'.format(SUM68[i][0])+', '
+                   +'{:g}'.format(SUM68[i][1])
+                   +" \n")
+        
+
+#%%
+######################################
+## Compute scale variations and save to file
+######################################
+
+if(PDFinUse == "MSHT20"):
+    harpy.setNPparameters([2.,0.0435856, 0.120811, 0.316864, 0.366887, 1.6959, 0.00369852, 56.4383, 0.00123501, 1.09761, 0.107047, 5.07336, 28.6827, 0])
+
+if(PDFinUse == "HERA20"):
+    harpy.setNPparameters([2.,0.0326349, 0.105422, 8.15213, 0.442909, 0.109655, 0.11605, 6.52881, 0.34749, 0.0498677, 0.491896, 5.22109, 336.538, 0])
+
+if(PDFinUse == "NNPDF31"):
+    harpy.setNPparameters([2.,0.026075, 0.284306, 2.57804, 0.398623, 1.10417, 0.0874515, 12.5858, 0.0981801, 6.05093, 0.251195, 3.00048, 180.76, 0])
+
+if(PDFinUse == "CT18"):
+    harpy.setNPparameters([2.,0.0439572, 0.0518259, 0.896614, 0.29299, 4.71699, 0.00940138, 55.5163, 0.0012351, 0.371885, 0.0122727, 9.0651, 24.2762, 0])
+    
+
+central=DataProcessor.harpyInterface.ComputeXSec(setPLOT)
+
+harpy.varyScales(1., 2., 1., 1.)
+c2Up=DataProcessor.harpyInterface.ComputeXSec(setPLOT)
+
+harpy.varyScales(1., 0.5, 1., 1.)
+c2Down=DataProcessor.harpyInterface.ComputeXSec(setPLOT)
+
+harpy.varyScales(1., 1. , 1., 2.)
+c4Up=DataProcessor.harpyInterface.ComputeXSec(setPLOT)
+
+harpy.varyScales(1., 1., 1., 0.5)
+c4Down=DataProcessor.harpyInterface.ComputeXSec(setPLOT)
+
+
+pointNames=[s["id"] for s in setPLOT.points]
+
+with open('/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/TMD<->PDF/Figures/SV21/'+PDFinUse+'/xSec-'+PDFinUse+'-scaleVar.dat','w') as file:
+    file.write("Point id, xSec[central], c2[Down], c2[Up], c4[Down], c4[Up] \n")
+    for i in range(len(pointNames)):
+        file.write(pointNames[i]+', '
+                   +'{:g}'.format(central[i])+', '
+                   +'{:g}'.format(c2Down[i])+', '
+                   +'{:g}'.format(c2Up[i])+', '
+                   +'{:g}'.format(c4Down[i])+', '
+                   +'{:g}'.format(c4Up[i])
+                   +" \n")
