@@ -22,8 +22,12 @@ import DataProcessor.ArtemideReplicaSet
 #MAINPATH="/home/m/Github/artemide-DataProcessor/"
 MAINPATH="/home/vla18041/LinkData2/arTeMiDe_Repository/DataProcessor/"
 
-useOrder="nnlo"
-#useOrder="n3lo"
+#useOrder="nnlo"
+useOrder="n3lo"
+
+#### If true fSIDIS=+fDY, (wrong)
+#### if false fSIDIS=-fDY (correct)
+useWrongSign=False
 
 #%%
 #######################################
@@ -103,7 +107,12 @@ def cutFunc(p):
     
     #### This is because star measures AN
     if p["id"][0:4]=="star":
-        p["thFactor"]=-p["thFactor"]
+        p["thFactor"]=-p["thFactor"]        
+    
+    # ##### test sign change
+    if(useWrongSign):
+        if p["type"]=="DY":
+            p["thFactor"]=-p["thFactor"]        
         
 #    return delta<0.5 and p.qT_avarage<80
     return delta<deltaTEST, p
@@ -130,8 +139,8 @@ def cutFunc(p):
     
 
 theData=DataProcessor.DataMultiSet.DataMultiSet("SIDISset",loadThisData([
-                    'compass.sivers.pi+.dpt', 'compass.sivers.pi-.dpt',
-                    'compass.sivers.k+.dpt', 'compass.sivers.k-.dpt',
+                    'compass08.sivers.pi+.dpt', 'compass08.sivers.pi-.dpt',
+                    'compass08.sivers.k+.dpt', 'compass08.sivers.k-.dpt',
                     'compass16.sivers.h+.1<z<2.dpt','compass16.sivers.h-.1<z<2.dpt',
                     'compass16.sivers.h+.z>2.dpt' ,'compass16.sivers.h-.z>2.dpt',
                     'hermes.sivers.pi+.3d','hermes.sivers.pi-.3d',
@@ -161,65 +170,107 @@ print('Total number of points:',setSIDIS.numberOfPoints+setDY.numberOfPoints)
 
 #%%
 rSet=DataProcessor.ArtemideReplicaSet.ReadRepFile("/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/Sivers20/REPS/"+
-                                                  "Sivers20_model9case1.rep")
+                                                  "Sivers20_BPV20(n3lo).rep")
+                                                  # "Sivers20_model9case1(noDY-n3lo).rep")
+
 rSet.SetReplica()
 
+#harpy.setNPparameters_SiversTMDPDF([0.0763382, 2.6377, 94.5443, 0., 0., -0.0436252, -0.319028, -3.25994, \
+#0.203802, -0.617296, -2.87003, 0.0710813, 2.86455, 0.0240161])
+#%%
 DataProcessor.harpyInterface.PrintChi2Table(setSIDIS,method="central",printSysShift=False)
 
 DataProcessor.harpyInterface.PrintChi2Table(setDY)
 
 #%%
-###########################
-### Computation of chi^2 for each replica
-##########################
-cccSIDIS=[]
-cccDY=[]
-cccZ=[]
-cccTotal=[]
-for i in range(1,rSet.numberOfReplicas+1):
-    rSet.SetReplica(i)
+# ###########################
+# ### Computation of chi^2 for each replica
+# ##########################
+# cccSIDIS=[]
+# cccDY=[]
+# cccZ=[]
+# cccTotal=[]
+# for i in range(1,rSet.numberOfReplicas+1):
+#     rSet.SetReplica(i)
     
-    ccSIDIS2,cc3=DataProcessor.harpyInterface.ComputeChi2(setSIDIS,method="central")
-    ccDY2,cc3=DataProcessor.harpyInterface.ComputeChi2(setDY)
-    cccSIDIS.append(ccSIDIS2)
-    cccDY.append(ccDY2)
-    cccZ.append(cc3[0]+cc3[1]+cc3[3])
-    cccTotal.append(ccSIDIS2+ccDY2)
+#     ccSIDIS2,cc3=DataProcessor.harpyInterface.ComputeChi2(setSIDIS,method="central")
+#     ccDY2,cc3=DataProcessor.harpyInterface.ComputeChi2(setDY)
+#     cccSIDIS.append(ccSIDIS2)
+#     cccDY.append(ccDY2)
+#     cccZ.append(cc3[0]+cc3[1]+cc3[3])
+#     cccTotal.append(ccSIDIS2+ccDY2)
+
+#%%
+# ###########################
+# ### Computation of chi^2 for each replica for sets of experiments
+# ##########################
+# cccSIDIS=[]
+# cccDY=[]
+# cccTotal=[]
+
+# c08=[]
+# c16=[]
+# hpiPlus=[]
+# hpiMinus=[]
+# hkPlus=[]
+# hkMinus=[]
+# jlab=[]
+
+# Wplus=[]
+# Wminus=[]
+# ZZ=[]
+# piDY=[]
+
+# for i in range(1,rSet.numberOfReplicas+1):
+#     rSet.SetReplica(i)
+    
+#     ccSIDIS2,cc2=DataProcessor.harpyInterface.ComputeChi2(setSIDIS,method="central")
+#     ccDY2,cc3=DataProcessor.harpyInterface.ComputeChi2(setDY)
+    
+#     cccSIDIS.append(ccSIDIS2)
+#     cccDY.append(ccDY2)
+#     cccTotal.append(ccSIDIS2+ccDY2)
+    
+#     c08.append(cc2[0]+cc2[1]+cc2[2]+cc2[3])
+#     c16.append(cc2[4]+cc2[5]+cc2[6]+cc2[7])
+#     hpiPlus.append(cc2[8])
+#     hpiMinus.append(cc2[9])
+#     hkPlus.append(cc2[10])
+#     hkMinus.append(cc2[11])
+#     jlab.append(cc2[12]+cc2[13]+cc2[14])
+    
+#     Wplus.append(cc3[0])
+#     Wminus.append(cc3[1])
+#     ZZ.append(cc3[2])
+#     piDY.append(cc3[3])
 
 #%%
 ### SIDIS nnlo
-#chiSIDIS=0.865
-#chiDY=1.248
-#chiZ=2.873
+# chiSIDIS=0.876
+# chiDY=1.287
 
 ### SIDIS+DY nnlo
-#chiSIDIS=0.880
-#chiDY=0.782
-#chiZ=1.624
+# chiSIDIS=0.899
+# chiDY=0.938
 
 ### SIDIS n3lo
-#chiSIDIS=0.848
-#chiDY=1.236
-#chiZ=2.841
+# chiSIDIS=0.874
+# chiDY=1.230
 
 ### SIDIS+DY n3lo
-# chiSIDIS=0.883
-# chiDY=0.792
-# chiZ=1.559
+# chiSIDIS=0.878
+# chiDY=0.903
+
 
 # rr=ComputeParameters(cccSIDIS)
 # print("SIDIS: ",chiSIDIS,rr[2]/63-chiSIDIS,rr[3]/63-chiSIDIS)
 
 # rr=ComputeParameters(cccDY)
-# print("DY: ",chiDY,rr[2]/12-chiDY,rr[3]/12-chiDY)
+# print("DY: ",chiDY,rr[2]/13-chiDY,rr[3]/13-chiDY)
 
-# chii=(chiDY*12-chiZ)/11
-# rr=ComputeParameters(cccZ)
-# print("DY/Z: ",chii,rr[2]/11-chii,rr[3]/11-chii)
-
-# chii=(chiDY*12+chiSIDIS*63)/75
+# chii=(chiDY*13+chiSIDIS*63)/76
 # rr=ComputeParameters(cccTotal)
-# print("Total: ",chii,rr[2]/75-chii,rr[3]/75-chii)
+# print("Total: ",chii,rr[2]/76-chii,rr[3]/76-chii)
 
 
 #%%
@@ -268,11 +319,12 @@ def chi_2(x):
 from iminuit import Minuit
 
 if(useOrder=="nnlo"):
-    #initialValues=(0.02617, 1.65313, 29.5239, 0.0, 0.0, -0.04842, -0.39636, -2.61426, 0.18038, -0.45053, 14.0649, 0.45734, 2.5715, -0.25895)
-    #initialValues=(0.131196, 3.29739, 64.8559, 0., 0., -0.0350288, -0.360633, -3.48127, 0.278947, -0.543139, 11.7035, 0.749227, 2.6025, -0.443391)
-    initialValues=(0.15856, 3.45784, 69.1464, 0.0, 0.0, -0.0352, -0.35094, -3.49901, 0.27941, -0.58113, 7.50691, 0.70375, 2.59306, -0.42195)
+    initialValues=(0.578584, 4.77155, 192.698, 0.0, 0.0, -0.0201949, -0.348725, -3.85109, 0.395256, -0.505503, 9.40679, 0.902935, 2.49469, -0.514439)
 elif(useOrder=="n3lo"):
-    initialValues=(0.04915, 3.285, 51.92, 0.0, 0.0, -0.03589, -0.3689, -3.5055, 0.2822, -0.59204, 9.572, 0.8442, 2.744, -0.4627)
+    initialValues=(0.5362, 5.21724, 202.749, 0.0, 0.0, -0.01661, -0.35169, -3.90804, 0.37263, -0.70153, 8.97236, 0.75803, 2.46253, -0.47481)
+    if(useWrongSign):
+        initialValues=(0.606823, 6.37593, 163.969, 0., 0., -0.0827816, -0.164371, -2.43524, 0.178541, -0.0526965, 4.81609, -0.190318, 3.5303, 0.504813)
+    
 
 initialErrors=(0.1, 10., 10. , 0.1,0.1,
                0.3, 0.5, 1., 
@@ -307,7 +359,7 @@ m.strategy=1
 # m.tol=0.0001*totalN*10000 ### the last 0.0001 is to compensate MINUIT def
 # m.strategy=1
 
-m.migrad(ncall=100)
+m.migrad()#ncall=150)
 
 print(m.params)
 # sys.exit()
@@ -436,8 +488,8 @@ def MinForReplica():
 #
 # Generate pseudo data and minimise   100 times
 #
-numOfReplicas=450
-REPPATH=MAINPATH+"FittingPrograms/Sivers20/LOGS/"+"model9case1(noDY-n3lo)EXTRA-replicas.txt"
+numOfReplicas=50
+REPPATH=MAINPATH+"FittingPrograms/Sivers20/LOGS/"+"final(n3lo_fSIDIS=fDY)-replicas.txt"
 for i in range(numOfReplicas):
     print('---------------------------------------------------------------')
     print('------------REPLICA ',i,'/',numOfReplicas,'--------------------')

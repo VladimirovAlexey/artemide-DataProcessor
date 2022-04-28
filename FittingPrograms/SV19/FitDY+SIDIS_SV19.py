@@ -48,10 +48,10 @@ def SaveToLog(text):
 #Initialize artemide
 #######################################
 import harpy
-#path_to_constants=MAINPATH+"FittingPrograms/SV19/Constants-files/"+"DY+SIDIS_nnlo/const-DY+SIDIS_NNPDF31+DSS_nnlo"
+path_to_constants=MAINPATH+"FittingPrograms/SV19/Constants-files/"+"DY+SIDIS_nnlo/const-DY+SIDIS_NNPDF31+DSS_nnlo"
 #path_to_constants=MAINPATH+"FittingPrograms/SV19/Constants-files/"+"DY+SIDIS_nnlo/const-DY+SIDIS_NNPDF31+DSS_nnlo_m=0"
 #path_to_constants=MAINPATH+"FittingPrograms/SV19/Constants-files/"+"DY+SIDIS_nnlo_all=0/const-DY+SIDIS_NNPDF31+DSS_nnlo_all=0"
-path_to_constants=MAINPATH+"FittingPrograms/SV19/Constants-files/"+"DY+SIDIS_n3lo_all=0/const-DY+SIDIS_NNPDF31+DSS_n3lo_all=0"
+#path_to_constants=MAINPATH+"FittingPrograms/SV19/Constants-files/"+"DY+SIDIS_n3lo_all=0/const-DY+SIDIS_NNPDF31+DSS_n3lo_all=0"
 
 SaveToLog('Initialization with : \n'+path_to_constants)
 
@@ -188,12 +188,12 @@ print('Loaded experiments are', [i.name for i in setDY.sets])
 print('Loaded ', setSIDIS.numberOfSets, 'data sets with', sum([i.numberOfPoints for i in setSIDIS.sets]), 'points.')
 print('Loaded experiments are', [i.name for i in setSIDIS.sets])
 
-SaveToLog('Loaded '+ str(setDY.numberOfSets) + ' data sets with '+str(sum([i.numberOfPoints for i in setDY.sets])) + ' points. \n'
-+'Loaded experiments are '+str([i.name for i in setDY.sets]))
+#SaveToLog('Loaded '+ str(setDY.numberOfSets) + ' data sets with '+str(sum([i.numberOfPoints for i in setDY.sets])) + ' points. \n'
+#+'Loaded experiments are '+str([i.name for i in setDY.sets]))
 
 #%%
 
-#harpy.setNPparameters([1.93, 0.0434,0.195, 9.117, 444., 2.12, -4.89,0.,0.,0.258, 0.478, 0.484, 0.459]) ##NNPDF+DSS
+harpy.setNPparameters([1.93, 0.0434,0.195, 9.117, 444., 2.12, -4.89,0.,0.,0.258, 0.478, 0.484, 0.459]) ##NNPDF+DSS
 #harpy.setNPparameters([2.2764,0.0223, 0.3237, 13.17, 355.4, 2.049, -10.43,0.,0.,0.264, 0.479,0.459,0.539]) ##HERA+DSS
 
 #harpy.setNPparameters([1.92819, 0.0390534, 0.198279, 9.29836, 431.647, 2.11829, -4.44162, 0., 0., 0.259499, 0.476235, 0.477143, 0.482977]) ##NNPDF+DSS (paper)
@@ -204,9 +204,9 @@ SaveToLog('Loaded '+ str(setDY.numberOfSets) + ' data sets with '+str(sum([i.num
 ##NNPDF+DSS  all=0
 #harpy.setNPparameters([2., 0.044, 0.187, 5.936, 647., 2.518, -2.94, 0., 0.,0.283, 0.463, 0.446, 0.528])
 ## NNPDF+DSS  all=0
-harpy.setNPparameters_TMDR([2., 0.0398333])
-harpy.setNPparameters_uTMDPDF([0.184739, 6.22437, 588.193, 2.44327, -2.51106, 0.,  0.])
-harpy.setNPparameters_uTMDFF([0.277974, 0.459238, 0.43427, 0.55001])
+# harpy.setNPparameters_TMDR([2., 0.0398333])
+# harpy.setNPparameters_uTMDPDF([0.184739, 6.22437, 588.193, 2.44327, -2.51106, 0.,  0.])
+# harpy.setNPparameters_uTMDFF([0.277974, 0.459238, 0.43427, 0.55001])
 
 DataProcessor.harpyInterface.PrintChi2Table(setDY,printDecomposedChi2=True)
 DataProcessor.harpyInterface.PrintChi2Table(setSIDIS,printDecomposedChi2=True)
@@ -344,3 +344,46 @@ for i in range(numOfReplicas):
 #%%
 SaveToLog("Computation finished correctly ("+int(numOfReplicas)+" replicas computed) +\n "
           +"----------------------------------------------------------------------------------")
+
+#%%
+###############################################################
+## Just some plots
+###############################################################
+
+setPlot=DataProcessor.DataSet.DataSet("plotSet","SIDIS")
+
+for i in range(30):
+    # makeup a point
+    p=DataProcessor.Point.CreateSIDISPoint('plot'+str(i))
+    #print DataCurrent.name+'.'+str(i)
+    #p["process"]=[1, 1, 2103]
+    p["process"]=[1, 1, 2011]
+    p["s"]=300.
+    p["<pT>"]=0.7*(i+0.5)/30
+    p["pT"]=[0.7*(i)/30,0.7*(i+1)/30]
+    p["<Q>"]=4.
+    p["Q"]=[3.8,4.2]
+    p["<x>"]=0.1
+    p["x"]=[0.08,0.12]
+    p["<z>"]=0.4
+    p["z"]=[0.3,0.5]
+    p["xSec"]=1.
+    p["M_target"]=.938
+    p["M_product"]=0.1
+    p["includeCuts"]=False
+    p["cutParams"]=[0.1,0.85,10.,10000.]
+    if p["xSec"]<0.00000001:
+        p["thFactor"]=1.
+    else:
+        p["thFactor"]=1/(p["pT"][1]**2-p["pT"][0]**2)
+         
+    setPlot.AddPoint(p)    
+
+setPlot.FinalizeSet(computeCovarianceMatrix=False)
+
+plot=DataProcessor.harpyInterface.ComputeXSec(setPlot)
+
+print("{")
+for i in range(30):
+    print("{",setPlot.points[i]["<pT>"],",",plot[i],"},")
+print("}")

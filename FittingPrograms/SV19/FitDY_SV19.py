@@ -24,7 +24,6 @@ MAINPATH="/home/vla18041/LinkData2/arTeMiDe_Repository/DataProcessor/"
 #######################################
 import harpy
 path_to_constants=MAINPATH+"FittingPrograms/SV19/Constants-files/"
-harpy.initialize(path_to_constants+"DY_nnlo/const-NNPDF31_NNLO")
 #harpy.initialize(path_to_constants+"DY_n3lo/const-NNPDF31_n3lo")
 #harpy.initialize(path_to_constants+"DY_nnlo/const-HERA20_NNLO")
 #harpy.initialize(path_to_constants+"DY_n3lo/const-HERA20_n3lo")

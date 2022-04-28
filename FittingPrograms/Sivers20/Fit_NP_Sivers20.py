@@ -3,6 +3,8 @@
 """
 Created on Thu Jan 24 16:40:59 2019
 
+This code fit Sivers central-data for all replicas of SV19-input
+
 @author: vla18041
 """
 
@@ -22,8 +24,8 @@ import DataProcessor.ArtemideReplicaSet
 #MAINPATH="/home/m/Github/artemide-DataProcessor/"
 MAINPATH="/home/vla18041/LinkData2/arTeMiDe_Repository/DataProcessor/"
 
-#useOrder="nnlo"
-useOrder="n3lo"
+useOrder="nnlo"
+#useOrder="n3lo"
 
 #%%
 #######################################
@@ -118,8 +120,8 @@ def cutFunc(p):
 #%%
 ### Loading the data set
 theData0=DataProcessor.DataMultiSet.DataMultiSet("SIDISset",loadThisData([
-                    'compass.sivers.pi+.dpt', 'compass.sivers.pi-.dpt',
-                    'compass.sivers.k+.dpt', 'compass.sivers.k-.dpt',
+                    'compass08.sivers.pi+.dpt', 'compass08.sivers.pi-.dpt',
+                    'compass08.sivers.k+.dpt', 'compass08.sivers.k-.dpt',
                     'compass16.sivers.h+.1<z<2.dpt','compass16.sivers.h-.1<z<2.dpt',
                     'compass16.sivers.h+.z>2.dpt' ,'compass16.sivers.h-.z>2.dpt',
                     'hermes.sivers.pi+.3d','hermes.sivers.pi-.3d',
@@ -155,7 +157,7 @@ def SetUnTMD(n):
 
 #%%
 rSet=DataProcessor.ArtemideReplicaSet.ReadRepFile("/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/Sivers20/REPS/"+
-                                                  "Sivers20_model9case1(n3lo).rep")
+                                                  "Sivers20_BPV20(n3lo).rep")
 rSet.SetReplica()
 
 #harpy.setNPparameters_SiversTMDPDF([0.199479, 0.263377, 59.3553, 0., 0., -0.0263578, -0.266869, -2.83529, 0.0955288, -0.595511, 2.90686, 0.315239, 2.89282, -0.136414])
@@ -194,9 +196,9 @@ def chi_2(x):
 from iminuit import Minuit
 
 if(useOrder=="nnlo"):
-    initialValues=(0.02617, 1.65313, 29.5239, 0.0, 0.0, -0.04842, -0.39636, -2.61426, 0.18038, -0.45053, 14.0649, 0.45734, 2.5715, -0.25895)
+    initialValues=(0.526542, 4.29217, 172.381, 0.0, 0.0, -0.0178186, -0.353326, -3.88268, 0.38586, -0.372215, 11.844, 0.996171, 2.51856, -0.539914)
 elif(useOrder=="n3lo"):
-    initialValues=(0.04915, 3.285, 51.92, 0.0, 0.0, -0.03589, -0.3689, -3.5055, 0.2822, -0.59204, 9.572, 0.8442, 2.744, -0.4627)
+    initialValues=(0.526542, 4.29217, 172.381, 0.0, 0.0, -0.0178186, -0.353326, -3.88268, 0.38586, -0.372215, 11.844, 0.996171, 2.51856, -0.539914)
 
 initialErrors=(0.1, 10., 10. , 0.1,0.1,
                0.3, 0.5, 1., 
@@ -259,7 +261,7 @@ def MinForReplica(n):
     localM.tol=0.0001*totalNnew*10000 ### the last 0.0001 is to compensate MINUIT def
     localM.strategy=1
 
-    localM.migrad(ncall=150,resume=False)    
+    localM.migrad(ncall=250,resume=False)    
     
     SetUnTMD(0)
     chi2Central=chi_2(localM.values.values())
@@ -270,9 +272,9 @@ def MinForReplica(n):
 #
 # Generate pseudo data and minimise   100 times
 #
-rStart=1
-rFinish=100
-REPPATH=MAINPATH+"FittingPrograms/Sivers20/LOGS/"+"model9case1(n3lo)-NPreplicas.txt"
+rStart=150
+rFinish=301
+REPPATH=MAINPATH+"FittingPrograms/Sivers20/LOGS/"+"final(nnlo)-NPreplicas.txt"
 for i in range(rStart,rFinish):
     print('---------------------------------------------------------------')
     print('------------REPLICA: ',rStart," / ",i,' / ',rFinish,'--------------------')

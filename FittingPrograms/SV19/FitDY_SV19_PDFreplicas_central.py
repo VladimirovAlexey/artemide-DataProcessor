@@ -20,7 +20,7 @@ import sys
 sys.path.append(PathToDataProcessor)
 
 ## if this trigger is ON the LHC data will be fit only by shape
-useNormalizedLHCdata=True
+useNormalizedLHCdata=False
 
 #### Starting and final replica (included)
 StartReplica=1
@@ -43,7 +43,7 @@ import DataProcessor.DataMultiSet
 import socket
 PCname=socket.gethostname()
 
-replicaFile=PathToLog+"SV19_NNPDF31_PDFreplica_norm.txt"
+replicaFile=PathToLog+"SV19_NNPDF31_PDFreplica_noA7.txt"
 logFile=PathToLog+PCname+".log"
 
 #%%
@@ -169,7 +169,7 @@ def cutFunc(p):
 theData=DataProcessor.DataMultiSet.DataMultiSet("DYset",loadThisData(['CDF1', 'CDF2', 'D01', 'D02', 'D02m', 
                       'A7-00y10', 'A7-10y20','A7-20y24', 
                       'A8-00y04-norm' if useNormalizedLHCdata else 'A8-00y04',
-                      'A8-04y08-norm' if useNormalizedLHCdata else 'A8-04y12',
+                      'A8-04y08-norm' if useNormalizedLHCdata else 'A8-04y08',
                       'A8-08y12-norm' if useNormalizedLHCdata else 'A8-08y12',
                       'A8-12y16-norm' if useNormalizedLHCdata else 'A8-12y16',
                       'A8-16y20-norm' if useNormalizedLHCdata else 'A8-16y20',
@@ -199,9 +199,9 @@ if useNormalizedLHCdata:
         if s.isNormalized:
             s.normalizationMethod='bestChi2'
 #%%
-# harpy.setNPparameters([2.000, 0.030, 0.254, 8.550, 373.112,  2.529, -5.910, 0.000, 0.000])
+harpy.setNPparameters([2.000, 0.030, 0.254, 8.550, 373.112,  2.529, -5.910, 0.000, 0.000])
 
-# DataProcessor.harpyInterface.PrintChi2Table(setDY,printDecomposedChi2=True)
+DataProcessor.harpyInterface.PrintChi2Table(setDY,printDecomposedChi2=True)
 #%%
 #######################################
 # Main chi2 formula

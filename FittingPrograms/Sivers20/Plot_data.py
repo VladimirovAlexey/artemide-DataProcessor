@@ -22,8 +22,8 @@ import DataProcessor.ArtemideReplicaSet
 #MAINPATH="/home/m/Github/artemide-DataProcessor/"
 MAINPATH="/home/vla18041/LinkData2/arTeMiDe_Repository/DataProcessor/"
 
-#useOrder="nnlo"
-useOrder="n3lo"
+useOrder="nnlo"
+#useOrder="n3lo"
 
 #%%
 #######################################
@@ -68,17 +68,17 @@ harpy.setNPparameters_SiversTMDPDF([5.2, 0.,0.,0.,0., -0.6, 15.9, 0.5, -0.2, 21.
 if(useOrder=="nnlo"):
     ### only SIDIS case
     r1Set=DataProcessor.ArtemideReplicaSet.ReadRepFile("/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/Sivers20/REPS/"+
-                                                  "Sivers20_model9case1(noDY).rep")
+                                                  "Sivers20_BPV20(nnlo-noDY).rep")
     ### SIDIS+DY case
     r2Set=DataProcessor.ArtemideReplicaSet.ReadRepFile("/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/Sivers20/REPS/"+
-                                                  "Sivers20_model9case1.rep")
+                                                  "Sivers20_BPV20(nnlo).rep")
 elif(useOrder=="n3lo"):
     ### only SIDIS case
     r1Set=DataProcessor.ArtemideReplicaSet.ReadRepFile("/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/Sivers20/REPS/"+
-                                                  "Sivers20_model9case1(noDY-n3lo).rep")
+                                                  "Sivers20_BPV20(n3lo-noDY).rep")
     ### SIDIS+DY case
     r2Set=DataProcessor.ArtemideReplicaSet.ReadRepFile("/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/Sivers20/REPS/"+
-                                                  "Sivers20_model9case1(n3lo).rep")
+                                                  "Sivers20_BPV20(n3lo).rep")
 
 #%%
 #########################################################
@@ -112,8 +112,8 @@ def Compute68CI(dd):
 #########################################
 deltaMAX=0.8
 def CheckPoint(setName,p):
-    namesOfExperiments=['compass.sivers.pi+.dpt', 'compass.sivers.pi-.dpt',
-                    'compass.sivers.k+.dpt', 'compass.sivers.k-.dpt',
+    namesOfExperiments=['compass08.sivers.pi+.dpt', 'compass08.sivers.pi-.dpt',
+                    'compass08.sivers.k+.dpt', 'compass08.sivers.k-.dpt',
                     'compass16.sivers.h+.1<z<2.dpt','compass16.sivers.h-.1<z<2.dpt',
                     'compass16.sivers.h+.z>2.dpt' ,'compass16.sivers.h-.z>2.dpt',
                     'hermes.sivers.pi+.3d','hermes.sivers.pi-.3d',
@@ -206,25 +206,25 @@ def ProcessPoint(p):
 import os
 
 listToInclude=['hermes.sivers.pi+.Qint.dx.csv','hermes.sivers.pi+.Q>2.dpt.csv',
- 'compass16.sivers.h-.z>2.dx.csv', 'compass16.sivers.h+.z>2.dx.csv', 'compass.sivers.pi-.dpt.csv',
+ 'compass16.sivers.h-.z>2.dx.csv', 'compass16.sivers.h+.z>2.dx.csv', 'compass08.sivers.pi-.dpt.csv',
  'hermes.sivers.k+.Q<2.dpt.csv', 'hermes.sivers.pi+.Q<2.dpt.csv', 'hermes.sivers.k+.Qint.dx.csv',
- 'compass.sivers.piDY.dQ.csv', 'compass.sivers.k+.dx.csv', 'compass16.sivers.h-.z>2.dpt.csv',
+ 'compass.sivers.piDY.dQ.csv', 'compass08.sivers.k+.dx.csv', 'compass16.sivers.h-.z>2.dpt.csv',
  'compass16.sivers.h+.z>2.dpt.csv', 'hermes.sivers.pi-.Qint.dx.csv', 'compass16.sivers.h+.1<z<2.dpt.csv',
  'star.sivers.W-.dy.csv', 'compass16.sivers.h+.1<z<2.dz.csv', 'compass.sivers.piDY.dqT.csv',
  'compass16.sivers.h-.1<z<2.dx.csv', 'compass16.sivers.h+.z>1.dx.csv', 'hermes.sivers.k+.Qint.dpt.csv',
  'star.sivers.W-.dqT.csv', 'star.sivers.Z.csv', 'hermes.sivers.k+.Q>2.dpt.csv',
  'star.sivers.W+.dy.csv', 'hermes.sivers.k-.Qint.dx.csv', 'hermes.sivers.k+.Q>2.dz.csv',
- 'compass16.sivers.h-.1<z<2.dpt.csv', 'compass.sivers.k+.dpt.csv', 'compass.sivers.pi-.dx.csv',
- 'compass.sivers.k+.dz.csv', 'hermes.sivers.pi+.Qint.dpt.csv', 'jlab.sivers.k+.csv',
+ 'compass16.sivers.h-.1<z<2.dpt.csv', 'compass08.sivers.k+.dpt.csv', 'compass08.sivers.pi-.dx.csv',
+ 'compass08.sivers.k+.dz.csv', 'hermes.sivers.pi+.Qint.dpt.csv', 'jlab.sivers.k+.csv',
  'hermes.sivers.pi-.Qint.dz.csv', 'compass16.sivers.h-.z>1.dx.csv', 'hermes.sivers.pi-.3d.csv',
- 'hermes.sivers.k+.Q<2.dz.csv', 'compass.sivers.k-.dz.csv', 'compass.sivers.pi-.dz.csv',
+ 'hermes.sivers.k+.Q<2.dz.csv', 'compass08.sivers.k-.dz.csv', 'compass08.sivers.pi-.dz.csv',
  'compass16.sivers.h-.1<z<2.dz.csv', 'hermes.sivers.k-.3d.csv', 'jlab.sivers.pi-.csv',
  'hermes.sivers.pi-.Qint.dpt.csv', 'jlab.sivers.pi+.csv',
- 'compass.sivers.pi+.dz.csv', 'compass16.sivers.h+.z>2.dz.csv', 'compass16.sivers.h-.z>2.dz.csv',
- 'compass16.sivers.h+.z>1.dz.csv', 'compass.sivers.piDY.dxF.csv', 'compass.sivers.k-.dpt.csv',
- 'compass.sivers.k-.dx.csv', 'jlab.sivers.k-.csv', 'compass.sivers.pi+.dx.csv',
+ 'compass08.sivers.pi+.dz.csv', 'compass16.sivers.h+.z>2.dz.csv', 'compass16.sivers.h-.z>2.dz.csv',
+ 'compass16.sivers.h+.z>1.dz.csv', 'compass.sivers.piDY.dxF.csv', 'compass08.sivers.k-.dpt.csv',
+ 'compass08.sivers.k-.dx.csv', 'jlab.sivers.k-.csv', 'compass08.sivers.pi+.dx.csv',
  'hermes.sivers.pi+.3d.csv', 'hermes.sivers.k+.Qint.dz.csv', 'compass16.sivers.h+.1<z<2.dx.csv',
- 'compass16.sivers.h-.z>1.dz.csv', 'star.sivers.W+.dqT.csv', 'compass.sivers.pi+.dpt.csv',
+ 'compass16.sivers.h-.z>1.dz.csv', 'star.sivers.W+.dqT.csv', 'compass08.sivers.pi+.dpt.csv',
  'hermes.sivers.pi+.Qint.dz.csv', 'hermes.sivers.k-.Qint.dz.csv', 'compass16.sivers.h+.z>1.dpt.csv',
  'hermes.sivers.pi+.Q<2.dz.csv', 'hermes.sivers.k-.Qint.dpt.csv', 'compass16.sivers.h-.z>1.dpt.csv',
  'hermes.sivers.pi+.Q>2.dz.csv', 'hermes.sivers.k+.3d.csv']

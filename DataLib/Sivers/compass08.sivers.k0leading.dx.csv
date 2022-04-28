@@ -1,0 +1,17 @@
+Name,compass08.sivers.k0leading.dx
+Comment,COMPASS SSA-Sivers k0 leading (differential in x)
+Reference,0802.2160
+Process type,SIDIS
+Number of points,5
+Number of uncorr.errors,1
+Number of corr.errors,0
+Number of norm.errors,0
+List of norm.errors (relative),
+Total cross-section nomalized,False
+List of points 
+Point id,process id,s[GeV^2],<Q>[GeV],Qmin[GeV],Qmax[GeV],<x>,xMin,xMax,<z>,zMin,zMax,<pT>[GeV],pTMin[GeV],pTMax[GeV],xSec,Uncorr.Err.0,Th.Factor,FiducialCuts,yMin,yMax,W2min[GeV^2],W2max[GeV^2],TargetMass[GeV],ProductMass[GeV]
+compass08.sivers.k0leading.dx.0,1 - 1 - 12001,301.03984399999996,1.1958260743101399,1.0,1.8739989327638369,0.00906,0.003,0.013,0.4,0.25,1.0,0.583,0.1,10.0,-0.0206,0.0401,1.0,True,0.1,0.9,25.0,10000.0,0.938,0.139
+compass08.sivers.k0leading.dx.0,1 - 1 - 12001,301.03984399999996,1.4247806848775006,1.0,2.9401714235738026,0.0211,0.013,0.032,0.414,0.25,1.0,0.545,0.1,10.0,-0.0404,0.0329,1.0,True,0.1,0.9,25.0,10000.0,0.938,0.139
+compass08.sivers.k0leading.dx.0,1 - 1 - 12001,301.03984399999996,1.98997487421324,1.0,4.648819204916449,0.04859,0.032,0.08,0.434,0.25,1.0,0.512,0.1,10.0,0.0258,0.0415,1.0,True,0.1,0.9,25.0,10000.0,0.938,0.139
+compass08.sivers.k0leading.dx.0,1 - 1 - 12001,301.03984399999996,2.8618176042508368,1.549606401638816,5.926104960258466,0.10018,0.08,0.13,0.431,0.25,1.0,0.519,0.1,10.0,0.0088,0.0915,1.0,True,0.1,0.9,25.0,10000.0,0.938,0.139
+compass08.sivers.k0leading.dx.0,1 - 1 - 12001,301.03984399999996,4.147288270665544,1.9753683200861554,16.436057921533376,0.19292,0.13,1.0,0.431,0.25,1.0,0.551,0.1,10.0,0.1336,0.122,1.0,True,0.1,0.9,25.0,10000.0,0.938,0.139

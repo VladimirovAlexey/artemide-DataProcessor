@@ -282,24 +282,30 @@ def PrintChi2Table(data,method="default",printSysShift=True,printDecomposedChi2=
     #Only one set in MultiSet of just Set
     if len(chi2Part)==1:
         line="{:{width}} | {:5d} |".format(data.name,data.numberOfPoints,width=maxLength)
+        dataNumP=data.numberOfPoints
+        if(dataNumP==0): dataNumP=1
         if printDecomposedChi2:
             line+=" {:10.3f} | {:10.3f} | {:10.3f} |".format(
-                decChi2[0]/data.numberOfPoints,decChi2[1]/data.numberOfPoints,decChi2[2]/data.numberOfPoints)
+                decChi2[0]/dataNumP,decChi2[1]/dataNumP,decChi2[2]/dataNumP)
         else:
-            line+=" {:10.3f} |".format(chi2T/data.numberOfPoints)
+            line+=" {:10.3f} |".format(chi2T/dataNumP)
         if printSysShift:
             line+=" {:10.3f} |".format(shift*100)
         print(line)
     else:
         for i in range(len(chi2Part)):
             line="{:{width}} | {:5d} |".format(data.sets[i].name,data.sets[i].numberOfPoints,width=maxLength)
+            
+            dataNumP=data.sets[i].numberOfPoints
+            if(dataNumP==0): dataNumP=1
+            
             if printDecomposedChi2:
                 line+=" {:10.3f} | {:10.3f} | {:10.3f} |".format(
-                    decChi2[i][0]/data.sets[i].numberOfPoints,
-                    decChi2[i][1]/data.sets[i].numberOfPoints,
-                    decChi2[i][2]/data.sets[i].numberOfPoints)
+                    decChi2[i][0]/dataNumP,
+                    decChi2[i][1]/dataNumP,
+                    decChi2[i][2]/dataNumP)
             else:
-                line+=" {:10.3f} |".format(chi2Part[i]/data.sets[i].numberOfPoints)
+                line+=" {:10.3f} |".format(chi2Part[i]/dataNumP)
             if printSysShift:
                 line+=" {:10.3f} |".format(shift[i]*100)
             print(line)

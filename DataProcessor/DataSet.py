@@ -86,10 +86,10 @@ class DataSet:
         self.numOfNormErr=-1
         
         self.V=[] # covariance matrix 
-        self.invV=[] # inverse covariance matrix
         self.L=[] # Cholesky decomposition of covariant matrix
         self.matrixA=[] # matrix of systemtic shifts
         self.matrixAinverse=[]
+        self.isVdiagonal=False ## If V is diagonal (i.e. not correlated errors)
         
         # the list of list correlated errors for each point
         # contains point-to-point correlations and normalization correlations
@@ -156,7 +156,7 @@ class DataSet:
         ### 1) fill fields with numbers of errors + fill list of corr.error for each point
         self.numOfUncorrErr=len(self.points[0]["uncorrErr"])
         self.numOfCorrErr=len(self.points[0]["corrErr"])
-        self.numOfNormErr=len(self.normErr)
+        self.numOfNormErr=len(self.normErr)        
         
         for p in self.points:
             if(len(p["uncorrErr"]) != self.numOfUncorrErr):
@@ -165,13 +165,17 @@ class DataSet:
                 print('DataSet.Finalize:: Mismatch in the leght of corrErr for point',p.identifier,' in data set: ',self.name)
             
         
-        ### 2) Calculate covariace matrices
+        ### 2) Calculate covariace matrices        
+        
         if computeCovarianceMatrix:
+            if(self.numOfCorrErr==0 and self.numOfNormErr==0) :
+                self.isVdiagonal=True
+            else:
+                self.isVdiagonal=False
             self._computeListOfCorrErrors()
             self._computeListOfVariances()
             self._CalculateV()
             self._CholeskyDecompositionForV()
-            self.invV=numpy.linalg.inv(self.V)
             self._CalculateA()
             self.matrixAinverse=numpy.linalg.inv(self.matrixA)
         
@@ -243,27 +247,17 @@ class DataSet:
         
         for i in range(self.numberOfPoints):
             for j in range(self.numberOfPoints):
-                ## diagonal term
-                if i==j:
-                    a=numpy.array(self.points[i]["uncorrErr"])                    
-                    self.V[i][j]+=numpy.sum(a**2)
-                
-                ## correlated errors 
-                a=numpy.array(self.points[i]["corrErr"])
-                b=numpy.array(self.points[j]["corrErr"])
-                
-                self.V[i][j]+=numpy.sum(a*b)
-                
-                ## normalization errors
-                a=numpy.array(self.normErr)*self.points[i]["xSec"]
-                b=numpy.array(self.normErr)*self.points[j]["xSec"]
-                
-                self.V[i][j]+=numpy.sum(a*b)
+                ## diagonal term is uncorrelated error SQUARED, already precalculated
+                if i==j:                    
+                    self.V[i][j]+=self._listOfVariances[i]
+                ## off-diagonal term is correlated errors, already precalculated
+                self.V[i][j]+=numpy.dot(self._listOfCorrErrors[i],self._listOfCorrErrors[j])
        
      
     def _computeListOfCorrErrors(self):
         """
-        Compute the list of correlated errors for each point.
+        Compute the list of correlated errors for each point. 
+        It is equals to [corrErr]+[xSec*normErr]
         """
         dummy=numpy.zeros((self.numberOfPoints,self.numOfCorrErr+self.numOfNormErr))
         
@@ -296,13 +290,17 @@ class DataSet:
         None.
 
         """
-        ### code is taken from Rosseta project
-        self.L = [[0.0] * len(self.V) for _ in range(len(self.V))]
-        for i, (Ai, Li) in enumerate(zip(self.V, self.L)):
-            for j, Lj in enumerate(self.L[:i+1]):
-                s = sum(Li[k] * Lj[k] for k in range(j))
-                Li[j] = numpy.sqrt(Ai[i] - s) if (i == j) else \
-                          (1.0 / Lj[j] * (Ai[j] - s))
+        #### if the V is diagonal then L=sqrt(V)
+        if(self.isVdiagonal):
+            self.L=numpy.sqrt(self.V)
+        else:
+            ### code is taken from Rosseta project
+            self.L = [[0.0] * len(self.V) for _ in range(len(self.V))]
+            for i, (Ai, Li) in enumerate(zip(self.V, self.L)):
+                for j, Lj in enumerate(self.L[:i+1]):
+                    s = sum(Li[k] * Lj[k] for k in range(j))
+                    Li[j] = numpy.sqrt(Ai[i] - s) if (i == j) else \
+                              (1.0 / Lj[j] * (Ai[j] - s))
                           
     def _MultiplyByLInv(self,a):
         """
@@ -332,6 +330,11 @@ class DataSet:
         The matrix A defined as 
         A[a,b]=delta[a,b]+sum(corrErr[a,i]corrErr[b,i]/(uncorrErr[i]^2), i in number of points)
         """
+        
+        if(self.isVdiagonal):
+            self.matrixA=numpy.identity(0)
+            return
+        
         ## determine the number of correlated errors
         sc=self.numOfCorrErr+self.numOfNormErr
         
@@ -401,7 +404,6 @@ class DataSet:
 
         """
         diffX=[(theoryPrediction[i]-self.points[i]["xSec"]) for i in range(self.numberOfPoints)]
-        ##return numpy.matmul(diffX,numpy.matmul(self.invV,diffX))
         Lx=self._MultiplyByLInv(diffX)
         return numpy.dot(Lx,Lx)
     
@@ -574,6 +576,7 @@ class DataSet:
             # update xSec value
             # (old+uncorr*RND+corr*globalRND)*(1+norm)
             ## uncorrelated part
+            
             for err in p["uncorrErr"]:
                 pNew["xSec"]+=numpy.random.normal()*err
             # correlated part
@@ -581,6 +584,7 @@ class DataSet:
                 pNew["xSec"]+=corrRND[i]*p["corrErr"][i]
             # multiply by norm-error-distirbution
             pNew["xSec"]=pNew["xSec"]*resFactor
+            
             
 
             ##the point-errors should be rescaled by normalization factor
@@ -592,6 +596,7 @@ class DataSet:
                 pNew["corrErr"].append(err*resFactor)
             #
             dNew.AddPoint(pNew)
+            
         
         dNew.FinalizeSet()   
         return dNew

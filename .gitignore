@@ -6,6 +6,9 @@ a.out
 *.out
 *.mod
 
+#logs
+*.log
+
 #artemide temporary files
 aTMDe-temporary
 

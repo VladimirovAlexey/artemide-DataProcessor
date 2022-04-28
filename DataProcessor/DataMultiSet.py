@@ -190,6 +190,7 @@ class DataMultiSet:
 
         """
         nSets=[s.CutData(cutFunction,addName,computeCovarianceMatrix) for s in self.sets]
+        nSets= [x for x in nSets if x.numberOfPoints != 0]
 
         return DataMultiSet(self.name+addName,nSets)
     

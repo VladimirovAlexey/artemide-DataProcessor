@@ -45,6 +45,7 @@ print("Done.  =>     Convert to numbers ...")
 data_current=data_from_f[12:17]
 
 for i in range(len(data_current)):
+    #print(data_current[i])
     data_current[i]=data_current[i].split(",")    
     data_current[i]=[float(j) for j in data_current[i]]
 
@@ -82,14 +83,15 @@ for i in range(len(data_current)):
 
 print("Done.  ")
 
-DataCurrent.SaveToCSV(path_to_save+DataCurrent.name+".csv")
+#DataCurrent.SaveToCSV(path_to_save+DataCurrent.name+".csv")
 
 #%%
 ###### PW- ######
 ######    d PT             ######
-data_current=data_from_f[22:26]
+data_current=data_from_f[21:26]
 
 for i in range(len(data_current)):
+    #print(data_current[i])
     data_current[i]=data_current[i].split(",")    
     data_current[i]=[float(j) for j in data_current[i]]
 
