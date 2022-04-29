@@ -13,15 +13,20 @@ Created on Fri Sep  3 14:35:35 2021
 #######################################
 # importing libraries
 #######################################
+import os
+ROOT_DIR = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', '..'))+"/"
 
+ATMDE_DIR = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', '..','..'))+"/artemide/"
+#%%
 import sys
+
 import time
 import numpy
-sys.path.append("/home/vla18041/LinkData2/arTeMiDe_Repository/DataProcessor")
+sys.path.append(ROOT_DIR)
 import DataProcessor.harpyInterface
 import DataProcessor.ArtemideReplicaSet
 
-MAINPATH="/home/vla18041/LinkData2/arTeMiDe_Repository/DataProcessor/"
+MAINPATH=ROOT_DIR
 #%%
 #######################################
 #Initialize artemide with a replica -2
@@ -40,7 +45,7 @@ harpy.setNPparameters([2.0340, 0.0299, 0.2512, 7.7572,334.6108, 2.4543,-4.8203, 
 
 #%%
 
-rSet=DataProcessor.ArtemideReplicaSet.ReadRepFile("/home/vla18041/LinkData2/arTeMiDe_Repository/artemide/Models/SV19/Replicas/"+
+rSet=DataProcessor.ArtemideReplicaSet.ReadRepFile(ATMDE_DIR+"Models/SV19/Replicas/"+
                                                   "DY_n3lo/DY_NNPDF31_n3lo.rep")
                                                   # "Sivers20_model9case1(noDY-n3lo).rep")
 
