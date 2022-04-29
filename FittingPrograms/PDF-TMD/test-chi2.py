@@ -14,40 +14,49 @@ Created on Fri Sep  3 14:35:35 2021
 # importing libraries
 #######################################
 import os
-ROOT_DIR = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', '..'))+"/"
+DATAPROC_DIR = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', '..'))+"/"
+ROOT_DIR = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', '..','..'))+"/"
 
-ATMDE_DIR = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', '..','..'))+"/artemide/"
+#PDFinUse="SV19"
+#PDFinUse="HERA20"
+PDFinUse="NNPDF31"
+#PDFinUse="CT18"
+#PDFinUse="MSHT20"
+
+if(PDFinUse=="SV19"):
+    ATMDE_DIR = ROOT_DIR+"artemide/"
+else:
+    ATMDE_DIR = ROOT_DIR+"artemide-PDF/"
+
 #%%
 import sys
 
-import time
 import numpy
-sys.path.append(ROOT_DIR)
+sys.path.append(DATAPROC_DIR)
+sys.path.remove(os.path.realpath(os.path.join(os.path.dirname(__file__), '..', '..','..'))+'/artemide/harpy')
+sys.path.append(ATMDE_DIR+'harpy')
+
 import DataProcessor.harpyInterface
 import DataProcessor.ArtemideReplicaSet
 
-MAINPATH=ROOT_DIR
+
+
 #%%
 #######################################
 #Initialize artemide with a replica -2
 #######################################
 import harpy
-path_to_constants=MAINPATH+"FittingPrograms/SV19/Constants-files/"
-harpy.initialize(path_to_constants+"DY_n3lo/const-NNPDF31_n3lo")
-#harpy.initialize(path_to_constants+"DY_nnlo/const-HERA20_NNLO")
-#harpy.initialize(path_to_constants+"DY_n3lo/const-HERA20_n3lo")
-#harpy.initialize(path_to_constants+"DY_nnlo/const-MMHT14_NNLO")
-#harpy.initialize(path_to_constants+"DY_nnlo/const-CT14_NNLO")
-#harpy.initialize(path_to_constants+"DY_nnlo/const-PDF4LHC_NNLO")
-harpy.setNPparameters([2.0340, 0.0299, 0.2512, 7.7572,334.6108, 2.4543,-4.8203, 0.1000,  0.0000])
-#harpy.setNPparameters_TMDR(-2)
-#harpy.setNPparameters_uTMDPDF(-2)
 
-#%%
-
-rSet=DataProcessor.ArtemideReplicaSet.ReadRepFile(ATMDE_DIR+"Models/SV19/Replicas/"+
+if(PDFinUse=="SV19"):
+    harpy.initialize(DATAPROC_DIR+"FittingPrograms/SV19/Constants-files/DY_n3lo/const-NNPDF31_n3lo")
+    rSet=DataProcessor.ArtemideReplicaSet.ReadRepFile(ATMDE_DIR+"Models/SV19/Replicas/"+
                                                   "DY_n3lo/DY_NNPDF31_n3lo.rep")
-                                                  # "Sivers20_model9case1(noDY-n3lo).rep")
+    
+else:
+    harpy.initialize(ROOT_DIR
+        +"artemide/Models/PDFbias22/Constants-files/const-"+PDFinUse+"_NNLO_12p")
+    rSet=DataProcessor.ArtemideReplicaSet.ReadRepFile(ROOT_DIR
+        +"artemide/Models/PDFbias22/REPS/SV21-"+PDFinUse+"-nnlo-EXP.rep")
 
 rSet.SetReplica()
 
@@ -61,7 +70,7 @@ def loadThisData(listOfNames):
     dataCollection=[]
     for name in listOfNames:
         if( name==''): continue
-        loadedData=DataProcessor.DataSet.LoadCSV(ROOT_DIR+"DataLib/unpolDY/"+name+".csv")
+        loadedData=DataProcessor.DataSet.LoadCSV(DATAPROC_DIR+"DataLib/unpolDY/"+name+".csv")
         dataCollection.append(loadedData)   
 
     return dataCollection
@@ -126,9 +135,12 @@ theData=DataProcessor.DataMultiSet.DataMultiSet("DYset",setHE+setLE)
 
 setDY=theData.CutData(cutFunc) 
 
-print('Loaded ', setDY.numberOfSets, 'data sets with ', sum([i.numberOfPoints for i in setDY.sets]), 'points.')
-print('Loaded experiments are', [i.name for i in setDY.sets])
+ss=setDY
+print('Loaded ', ss.numberOfSets, 'data sets with ', sum([i.numberOfPoints for i in ss.sets]), 'points.')
+print('Loaded experiments are', [i.name for i in ss.sets])
 
+#%%
+DataProcessor.harpyInterface.PrintChi2Table(setDY,printDecomposedChi2=True)
 #%%
 
 setLHCb=loadThisData(['LHCb13(2021)','LHCb13_dy(2021)'])
@@ -136,15 +148,30 @@ theDataLHCb=DataProcessor.DataMultiSet.DataMultiSet("DYset",setLHCb)
 
 setLHCb=theDataLHCb.CutData(cutFunc) 
 
-print('Loaded ', setLHCb.numberOfSets, 'data sets with ', sum([i.numberOfPoints for i in setLHCb.sets]), 'points.')
-print('Loaded experiments are', [i.name for i in setLHCb.sets])
+ss=setLHCb
+print('Loaded ', ss.numberOfSets, 'data sets with ', sum([i.numberOfPoints for i in ss.sets]), 'points.')
+print('Loaded experiments are', [i.name for i in ss.sets])
                       
+#%%
+
+setCMS13=loadThisData(['CMS13_dQ_50to76','CMS13_dQ_76to106',
+                       'CMS13_dQ_106to170','CMS13_dQ_170to350',
+                       'CMS13_dQ_350to1000'])
+theDataCMS13=DataProcessor.DataMultiSet.DataMultiSet("DYset",setCMS13)
+
+setCMS13=theDataCMS13.CutData(cutFunc) 
+
+ss=setCMS13
+print('Loaded ', ss.numberOfSets, 'data sets with ', sum([i.numberOfPoints for i in ss.sets]), 'points.')
+print('Loaded experiments are', [i.name for i in ss.sets])
 
 #%%
 rSet.SetReplica()
-#harpy.setNPparameters([1.93, 0.0434,0.195, 9.117, 444., 2.12, -4.89,0.,0.,0.258, 0.478, 0.484, 0.459])
-#DataProcessor.harpyInterface.PrintChi2Table(setDY,printDecomposedChi2=True)
 DataProcessor.harpyInterface.PrintChi2Table(setLHCb,printDecomposedChi2=True)
+
+#%%
+rSet.SetReplica()
+DataProcessor.harpyInterface.PrintChi2Table(setCMS13,printDecomposedChi2=True)
 
 #%%
 qq=DataProcessor.harpyInterface.ComputeXSec(setLHCb.sets[1])
