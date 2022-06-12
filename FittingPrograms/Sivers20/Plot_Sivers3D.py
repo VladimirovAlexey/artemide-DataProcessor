@@ -1,9 +1,9 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Thu Jan 24 16:40:59 2019
+Created on Thu Oct 22 19:51:14 2020
 
-@author: vla18041
+@author: alexey
 """
 
 #######################################
