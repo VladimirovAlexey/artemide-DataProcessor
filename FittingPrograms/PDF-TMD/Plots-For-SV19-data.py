@@ -13,15 +13,19 @@ Created on Fri Sep  3 14:35:35 2021
 #######################################
 # importing libraries
 #######################################
+import os
+ROOT_DIR = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', '..'))+"/"
 
+ATMDE_DIR = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', '..','..'))+"/artemide/"
+#%%
 import sys
 import numpy
-sys.path.append("/home/vla18041/LinkData2/arTeMiDe_Repository/DataProcessor")
+sys.path.append(ROOT_DIR)
 import DataProcessor.harpyInterface
 import DataProcessor.ArtemideReplicaSet
 import DataProcessor.DataMultiSet
 
-MAINPATH="/home/vla18041/LinkData2/arTeMiDe_Repository/DataProcessor/"
+MAINPATH=ROOT_DIR 
 #%%
 #######################################
 #Initialize artemide with a replica -2
@@ -38,7 +42,7 @@ harpy.setNPparameters([2.0340, 0.0299, 0.2512, 7.7572,334.6108, 2.4543,-4.8203, 
 def loadThisData(listOfNames):    
     import DataProcessor.DataSet
     
-    path_to_data="/home/vla18041/LinkData2/arTeMiDe_Repository/DataProcessor/DataLib/unpolDY/"
+    path_to_data=ROOT_DIR+"DataLib/unpolDY/"
     
     
     dataCollection=[]
@@ -129,12 +133,13 @@ print('Loaded experiments are', [i.name for i in setDY.sets])
 
 #%%
 
-rSet=DataProcessor.ArtemideReplicaSet.ReadRepFile("/home/vla18041/LinkData2/arTeMiDe_Repository/artemide/Models/SV19/Replicas/"+
-                                                  "DY_n3lo/DY_NNPDF31_n3lo.rep")
+rSet=DataProcessor.ArtemideReplicaSet.ReadRepFile(ATMDE_DIR+"Models/SV19/Replicas/DY_n3lo/DY_NNPDF31_n3lo.rep")
                                                   # "Sivers20_model9case1(noDY-n3lo).rep")
 
 rSet.SetReplica()
 
+#%%
+DataProcessor.harpyInterface.PrintChi2Table(setDY,printDecomposedChi2=True)
 
 #%%
 # #######################################################
@@ -249,7 +254,6 @@ rSet.SetReplica()
 # ######################################
 import glob
 import pickle
-import numpy
 
 # fileList=glob.glob('/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/TMD<->PDF/Figures/SV19-noFIT/xSec-SV19/*.pick')
 # centralPath='/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/TMD<->PDF/Figures/SV19-noFIT/xSec-SV19/0000.pick'
@@ -274,3 +278,47 @@ with open('/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/TMD<->PDF/Figures
     file.write("Point id, xSec, Std \n")
     for i in range(len(pointNames)):
         file.write(pointNames[i]+', '+'{:g}'.format(central[i])+', '+'{:g}'.format(std[i])+" \n")
+        
+#%%
+# ######################################
+# ## Generate teh data for the smooth plot of the several replicas For ATLAS, and LHCb cases.
+# ## Copy data nad plit at bins into smaller bins
+# ######################################
+import copy
+setsToSplit=[setDYplot.sets[8],setDYplot.sets[9],setDYplot.sets[10]
+             ,setDYplot.sets[19],setDYplot.sets[20]]
+
+step=0.1
+setToAdd=[]
+for s in setsToSplit:
+    set1=DataProcessor.DataSet.DataSet(s.name,"DY")
+    for p in s.points:
+        DeltaQT=p["qT"][1]-p["qT"][0]
+        num=int(DeltaQT/step)
+        for i in range(num):
+            pNew=copy.deepcopy(p)
+            pNew["qT"]=[p["qT"][0]+i*step,p["qT"][0]+(i+1)*step]
+            pNew["<qT>"]=numpy.mean(pNew["qT"])
+            pNew["thFactor"]=2/(pNew["qT"][1]-pNew["qT"][0])
+            set1.AddPoint(pNew)
+    set1.FinalizeSet()
+    setToAdd.append(set1)
+    
+FineData=DataProcessor.DataMultiSet.DataMultiSet("DYfine",setToAdd)
+
+#%%
+######
+## runs throwgh the replicas and save the plots
+######
+path="/data/WorkingFiles/TMD/Fit_Notes/TMD<->PDF/Figures/SV19-noFIT/ContiniousPlots/"
+
+for j in range(0,101):  
+    harpy.setPDFreplica(j)
+    rSet.SetReplica()
+    print("Case :",j)
+    xSec0=DataProcessor.harpyInterface.ComputeXSec(FineData)
+    for s in range(FineData.numberOfSets):
+        with open(path+FineData.sets[s].name+"_"+str(j)+".csv", "w") as file:
+            for i in range(FineData._i1[s],FineData._i2[s]):
+                file.write('{:g}'.format(FineData.points[i]["<qT>"])+', '+'{:g}'.format(xSec0[i])+" \n")
+    
