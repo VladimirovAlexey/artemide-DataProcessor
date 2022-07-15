@@ -635,7 +635,10 @@ class DataSet:
         file.write("List of points \n")
         
         ### for weighted processes I add a column
-        includeWeightProc=('weightProcess' in list(self.points[0].keys()))
+        if(len(self.points)==0):
+            includeWeightProc=False
+        else:
+            includeWeightProc=('weightProcess' in list(self.points[0].keys()))
         ### Points table header
         
         file.write("Point id,process id,")
