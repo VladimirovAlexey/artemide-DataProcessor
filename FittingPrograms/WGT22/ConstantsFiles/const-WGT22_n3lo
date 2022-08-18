@@ -74,10 +74,11 @@
  
 *E   : ----hPDF sets----
 *p1  : total number of PDFs to initialize (0= initialization is skipped)
-           0
+           1
 *p2  : reference number for hadrons
-   -1
+   1
 *p3  : LHAPDF set names for hadrons (line-by-line corresponding to reference number
+ NNPDFpol11_100
 *p4  : list of initialization replicas
     0
  
@@ -134,7 +135,7 @@
  
 *A   : ---- Main definitions ----
 *p1  : Order of evolution
- NNLO
+ N3LO
 *p2  : Type of evolution solution (1 = improved D solution ,2 = improved gamma solution, 3 = fixed mu)
            3
 *B   : ---- Parameters of NP model ----
@@ -293,7 +294,7 @@
  T
 *A   : ---- Main definitions ----
 *p1  : Order of coefficient function
- NNLO
+ N3LO
 *p2  : Use the exact values of x1 and x2 (include qT/Q correction)
  F
 *p3  : Use resummation of pi^2-corrections in hard coefficient
@@ -318,7 +319,7 @@
  T
 *A   : ---- Main definitions ----
 *p1  : Order of coefficient function
- NNLO
+ N3LO
 *p2  : Use transverse momentum corrections in kinematics
  T
 *p3  : Use target mass corrections in kinematics
@@ -478,9 +479,9 @@
 *p2  : Include gluon TMDs into the grid
  F
 *p3  : total number of PDFs added to the grid
-    1
+           1
 *p4  : reference numbers for hadrons
-   1
+    1
 *E   : ---- Parameters of grid ----
 *p1  : xGrid_Min the minimal value of x in grid (max=1), make sure that it is enough)
    1.0000000000000000E-003
