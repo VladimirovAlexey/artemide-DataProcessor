@@ -73,7 +73,7 @@ def cutFunc(p):
             return False , p
     
     if p["type"]=="SIDIS":   
-        deltaTEST=0.3
+        deltaTEST=0.35
         delta=p["<pT>"]/p["<z>"]/p["<Q>"]        
     
     
@@ -107,7 +107,12 @@ print('Loaded experiments are', [i.name for i in setALT.sets])
 #SaveToLog('Loaded '+ str(setDY.numberOfSets) + ' data sets with '+str(sum([i.numberOfPoints for i in setDY.sets])) + ' points. \n'
 #+'Loaded experiments are '+str([i.name for i in setDY.sets]))
 #%%
-DataProcessor.harpyInterface.PrintChi2Table(setALT,printDecomposedChi2=True)
+DataProcessor.harpyInterface.PrintChi2Table(setALT,printDecomposedChi2=True,method="central")
+
+#%%
+def PenaltyTerm(x):
+    if(x[0]<1): return 0.1*(1-x[0])**4
+    else:  return 0.
 #%%
 totalN=setALT.numberOfPoints
 
@@ -116,7 +121,9 @@ def chi_2(x):
     harpy.setNPparameters_wgtTMDPDF(x)
     print('np set =',["{:8.3f}".format(i) for i in x], end =" ")    
     
-    ccSIDIS2,cc3=DataProcessor.harpyInterface.ComputeChi2(setALT)
+    ccSIDIS2,cc3=DataProcessor.harpyInterface.ComputeChi2(setALT,method="central")
+    
+    ccSIDIS2+=PenaltyTerm(x)
     
     cc=(ccSIDIS2)/totalN
     endT=time.time()
@@ -128,9 +135,9 @@ def chi_2(x):
 
 from iminuit import Minuit
 
-initialValues=(0.2,1)
+initialValues=(1.5,1)
 
-initialErrors=(0.05,  0.05)
+initialErrors=(0.1,  0.1)
 searchLimits=(None,None)
 
 # True= FIX
@@ -153,12 +160,70 @@ print(m.params)
 
 harpy.setNPparameters(list(m.values))
 
-DataProcessor.harpyInterface.PrintChi2Table(setALT,printDecomposedChi2=True)
+DataProcessor.harpyInterface.PrintChi2Table(setALT,printDecomposedChi2=True,method="central")
 
-m.minos()
+#m.minos()
 
-print(m.params)
+#print(m.params)
 
-harpy.setNPparameters(list(m.values))
+#harpy.setNPparameters(list(m.values))
 
-DataProcessor.harpyInterface.PrintChi2Table(setALT,printDecomposedChi2=True)
+#DataProcessor.harpyInterface.PrintChi2Table(setALT,printDecomposedChi2=True)
+
+#%%
+DataProcessor.harpyInterface.PrintPerPointContribution(setALT,method="central",output="id,x,del")
+
+
+#%%
+
+def MinForReplica():
+    
+    
+    def repchi_2(x):        
+        startT=time.time()
+        harpy.setNPparameters_wgtTMDPDF(x)
+        #print('np set =',["{:8.3f}".format(i) for i in x], end =" ")    
+            
+        ccSIDIS2,cc3=DataProcessor.harpyInterface.ComputeChi2(repDataSIDIS,method="central")
+        
+        ccSIDIS2+=PenaltyTerm(x)
+        
+        cc=(ccSIDIS2)/totalNnew
+        
+        endT=time.time()
+        #print(':->',cc,'       t=',endT-startT)
+        return ccSIDIS2
+    
+    repDataSIDIS=setALT.GenerateReplica()
+    totalNnew=repDataSIDIS.numberOfPoints    
+    
+    localM = Minuit(repchi_2, initialValues)
+    localM.errors=initialErrors
+    localM.limits=searchLimits
+    localM.fixed=parametersToMinimize
+    localM.errordef=1    
+    localM.tol=0.0001*totalN*10000 ### the last 0.0001 is to compensate MINUIT def
+    localM.strategy=1
+
+    localM.migrad()
+    
+    chi2Central=chi_2(list(localM.values))
+    
+    return [localM.fval,chi2Central,list(localM.values)]
+
+#%%
+#
+# Generate pseudo data and minimise   100 times
+#
+numOfReplicas=1000
+REPPATH=MAINPATH+"/FittingPrograms/WGT22/LOGS/"+"l12(d<0.35;penalty)-replicas.txt"
+for i in range(numOfReplicas):
+    print('---------------------------------------------------------------')
+    print('------------REPLICA ',i,'/',numOfReplicas,'--------------------')
+    print('---------------------------------------------------------------')
+    repRes=MinForReplica()
+    print(repRes)
+    f=open(REPPATH,"a+")
+    print('SAVING >>  ',f.name)
+    f.write(str(repRes)+"\n")
+    f.close()

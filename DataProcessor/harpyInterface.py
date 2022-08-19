@@ -117,6 +117,8 @@ def _ComputeXSec_Data(data,method="default"):
                                     [d["<x>"] for d in data.points],
                                     [d["<Q>"] for d in data.points],
                                     [[d["M_target"],d["M_product"]] for d in data.points])
+    else:
+        raise ValueError("Method is unknown.")
      
     YY=data.MatchWithData(XX)
     return YY
@@ -323,3 +325,94 @@ def PrintChi2Table(data,method="default",printSysShift=True,printDecomposedChi2=
         print(line)
         
     print("Computation time = ",endT-startT,' sec.')
+    
+def PrintPerPointContribution(data,method="default",output="id"):
+    """
+    Prints a table of contribution to chi^2 per point (only diagonal unceranties are included)
+
+    Parameters
+    ----------
+    data : DataSet or DataMultiSet
+        DESCRIPTION.
+    method : TYPE, optional
+        DESCRIPTION. The default is "default".
+    output : string, split by commas
+        What to output, can contain, x,del,id. The default is "id". (TO BE ADDED MORE)
+
+    Returns
+    -------
+    None.
+
+    """
+    outputlist=output.split(",")
+    
+    line=""
+    line2=""
+    if("id" in outputlist):    
+        idLength=max([len(p["id"]) for p in data.points])
+        if(idLength<10): idLength=10
+        line+="{:{width}}".format("name",width=idLength)+' | '
+        line2+="{:-<{width}}".format("",width=idLength)+'-|-'
+    else:
+        line+=" "
+        line2+="-"
+    if("x" in outputlist):
+        ### determining size for x variables
+        xff=min([p["x"][0] for p in data.points])
+        if(xff<0.0001): xW=5
+        elif(xff<0.001): xW=4
+        elif(xff<0.01): xW=3
+        else: xW=2
+        
+        ## total size of x-cell
+        #[0.xW,0.xW]=2xW+7
+        xLength=2*xW+7
+        line+="{:{width}}".format(" x",width=xLength)+' | '
+        line2+="{:-<{width}}".format("",width=xLength)+'-|-'
+    if("del" in outputlist):        
+        ### determining size for del variables {:6.3f}
+        delLength=6 
+        line+="{:{width}}".format(" delta",width=delLength)+' | '
+        line2+="{:-<{width}}".format("",width=delLength)+'-|-'
+        
+    
+    line+=' dChi^2   '+' | '
+    line2+='----------'+'-|-'
+
+    print(line)
+    print(line2)
+    
+    def PrintP(p,chi2):
+        line=""
+        if("id" in outputlist):
+            line+="{:{width}} |".format(p["id"],width=idLength)
+        if("x" in outputlist):
+            line+=" [{:{p1}.{p2}f},{:{p1}.{p2}f}] |".format(p["x"][0],p["x"][1],p1=xW+2,p2=xW)
+        if("del" in outputlist):
+            if(p["type"]=="DY"):
+                ddd=p["<qT>"]/p["<Q>"]
+            elif(p["type"]=="SIDIS"):
+                ddd=p["<pT>"]/p["<Q>"]/p["<z>"]
+            else: raise ValueError("Unknown process")
+            line+=" {:6.3f} |".format(ddd)
+        line+=" {:10.3f} |".format(chi2)
+        print(line)
+    
+    if(isinstance(data, DataSet.DataSet)):
+        YY=ComputeXSec(data,method)
+        ZZ=[(data.points[i]["xSec"]-YY[i])**2/(numpy.sum(numpy.array(data.points[i]["uncorrErr"])**2)) for i in range(len(YY))]
+        for i in range(len(YY)):
+            PrintP(data.points[i],ZZ[i])
+        print(line2)
+        
+    elif(isinstance(data, DataMultiSet.DataMultiSet)):
+        for ss in data.sets:
+            YY=ComputeXSec(ss,method)
+            ZZ=[(ss.points[i]["xSec"]-YY[i])**2/(numpy.sum(numpy.array(ss.points[i]["uncorrErr"])**2)) for i in range(len(YY))]
+            
+            print(ss.name)
+            print(line2)
+            
+            for i in range(len(YY)):
+                PrintP(ss.points[i],ZZ[i])
+            print(line2)
