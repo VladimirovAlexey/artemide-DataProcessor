@@ -44,7 +44,7 @@ elif(useOrder=="n3lo"):
     harpy.setNPparameters_TMDR([2.0, 0.04843])
     harpy.setNPparameters_uTMDPDF([0.1425, 4.8199, 580.9, 2.3889, -1.0683, 0.0,  0.0014, 0.442, 4.14])
     harpy.setNPparameters_uTMDFF([0.2797, 0.4469, 0.43215, 0.63246])
-    harpy.setNPparameters_wgtTMDPDF([0.2, 1.0])
+    harpy.setNPparameters_wgtTMDPDF([1.5, 1.0])
 #%%
 def loadThisData(listOfNames):    
     import DataProcessor.DataSet
@@ -62,15 +62,7 @@ def loadThisData(listOfNames):
 #%%
 ##################Cut function
 def cutFunc(p):
-    import copy
-    
-    if p["type"]=="DY":
-        deltaTEST=0.3
-        delta=p["<qT>"]/p["<Q>"]        
-        
-        
-        if(9<p["<Q>"]<11):#UPSILON resonance-bin
-            return False , p
+    import copy 
     
     if p["type"]=="SIDIS":   
         deltaTEST=0.35
@@ -90,14 +82,18 @@ def cutFunc(p):
     
         
 #    return delta<0.5 and p.qT_avarage<80
-    return delta<deltaTEST, p
+    return delta<deltaTEST and p["<Q>"]>1.41, p
 
 #%%
 ### Loading the SIDIS data set
 theData=DataProcessor.DataMultiSet.DataMultiSet("ALTset",loadThisData([
                       'hermes3D.ALT.pi+','hermes3D.ALT.pi-',
                       'hermes3D.ALT.k+','hermes3D.ALT.k-',
-                      'compass16.ALT.h+.2<z.dpt','compass16.ALT.h-.2<z.dpt']))
+                      'compass16.ALT.h+.2<z.dpt','compass16.ALT.h-.2<z.dpt',
+                      'compass16.ALT.h+.2<z.dz','compass16.ALT.h-.2<z.dz',
+                      'compass16.ALT.h+.2<z.dx','compass16.ALT.h-.2<z.dx'#,
+                      #'JLab6.ALT.pi+','JLab6.ALT.pi-'
+                      ]))
 
 setALT=theData.CutData(cutFunc) 
 
@@ -107,12 +103,15 @@ print('Loaded experiments are', [i.name for i in setALT.sets])
 #SaveToLog('Loaded '+ str(setDY.numberOfSets) + ' data sets with '+str(sum([i.numberOfPoints for i in setDY.sets])) + ' points. \n'
 #+'Loaded experiments are '+str([i.name for i in setDY.sets]))
 #%%
+harpy.setNPparameters_wgtTMDPDF([0.518,0.414])
+
 DataProcessor.harpyInterface.PrintChi2Table(setALT,printDecomposedChi2=True,method="central")
 
 #%%
 def PenaltyTerm(x):
-    if(x[0]<1): return 0.1*(1-x[0])**4
-    else:  return 0.
+    return 0
+    #if(x[0]<0.5): return 10.*(numpy.exp((0.5-x[0])**4)-1)
+    #else:  return 0.
 #%%
 totalN=setALT.numberOfPoints
 
@@ -138,7 +137,7 @@ from iminuit import Minuit
 initialValues=(1.5,1)
 
 initialErrors=(0.1,  0.1)
-searchLimits=(None,None)
+searchLimits=((-5,5),(-10,10))
 
 # True= FIX
 parametersToMinimize=(False, False)
@@ -171,7 +170,9 @@ DataProcessor.harpyInterface.PrintChi2Table(setALT,printDecomposedChi2=True,meth
 #DataProcessor.harpyInterface.PrintChi2Table(setALT,printDecomposedChi2=True)
 
 #%%
-DataProcessor.harpyInterface.PrintPerPointContribution(setALT,method="central",output="id,x,del")
+
+import DataProcessor.harpyInterface
+DataProcessor.harpyInterface.PrintPerPointContribution(setALT,method="central",output="id,<Q>,<x>,del")
 
 
 #%%
@@ -216,7 +217,7 @@ def MinForReplica():
 # Generate pseudo data and minimise   100 times
 #
 numOfReplicas=1000
-REPPATH=MAINPATH+"/FittingPrograms/WGT22/LOGS/"+"l12(d<0.35;penalty)-replicas.txt"
+REPPATH=MAINPATH+"/FittingPrograms/WGT22/LOGS/"+"l12(d<0.35;Q2>2)-replicas.txt"
 for i in range(numOfReplicas):
     print('---------------------------------------------------------------')
     print('------------REPLICA ',i,'/',numOfReplicas,'--------------------')

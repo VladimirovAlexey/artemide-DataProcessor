@@ -326,7 +326,7 @@ def PrintChi2Table(data,method="default",printSysShift=True,printDecomposedChi2=
         
     print("Computation time = ",endT-startT,' sec.')
     
-def PrintPerPointContribution(data,method="default",output="id"):
+def PrintPerPointContribution(data,method="default",output="id",minValue=0.):
     """
     Prints a table of contribution to chi^2 per point (only diagonal unceranties are included)
 
@@ -337,7 +337,10 @@ def PrintPerPointContribution(data,method="default",output="id"):
     method : TYPE, optional
         DESCRIPTION. The default is "default".
     output : string, split by commas
-        What to output, can contain, x,del,id. The default is "id". (TO BE ADDED MORE)
+        What to output, can contain, x,<x>,<Q>,del,id. The default is "id". (TO BE ADDED MORE)
+        
+    minValue : float
+        The value of chi^2 less that which the points are nor shown
 
     Returns
     -------
@@ -369,6 +372,29 @@ def PrintPerPointContribution(data,method="default",output="id"):
         xLength=2*xW+7
         line+="{:{width}}".format(" x",width=xLength)+' | '
         line2+="{:-<{width}}".format("",width=xLength)+'-|-'
+    if("<x>" in outputlist):        
+        ### determining size for x variables
+        xff=min([p["<x>"] for p in data.points])
+        if(xff<0.0001): xMW=5
+        elif(xff<0.001): xMW=4
+        elif(xff<0.01): xMW=3
+        else: xMW=2
+        ## total size of x-cell
+        #0.xMW=xW+2
+        xMLength=xMW+2
+        line+="{:{width}}".format(" <x>",width=xMLength)+' | '
+        line2+="{:-<{width}}".format("",width=xMLength)+'-|-'
+    if("<Q>" in outputlist):        
+        ### determining size for x variables
+        xff=max([p["<Q>"] for p in data.points])
+        if(xff>100): QMW=3
+        elif(xff<10): QMW=2
+        else: QMW=1
+        ## total size of x-cell
+        #0.xMW=xW+2
+        QMLength=QMW+2
+        line+="{:{width}}".format(" <Q>",width=QMLength)+' | '
+        line2+="{:-<{width}}".format("",width=QMLength)+'-|-'
     if("del" in outputlist):        
         ### determining size for del variables {:6.3f}
         delLength=6 
@@ -388,6 +414,10 @@ def PrintPerPointContribution(data,method="default",output="id"):
             line+="{:{width}} |".format(p["id"],width=idLength)
         if("x" in outputlist):
             line+=" [{:{p1}.{p2}f},{:{p1}.{p2}f}] |".format(p["x"][0],p["x"][1],p1=xW+2,p2=xW)
+        if("<x>" in outputlist):            
+            line+=" {:{p1}.{p2}f} |".format(p["<x>"],p1=xMW+2,p2=xMW)
+        if("<Q>" in outputlist):            
+            line+=" {:{p1}.{p2}f} |".format(p["<Q>"],p1=QMW+1,p2=4-QMW)
         if("del" in outputlist):
             if(p["type"]=="DY"):
                 ddd=p["<qT>"]/p["<Q>"]
@@ -413,6 +443,11 @@ def PrintPerPointContribution(data,method="default",output="id"):
             print(ss.name)
             print(line2)
             
+            npoints=0
             for i in range(len(YY)):
-                PrintP(ss.points[i],ZZ[i])
+                if(ZZ[i]>minValue):
+                    PrintP(ss.points[i],ZZ[i])
+                    npoints+=1
+            if(npoints==0):
+                print("All points have chi^2 < "+str(minValue))
             print(line2)
