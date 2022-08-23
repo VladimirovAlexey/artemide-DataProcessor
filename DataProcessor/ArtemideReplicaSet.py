@@ -108,6 +108,20 @@ def ReadRepFile(path):
         rSet._SiversTMDPDFstart=-2
         rSet._SiversTMDPDFend=-1
     
+    ## wgtTMDPDF appeared only in 20
+    if(ver>=20):
+        ## wgtTMDPDF size
+        while not listFromF[0].startswith("*13  "):
+            listFromF.pop(0)
+        listFromF.pop(0)
+        
+        line=(listFromF.pop(0)).split(",")
+        rSet._wgtTMDPDFstart=int(line[0])-2
+        rSet._wgtTMDPDFend=int(line[1])-1
+    else:
+        rSet._wgtTMDPDFstart=-2
+        rSet._wgtTMDPDFend=-1
+    
     
     #### Some files can contain *BB section which has number of PDF replicas        
     #### it can happen only for versions >=15
@@ -157,6 +171,15 @@ def ReadRepFile(path):
         rSet._c_SiversTMDPDFstart=int(line[0])-2
         rSet._c_SiversTMDPDFend=int(line[1])-1
         
+        ## SiversTMDPDF size
+        while not listFromF[0].startswith("*13  "):
+            listFromF.pop(0)
+        listFromF.pop(0)
+        
+        line=(listFromF.pop(0)).split(",")
+        rSet._c_wgtTMDPDFstart=int(line[0])-2
+        rSet._c_wgtTMDPDFend=int(line[1])-1
+        
         ### search for number of replicas
         while not listFromF[0].startswith("*C   "):
             listFromF.pop(0)
@@ -171,12 +194,15 @@ def ReadRepFile(path):
         rSet._c_lpTMDPDFend=-1 
         rSet._c_SiversTMDPDFstart=-2
         rSet._c_SiversTMDPDFend=-1
+        rSet._c_wgtTMDPDFstart=-2
+        rSet._c_wgtTMDPDFend=-1
     
     #### computing the length of only NP input
     rSet._PDFlength= (rSet._c_uTMDPDFend-rSet._c_uTMDPDFstart if rSet._c_uTMDPDFstart>0 else 0)\
                     + (rSet._c_uTMDFFend-rSet._c_uTMDFFstart if rSet._c_uTMDFFstart>0 else 0)\
                     + (rSet._c_lpTMDPDFend-rSet._c_lpTMDPDFstart if rSet._c_lpTMDPDFstart>0 else 0)\
-                    + (rSet._c_SiversTMDPDFend-rSet._c_SiversTMDPDFstart if rSet._c_SiversTMDPDFstart>0 else 0)
+                    + (rSet._c_SiversTMDPDFend-rSet._c_SiversTMDPDFstart if rSet._c_SiversTMDPDFstart>0 else 0)\
+                    + (rSet._c_wgtTMDPDFend-rSet._c_wgtTMDPDFstart if rSet._c_wgtTMDPDFstart>0 else 0)
     rSet._NPLength=rSet._totalLength-rSet._PDFlength    
     
     ##########################
@@ -200,6 +226,7 @@ def ReadRepFile(path):
     while not listFromF[0].startswith("*R   "):
         listFromF.pop(0)
     listFromF.pop(0)
+    
     
     rSet.replicaList=[]
     for line in listFromF[:rSet.numberOfReplicas]:
@@ -227,24 +254,28 @@ class ArtemideReplicaSet:
         self._uTMDFFstart=0
         self._lpTMDPDFstart=0
         self._SiversTMDPDFstart=0
+        self._wgtTMDPDFstart=0
         
         self._TMDRend=0
         self._uTMDPDFend=0
         self._uTMDFFend=0
         self._lpTMDPDFend=0
         self._SiversTMDPDFend=0
+        self._wgtTMDPDFend=0
         
         ### inidices of collinear input
         self._c_uTMDPDFstart=0
         self._c_uTMDFFstart=0
         self._c_lpTMDPDFstart=0
         self._c_SiversTMDPDFstart=0
+        self._c_wgtTMDPDFstart=0
         
         self._c_TMDRend=0
         self._c_uTMDPDFend=0
         self._c_uTMDFFend=0
         self._c_lpTMDPDFend=0
         self._c_SiversTMDPDFend=0
+        self._c_wgtTMDPDFend=0
         
         ### flag which indicates that the replica incorporate PDF variation
         self._includesPDFvariation=False
@@ -303,12 +334,14 @@ class ArtemideReplicaSet:
             douTMDFF=True
             dolpTMDPDF=True
             doSiversTMDPDF=True
+            dowgtTMDPDF=True
         else:
             doTMDR=False
             douTMDPDF=False
             douTMDFF=False
             dolpTMDPDF=False
             doSiversTMDPDF=False
+            dowgtTMDPDF=False
             
             if(part=='TMDR'):
                 doTMDR=True
@@ -320,6 +353,8 @@ class ArtemideReplicaSet:
                 dolpTMDPDF=True
             if(part=='SiversTMDPDF'):
                 doSiversTMDPDF=True
+            if(part=='wgtTMDPDF'):
+                dowgtTMDPDF=True
             
         
             
@@ -346,6 +381,11 @@ class ArtemideReplicaSet:
             if(self._SiversTMDPDFend>=self._SiversTMDPDFstart+1 >0):
                 print("Modification of Sivers replica is not implimented")
             harpy.setNPparameters_SiversTMDPDF(r[self._SiversTMDPDFstart:self._SiversTMDPDFend])
+            
+        if(dowgtTMDPDF and self._wgtTMDPDFend>=self._wgtTMDPDFstart+1 >0):
+            if(self._wgtTMDPDFend>=self._wgtTMDPDFstart+1 >0):
+                print("Modification of hPDF replica is not implimented")
+            harpy.setNPparameters_wgtTMDPDF(r[self._wgtTMDPDFstart:self._wgtTMDPDFend])
             
     def GetReplica(self,num,part="full"):
         """
@@ -399,6 +439,11 @@ class ArtemideReplicaSet:
                 return r[self._SiversTMDPDFstart:self._SiversTMDPDFend]
             else:
                 return []
+        elif(part=="wgtTMDPDF"):
+            if(self._wgtTMDPDFend>=self._wgtTMDPDFstart+1 >0):
+                return r[self._wgtTMDPDFstart:self._wgtTMDPDFend]
+            else:
+                return []
         elif(part=="uTMDPDF-PDF"):
             if(self._c_uTMDPDFend>=self._c_uTMDPDFstart+1 >0):
                 return r[self._c_uTMDPDFstart:self._c_uTMDPDFend]
@@ -417,6 +462,11 @@ class ArtemideReplicaSet:
         elif(part=="SiversTMDPDF-PDF"):
             if(self._c_SiversTMDPDFend>=self._c_SiversTMDPDFstart+1 >0):
                 return r[self._c_SiversTMDPDFstart:self._c_SiversTMDPDFend]
+            else:
+                return []
+        elif(part=="wgtTMDPDF-PDF"):
+            if(self._c_wgtTMDPDFend>=self._c_wgtTMDPDFstart+1 >0):
+                return r[self._c_wgtTMDPDFstart:self._c_wgtTMDPDFend]
             else:
                 return []
         else:

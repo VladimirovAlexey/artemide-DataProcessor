@@ -48,6 +48,11 @@ elif(useOrder=="n3lo"):
     harpy.setNPparameters_uTMDFF([0.2797, 0.4469, 0.43215, 0.63246])
     harpy.setNPparameters_wgtTMDPDF([1.5, 1.0])
 #%%
+import DataProcessor.ArtemideReplicaSet
+rSet=DataProcessor.ArtemideReplicaSet.ReadRepFile("/home/vla18041/LinkData2/WorkingFiles/TMD/Fit_Notes/wgt22/REPS/"
+                                                  +"wgt22-NNPDF.rep")### SIDIS+DY case
+
+#%%
 def loadThisData(listOfNames):    
     import DataProcessor.DataSet
     
@@ -105,9 +110,7 @@ print('Loaded experiments are', [i.name for i in setALT.sets])
 #SaveToLog('Loaded '+ str(setDY.numberOfSets) + ' data sets with '+str(sum([i.numberOfPoints for i in setDY.sets])) + ' points. \n'
 #+'Loaded experiments are '+str([i.name for i in setDY.sets]))
 #%%
-if(usePDF=="NNPDF"): harpy.setNPparameters_wgtTMDPDF([0.518,0.414])
-elif(usePDF=="DSSV"):harpy.setNPparameters_wgtTMDPDF([0.472, 0.368])
-else:raise ValueError("usePDF unknown")
+rSet.SetReplica()
 
 DataProcessor.harpyInterface.PrintChi2Table(setALT,printDecomposedChi2=True,method="central")
 
