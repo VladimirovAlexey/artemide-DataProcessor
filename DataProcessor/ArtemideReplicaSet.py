@@ -171,7 +171,7 @@ def ReadRepFile(path):
         rSet._c_SiversTMDPDFstart=int(line[0])-2
         rSet._c_SiversTMDPDFend=int(line[1])-1
         
-        ## SiversTMDPDF size
+        ## wgtTMDPDF size
         while not listFromF[0].startswith("*13  "):
             listFromF.pop(0)
         listFromF.pop(0)
@@ -378,12 +378,12 @@ class ArtemideReplicaSet:
             harpy.setNPparameters_lpTMDPDF(r[self._lpTMDPDFstart:self._lpTMDPDFend])
             
         if(doSiversTMDPDF and self._SiversTMDPDFend>=self._SiversTMDPDFstart+1 >0):
-            if(self._SiversTMDPDFend>=self._SiversTMDPDFstart+1 >0):
+            if(self._c_SiversTMDPDFend>=self._c_SiversTMDPDFstart+1 >0):
                 print("Modification of Sivers replica is not implimented")
             harpy.setNPparameters_SiversTMDPDF(r[self._SiversTMDPDFstart:self._SiversTMDPDFend])
             
         if(dowgtTMDPDF and self._wgtTMDPDFend>=self._wgtTMDPDFstart+1 >0):
-            if(self._wgtTMDPDFend>=self._wgtTMDPDFstart+1 >0):
+            if(self._c_wgtTMDPDFend>=self._c_wgtTMDPDFstart+1 >0):
                 print("Modification of hPDF replica is not implimented")
             harpy.setNPparameters_wgtTMDPDF(r[self._wgtTMDPDFstart:self._wgtTMDPDFend])
             

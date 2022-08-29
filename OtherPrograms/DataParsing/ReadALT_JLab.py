@@ -61,7 +61,7 @@ for line in table:
     p["s"]=s_current
     ### taken from the text
     p["Q"]=[numpy.sqrt(1.4),numpy.sqrt(2.7)]   
-    p["x"]=[0.16+0.05*num,0.16+0.05*(num+1)]
+    p["x"]=[0.15+0.05*(num-1),0.15+0.05*num]
     p["z"]=[0.5,0.6]
     p["pT"]=[0.24,0.44] 
     
@@ -111,7 +111,7 @@ for line in table:
     p["s"]=s_current
     ### taken from the text
     p["Q"]=[numpy.sqrt(1.4),numpy.sqrt(2.7)]   
-    p["x"]=[0.16+0.05*num,0.16+0.05*(num+1)]
+    p["x"]=[0.15+0.05*(num-1),0.15+0.05*num]
     p["z"]=[0.5,0.6]
     p["pT"]=[0.24,0.44] 
     

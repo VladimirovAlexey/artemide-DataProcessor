@@ -32,21 +32,21 @@ import harpy
 path_to_constants=MAINPATH+"/FittingPrograms/WGT22/ConstantsFiles/"
 
 if(useOrder=="nnlo"):
-    harpy.initialize(path_to_constants+"const-WGT22_nnlo_"+usePDF)
+    harpy.initialize(path_to_constants+"const-WGT22_nnlo_"+usePDF+"-flavor")
     
     #### All=0 Case
     harpy.setNPparameters_TMDR([2., 0.0398333])
     harpy.setNPparameters_uTMDPDF([0.185239, 6.22706, 580.946, 2.44166, -2.53161, 0.,  0.0014, 0.442, 4.14])
     harpy.setNPparameters_uTMDFF([0.279443, 0.460015, 0.435955, 0.551302])
-    harpy.setNPparameters_wgtTMDPDF([0.2, 1.0])
+    harpy.setNPparameters_wgtTMDPDF([0.2, 1.0,1.0,1.0])
     
 elif(useOrder=="n3lo"):
-    harpy.initialize(path_to_constants+"const-WGT22_n3lo_"+usePDF)
+    harpy.initialize(path_to_constants+"const-WGT22_n3lo_"+usePDF+"-flavor")
     #### All=0 Case n3lo
     harpy.setNPparameters_TMDR([2.0, 0.04843])
     harpy.setNPparameters_uTMDPDF([0.1425, 4.8199, 580.9, 2.3889, -1.0683, 0.0,  0.0014, 0.442, 4.14])
     harpy.setNPparameters_uTMDFF([0.2797, 0.4469, 0.43215, 0.63246])
-    harpy.setNPparameters_wgtTMDPDF([0.5, 1.0])
+    harpy.setNPparameters_wgtTMDPDF([0.5, 1.0,1.0,1.0])
 #%%
 def loadThisData(listOfNames):    
     import DataProcessor.DataSet
@@ -105,8 +105,8 @@ print('Loaded experiments are', [i.name for i in setALT.sets])
 #SaveToLog('Loaded '+ str(setDY.numberOfSets) + ' data sets with '+str(sum([i.numberOfPoints for i in setDY.sets])) + ' points. \n'
 #+'Loaded experiments are '+str([i.name for i in setDY.sets]))
 #%%
-if(usePDF=="NNPDF"): harpy.setNPparameters_wgtTMDPDF([0.518,0.414])
-elif(usePDF=="DSSV"):harpy.setNPparameters_wgtTMDPDF([0.472, 0.368])
+if(usePDF=="NNPDF"): harpy.setNPparameters_wgtTMDPDF([0.518,0.414,0.414,0.414])
+elif(usePDF=="DSSV"):harpy.setNPparameters_wgtTMDPDF([0.472, 0.368, 0.368, 0.368])
 else:raise ValueError("usePDF unknown")
 
 DataProcessor.harpyInterface.PrintChi2Table(setALT,printDecomposedChi2=True,method="central")
@@ -139,13 +139,13 @@ def chi_2(x):
 from iminuit import Minuit
 
 #initialValues=(0.472, 0.368)
-initialValues=(0.472, 1)
+initialValues=(0.472, 0.368,0.368,0.368)
 
-initialErrors=(1.,  1.)
-searchLimits=((-5,5),(-10,10))
+initialErrors=(.1,  .1,.1,.1)
+searchLimits=((-5,5),(-10,10),(-10,10),(-10,10))
 
 # True= FIX
-parametersToMinimize=(False, True)
+parametersToMinimize=(False, False, False, False)
 
 m = Minuit(chi_2, initialValues)
 
@@ -173,11 +173,6 @@ DataProcessor.harpyInterface.PrintChi2Table(setALT,printDecomposedChi2=True,meth
 #harpy.setNPparameters(list(m.values))
 
 #DataProcessor.harpyInterface.PrintChi2Table(setALT,printDecomposedChi2=True)
-
-#%%
-
-import DataProcessor.harpyInterface
-DataProcessor.harpyInterface.PrintPerPointContribution(setALT,method="central",output="id,<Q>,<x>,del")
 
 
 #%%
@@ -225,59 +220,19 @@ def MinForReplica():
 ll=[]
 
 numOfReplicas=300
-REPPATH=MAINPATH+"/FittingPrograms/WGT22/LOGS/"+"l12(d<0.35;Q2>2;NNPDF;rep)-replicas.txt"
 for i in range(numOfReplicas):
     print('---------------------------------------------------------------')
     print('------------REPLICA ',i,'/',numOfReplicas,'--------------------')
     print('---------------------------------------------------------------')
     
-    
-    #repPDF=numpy.random.randint(1, high=100)
-    #harpy.sethPDFreplica(repPDF)
-    ### to speed up computation I generate  large number of data-pseudo replicas for single PDF
-    ### at the next turn I will random sample it (after deleting ugly cases)
-    #for j in range(20):
     repRes=MinForReplica()    
     print(repRes)
     ll.append(repRes)
-        #f=open(REPPATH,"a+")
-        #print('SAVING >>  ',f.name)
-        #f.write(str(repRes)+", "+str(repPDF)+"\n")
-        #f.close()
 #%%
-kk=[numpy.abs(lll[2][0]) for lll in ll]
-print(numpy.mean(kk))
-      
-#%%
-def chi_2silent(x):
-    #startT=time.time()
-    harpy.setNPparameters_wgtTMDPDF(x)
-    #print('np set =',["{:8.3f}".format(i) for i in x], end =" ")    
-    
-    ccSIDIS2,cc3=DataProcessor.harpyInterface.ComputeChi2(setALT,method="central")
-    
-    ccSIDIS2+=PenaltyTerm(x)
-    
-    cc=(ccSIDIS2)/totalN
-    #endT=time.time()
-    #print(':->',cc)
-    return ccSIDIS2
-#%%
-from scipy.optimize import fsolve
-x0=1
-for i in range(10):
-    func= lambda t : (chi_2silent([i*0.2,t[0]])/totalN-0.92)
-    solution=fsolve(func, x0,xtol=0.001)
-    x0=solution[0]
-    print("{"+"{:8.4f}, {:6.3f}".format(i*0.2,solution[0])+"},")
+kk=[numpy.abs(lll[2]) for lll in ll]
+print(numpy.mean(kk,axis=0))
 
-x0=0
-for i in range(10):
-    func= lambda t : (chi_2silent([1.8-i*0.2,t[0]])/totalN-.92)
-    solution=fsolve(func, x0,xtol=0.001)
-    x0=solution[0]
-    print("{"+"{:8.4f}, {:6.3f}".format(1.8-i*0.2,solution[0])+"},")
-    
 #%%
-for i in range(100):
-    print([0.01,i*0.03],chi_2silent([0.01,i*0.03])/totalN)
+harpy.setNPparameters_wgtTMDPDF(numpy.mean(kk,axis=0))
+
+DataProcessor.harpyInterface.PrintChi2Table(setALT,printDecomposedChi2=True,method="central")
