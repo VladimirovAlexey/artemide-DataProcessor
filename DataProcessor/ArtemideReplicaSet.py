@@ -34,6 +34,8 @@ def ReadRepFile(path):
     listFromF.pop(0)
     ver=int(listFromF.pop(0))
     
+    #print("Reading with version =", ver)
+    
     ### search for name entry
     while not listFromF[0].startswith("*A   "):
         listFromF.pop(0)
@@ -153,6 +155,7 @@ def ReadRepFile(path):
         rSet._c_uTMDFFstart=int(line[0])-2
         rSet._c_uTMDFFend=int(line[1])-1
         
+        
         ## lpTMDPDF size
         while not listFromF[0].startswith("*11  "):
             listFromF.pop(0)
@@ -172,13 +175,17 @@ def ReadRepFile(path):
         rSet._c_SiversTMDPDFend=int(line[1])-1
         
         ## wgtTMDPDF size
-        while not listFromF[0].startswith("*13  "):
+        if(ver>=20):            
+            while not listFromF[0].startswith("*13  "):
+                listFromF.pop(0)
             listFromF.pop(0)
-        listFromF.pop(0)
-        
-        line=(listFromF.pop(0)).split(",")
-        rSet._c_wgtTMDPDFstart=int(line[0])-2
-        rSet._c_wgtTMDPDFend=int(line[1])-1
+            
+            line=(listFromF.pop(0)).split(",")
+            rSet._c_wgtTMDPDFstart=int(line[0])-2
+            rSet._c_wgtTMDPDFend=int(line[1])-1
+        else:
+            rSet._c_wgtTMDPDFstart=-2
+            rSet._c_wgtTMDPDFend=-1
         
         ### search for number of replicas
         while not listFromF[0].startswith("*C   "):

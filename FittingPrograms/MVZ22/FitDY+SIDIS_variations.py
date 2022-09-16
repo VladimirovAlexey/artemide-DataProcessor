@@ -9,16 +9,15 @@ Created on Thu Jan 24 16:40:59 2019
 #######################################
 # importing libraries
 #######################################
-
-#######################################
-# importing libraries
-#######################################
 import os
 ROOT_DIR = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', '..'))+"/"
 
-ATMDE_DIR = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', '..','..'))+"/artemide/"
+ATMDE_DIR = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', '..','..'))+"/artemide-FLAVOR/"
 #%%
 import sys
+sys.path.remove('/data/arTeMiDe_Repository/artemide/harpy')
+sys.path.append(ATMDE_DIR+"harpy")
+
 import numpy
 sys.path.append(ROOT_DIR)
 import DataProcessor.harpyInterface
@@ -31,12 +30,16 @@ MAINPATH=ROOT_DIR
 #Initialize artemide
 #######################################
 import harpy
-path_to_constants=MAINPATH+"FittingPrograms/MVZ22/ConstantsFiles/SV19_N4LL"
+path_to_constants=MAINPATH+"FittingPrograms/MVZ22/ConstantsFiles/SV19f_N4LL"
 
 harpy.initialize(path_to_constants)
 
-harpy.setNPparameters_TMDR([2.,0.0434])
-harpy.setNPparameters_uTMDPDF([0.253434, 9.04351, 346.999, 2.47992, -5.69988, 0.1, 0.])
+harpy.setNPparameters_TMDR([0.0,0.0434])
+harpy.setNPparameters_uTMDPDF([0.253434, .4351, 
+                               0.253434, .4351,
+                               0.253434, .4351,
+                               100.,1.,2.,
+                               0.0,0.0,0.])
 harpy.setNPparameters_uTMDFF([0.264,0.479,0.459,0.539]) 
 
 #%%
@@ -139,17 +142,17 @@ def cutFunc(p):
 ### Loading the DY data set
 theData=DataProcessor.DataMultiSet.DataMultiSet("DYset",loadThisDataDY([
                           'CDF1', 'CDF2', 'D01', 'D02', 'D02m', 
-                          'A7-00y10', 'A7-10y20','A7-20y24', 
+                          #'A7-00y10', 'A7-10y20','A7-20y24', 
                           'A8-00y04', 'A8-04y08', 'A8-08y12', 'A8-12y16', 'A8-16y20', 'A8-20y24', 
                           'A8-46Q66', 'A8-116Q150', 
                           'CMS7', 'CMS8', 
                           'CMS13-00y04','CMS13-04y08','CMS13-08y12','CMS13-12y16','CMS13-16y24',
-                          #'CMS13_dQ_106to170','CMS13_dQ_170to350','CMS13_dQ_350to1000',
+                          'CMS13_dQ_106to170','CMS13_dQ_170to350','CMS13_dQ_350to1000',
                           'LHCb7', 'LHCb8', 'LHCb13_dy(2021)', 
                           'PHE200', 'STAR510', 
                           'E228-200', 'E228-300', 'E228-400', 
-                          'E772',
-                          'E605']))
+                          'E772','E605'
+                          ]))
 
 setDY=theData.CutData(cutFunc) 
 
@@ -173,13 +176,15 @@ print('Loaded experiments are', [i.name for i in setSIDIS.sets])
 #+'Loaded experiments are '+str([i.name for i in setDY.sets]))
 
 #%%
-
-#harpy.setNPparameters([0.0426578, 0., 0.223809, 9.23868, 375.888, 2.14611, -4.97177, 0., 0., 0.233382, 0.478562, 0.47218, 0.511187]) ##NNPDF+DSS n3lo (paper)
-
-harpy.setNPparameters([2.0,0.04561669641428937, 0.00016329859692683645, 7.5365525893445, 307.06810543190187, 2.4496886416460186, -5.897405763676967, 0.0, 0.0, 0.4425554060678728, 0.41515805745933115, 0.4570083762399105, 0.7159523910747556])
+harpy.setNPparameters_TMDR([-0.112, 0.122])
+harpy.setNPparameters_uTMDPDF([0.0875,0.155,0.004327,4.401,
+                               0.000133,28.14,0.0,1.098,
+                               0.0469,0.0,23.165,0.0])
 
 DataProcessor.harpyInterface.PrintChi2Table(setDY,printDecomposedChi2=True)
 #DataProcessor.harpyInterface.PrintChi2Table(setSIDIS,printDecomposedChi2=True)
+
+
     
 #%%
 #######################################
@@ -187,6 +192,33 @@ DataProcessor.harpyInterface.PrintChi2Table(setDY,printDecomposedChi2=True)
 #######################################
 import time
 totalN=setDY.numberOfPoints+setSIDIS.numberOfPoints
+
+def chi_2DY(x):
+    startT=time.time()
+    harpy.setNPparameters_TMDR([x[0],x[1]])
+    harpy.setNPparameters_uTMDPDF(x[2:])
+    print('np set =',["{:8.3f}".format(i) for i in x], end =" ")    
+    
+    ccDY2,cc3=DataProcessor.harpyInterface.ComputeChi2(setDY)
+    #ccSIDIS2,cc3=DataProcessor.harpyInterface.ComputeChi2(setSIDIS)
+    
+    cc=ccDY2/setDY.numberOfPoints
+    endT=time.time()
+    print(':->',cc,'       t=',endT-startT)
+    return ccDY2
+
+def chi_2SIDIS(x):
+    startT=time.time()
+    harpy.setNPparameters_uTMDFF(x)
+    print('np set =',["{:8.3f}".format(i) for i in x], end =" ")    
+    
+    #ccDY2,cc3=DataProcessor.harpyInterface.ComputeChi2(setDY)
+    ccSIDIS2,cc3=DataProcessor.harpyInterface.ComputeChi2(setSIDIS)
+    
+    cc=ccSIDIS2/setSIDIS.numberOfPoints
+    endT=time.time()
+    print(':->',cc,'       t=',endT-startT)
+    return ccSIDIS2
 
 def chi_2(x):
     startT=time.time()
@@ -202,22 +234,33 @@ def chi_2(x):
     return ccDY2+ccSIDIS2
 
 #%%
-
+#### Minimize DY
 from iminuit import Minuit
 
 #
-#initialValues=(0.0426578, 0., 0.223809, 9.23868, 375.888, 2.14611, -4.97177, 0., 0., 0.233382, 0.478562, 0.47218, 0.511187)
 
-initialValues=(0.04562, 0.0, 0.0001633, 7.53655, 307.0, 2.4497, -5.89740, 0.0, 0.0, 0.44255, 0.415158, 0.457, 0.71595)
+#initialValues=(0.0426578,0.253434, 9.04351,0.253434, 9.04351,0.253434, 9.04351,0.253434, 9.04351,0.253434, 9.04351, 346.999)
+initialValues=( -0.112, 0.122, 
+               0.0875,0.155,0.004327,4.401, 
+               0.001,1.14,
+               23.165,0.0,2.,
+               0.,0.,0.)
 
-initialErrors=(0.05,  0.05,  0.01,  1.0,   100,  0.1,   0.5,    1., 1., 0.1,   0.1,  0.1,    0.1)
-searchLimits=((0.,4.),   (-4.,4.),  (0.,10.), (0.,10.),(0., 1000.),(0.,10.),None,None,None, (0.,5.),(0.,5.),(0.,5.),None)
+initialErrors=(0.01,0.01, 
+               0.1,  1.0, 0.1, 1.0, 
+               0.1,  1.0, 
+               25.,  1.0, 0.1, 
+               0.1,  1.0, 25.0)
+searchLimits=((-0.2,2),(0.,4.), 
+              (0.,10.), (0.,100.),(0.,10.), (0.,100.),
+              (0.,10.), (0.,100.),
+              (0.,1000.), (0.,1000.),(0.,4.), 
+              (0.,100.),(0.,1000),(0.,1000.))
 
 # True= FIX
-parametersToMinimize=(False, False, False, False,False, False, False, True,True, False, False, False, False)
-#parametersToMinimize=(False, False, True, True, True, True, True, True,True, True, True, True, True)
+parametersToMinimize=(False,False, False, False, False,False, False, False, False, False, False, True, True ,True)
 
-m = Minuit(chi_2, initialValues)
+m = Minuit(chi_2DY, initialValues)
 
 m.errors=initialErrors
 m.limits=searchLimits
@@ -226,13 +269,50 @@ m.errordef=1
 
 print(m.params)
 
-m.tol=0.0001*totalN*10000 ### the last 0.0001 is to compensate MINUIT def
+m.tol=0.0001*setDY.numberOfPoints*10000 ### the last 0.0001 is to compensate MINUIT def
 m.strategy=1
 m.migrad()
 
 print(m.params)
 
-harpy.setNPparameters(list(m.values))
+valsDY=list(m.values)
+
+harpy.setNPparameters_TMDR([valsDY[0],valsDY[1]])
+harpy.setNPparameters_uTMDPDF(valsDY[2:])
+
+DataProcessor.harpyInterface.PrintChi2Table(setDY,printDecomposedChi2=True)
+DataProcessor.harpyInterface.PrintChi2Table(setSIDIS,printDecomposedChi2=True)
+#%%
+
+#### Minimize SIDIS
+from iminuit import Minuit
+
+initialValues=(0.44255, 0.415158, 0.457, 0.71595)
+
+initialErrors=(0.1,   0.1,  0.1,    0.1)
+searchLimits=((0.,5.),(0.,5.),(0.,5.),None)
+
+# True= FIX
+parametersToMinimize=(False, False, False, False)
+
+m = Minuit(chi_2SIDIS, initialValues)
+
+m.errors=initialErrors
+m.limits=searchLimits
+m.fixed=parametersToMinimize
+m.errordef=1
+
+print(m.params)
+
+m.tol=0.0001*setSIDIS.numberOfPoints*10000 ### the last 0.0001 is to compensate MINUIT def
+m.strategy=1
+m.migrad()
+
+valsSIDIS=list(m.values)
+harpy.setNPparameters_uTMDFF(valsSIDIS)
+
+print("DY>>>>>>",valsDY)
+print("SIDIS>>>",valsSIDIS)
 
 DataProcessor.harpyInterface.PrintChi2Table(setDY,printDecomposedChi2=True)
 DataProcessor.harpyInterface.PrintChi2Table(setSIDIS,printDecomposedChi2=True)
@@ -249,3 +329,4 @@ DataProcessor.harpyInterface.PrintChi2Table(setSIDIS,printDecomposedChi2=True)
 # SaveToLog("MINIMIZATION FINISHED",str(m.params))
 # SaveToLog("CORRELATION MATRIX",str(m.matrix(correlation=True)))
 
+print([harpy.get_DNP(0.01*b+0.01,2.) for b in range(400)])

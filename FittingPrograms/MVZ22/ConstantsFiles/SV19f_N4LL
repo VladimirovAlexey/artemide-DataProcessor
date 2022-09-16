@@ -47,7 +47,7 @@
 *p2  : reference number for hadrons
     1
 *p3  : LHAPDF set names for hadrons (line-by-line corresponding to reference number
- HERAPDF20_NNLO_VAR
+ MSHT20_REP
 *p4  : list of initialization replicas
     0
  
@@ -162,15 +162,20 @@
  F
 *B   : ---- Parameters of NP model ----
 *p1  : Length of lambdaNP
-           7
+           12
 *p2  : Initialization parameters (in column)
-   2.0000000000000000     
-   0.0000000000000000     
-   0.0000000000000000     
-   0.0000000000000000     
-   0.0000000000000000     
-   0.0000000000000000     
-   0.0000000000000000     
+   1.0000000000000000     
+   1.0000000000000000     
+   1.0000000000000000     
+   1.0000000000000000     
+   1.0000000000000000     
+   1.0000000000000000     
+   1.0000000000000000
+   1.0000000000000000     
+   1.0000000000000000     
+   1.0000000000000000     
+   1.0000000000000000
+   1.0000000000000000                    
 *C   : ---- Numerical evaluation parameters ----
 *p1  : Tolerance (relative tolerance of convolution integral)
    1.0000000000000000E-004
