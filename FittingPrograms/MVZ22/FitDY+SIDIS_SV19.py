@@ -249,3 +249,7 @@ DataProcessor.harpyInterface.PrintChi2Table(setSIDIS,printDecomposedChi2=True)
 # SaveToLog("MINIMIZATION FINISHED",str(m.params))
 # SaveToLog("CORRELATION MATRIX",str(m.matrix(correlation=True)))
 
+#%%
+for i in range(120):
+    b=i*0.04+0.0
+    print('{', b,",",harpy.get_R(b, 2., 4.),"},")
