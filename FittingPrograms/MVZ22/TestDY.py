@@ -30,13 +30,15 @@ MAINPATH=ROOT_DIR
 #Initialize artemide
 #######################################
 import harpy
-path_to_constants=MAINPATH+"FittingPrograms/MVZ22/ConstantsFiles/SV19_N4LL"
+
+keyNAME="N4LL"
+
+path_to_constants=MAINPATH+"FittingPrograms/MVZ22/ConstantsFiles/DYonly/SV19_DYonly_"+keyNAME
 
 harpy.initialize(path_to_constants)
 
 harpy.setNPparameters_TMDR([2.,0.0434])
 harpy.setNPparameters_uTMDPDF([0.253434, 9.04351, 346.999, 2.47992, -5.69988, 0.1, 0.])
-harpy.setNPparameters_uTMDFF([0.264,0.479,0.459,0.539]) 
 
 #%%
 ### read the list of files and return the list of DataSets
@@ -44,19 +46,6 @@ def loadThisDataDY(listOfNames):
     import DataProcessor.DataSet
     
     path_to_data=ROOT_DIR+"DataLib/unpolDY/"
-    
-    
-    dataCollection=[]
-    for name in listOfNames:
-        loadedData=DataProcessor.DataSet.LoadCSV(path_to_data+name+".csv")
-        dataCollection.append(loadedData)   
-
-    return dataCollection
-
-def loadThisDataSIDIS(listOfNames):    
-    import DataProcessor.DataSet
-    
-    path_to_data=ROOT_DIR+"DataLib/unpolSIDIS/"
     
     
     dataCollection=[]
@@ -132,7 +121,7 @@ def cutFunc(p):
             return False , p
     
 #    return delta<0.5 and p.qT_avarage<80
-    return (delta<0.1 or (delta<0.25 and par/err*delta**2<1)) , p
+    return (delta<0.25 or (delta<0.25 and par/err*delta**2<1)) , p
 
 #%%
 ### Loading the DY data set
@@ -143,7 +132,7 @@ theData=DataProcessor.DataMultiSet.DataMultiSet("DYset",loadThisDataDY([
                           'A8-46Q66', 'A8-116Q150', 
                           'CMS7', 'CMS8', 
                           'CMS13-00y04','CMS13-04y08','CMS13-08y12','CMS13-12y16','CMS13-16y24',
-                          #'CMS13_dQ_106to170','CMS13_dQ_170to350','CMS13_dQ_350to1000',
+                          'CMS13_dQ_106to170','CMS13_dQ_170to350','CMS13_dQ_350to1000',
                           'LHCb7', 'LHCb8', 'LHCb13_dy(2021)', 
                           'PHE200', 'STAR510', 
                           'E228-200', 'E228-300', 'E228-400', 
@@ -152,103 +141,36 @@ theData=DataProcessor.DataMultiSet.DataMultiSet("DYset",loadThisDataDY([
 
 setDY=theData.CutData(cutFunc) 
 
-### Loading the SIDIS data set
-theData=DataProcessor.DataMultiSet.DataMultiSet("SIDISset",loadThisDataSIDIS([
-                      'hermes.p.vmsub.zxpt.pi+','hermes.p.vmsub.zxpt.pi-',
-                      'hermes.d.vmsub.zxpt.pi+','hermes.d.vmsub.zxpt.pi-',
-                      'hermes.p.vmsub.zxpt.k+','hermes.p.vmsub.zxpt.k-',
-                      'hermes.d.vmsub.zxpt.k+','hermes.d.vmsub.zxpt.k-',
-                      'compass.d.h+','compass.d.h-']))
-
-setSIDIS=theData.CutData(cutFunc) 
 
 print('Loaded ', setDY.numberOfSets, 'data sets with', sum([i.numberOfPoints for i in setDY.sets]), 'points.')
 print('Loaded experiments are', [i.name for i in setDY.sets])
-
-print('Loaded ', setSIDIS.numberOfSets, 'data sets with', sum([i.numberOfPoints for i in setSIDIS.sets]), 'points.')
-print('Loaded experiments are', [i.name for i in setSIDIS.sets])
-
-#SaveToLog('Loaded '+ str(setDY.numberOfSets) + ' data sets with '+str(sum([i.numberOfPoints for i in setDY.sets])) + ' points. \n'
-#+'Loaded experiments are '+str([i.name for i in setDY.sets]))
 
 #%%
 
 #harpy.setNPparameters([0.0426578, 0., 0.223809, 9.23868, 375.888, 2.14611, -4.97177, 0., 0., 0.233382, 0.478562, 0.47218, 0.511187]) ##NNPDF+DSS n3lo (paper)
 
-harpy.setNPparameters([2.0,0.04561669641428937, 0.00016329859692683645, 7.5365525893445, 307.06810543190187, 2.4496886416460186, -5.897405763676967, 0.0, 0.0, 0.4425554060678728, 0.41515805745933115, 0.4570083762399105, 0.7159523910747556])
+harpy.setNPparameters([2.0,0.04561669641428937, 0.00016329859692683645, 7.5365525893445, 307.06810543190187, 2.4496886416460186, -5.897405763676967, 0.0, 0.0])
 
 DataProcessor.harpyInterface.PrintChi2Table(setDY,printDecomposedChi2=True)
 #DataProcessor.harpyInterface.PrintChi2Table(setSIDIS,printDecomposedChi2=True)
+
+#%%
+import json
+pltPATH=MAINPATH+"FittingPrograms/MVZ22/LOGS/"
+
+for s in setDY.sets:
     
-#%%
-#######################################
-# Minimisation
-#######################################
-import time
-totalN=setDY.numberOfPoints+setSIDIS.numberOfPoints
-
-def chi_2(x):
-    startT=time.time()
-    harpy.setNPparameters(x)
-    print('np set =',["{:8.3f}".format(i) for i in x], end =" ")    
+    fname=s.name+"plt.dat"
+    if(os.path.isfile(pltPATH+fname)):
+        with open(pltPATH+fname, 'r') as openfile:
+            sDICT = json.load(openfile)
+    else:
+        sDICT={'p': [p["id"] for p in s.points],
+               'qT': [p["qT"] for p in s.points]}
     
-    ccDY2,cc3=DataProcessor.harpyInterface.ComputeChi2(setDY)
-    ccSIDIS2,cc3=DataProcessor.harpyInterface.ComputeChi2(setSIDIS)
+    x=DataProcessor.harpyInterface.ComputeXSec(s)
     
-    cc=(ccDY2+ccSIDIS2)/totalN
-    endT=time.time()
-    print(':->',cc,'       t=',endT-startT)
-    return ccDY2+ccSIDIS2
-
-#%%
-
-from iminuit import Minuit
-
-#
-#initialValues=(0.0426578, 0., 0.223809, 9.23868, 375.888, 2.14611, -4.97177, 0., 0., 0.233382, 0.478562, 0.47218, 0.511187)
-
-initialValues=(0.04562, 0.0, 0.0001633, 7.53655, 307.0, 2.4497, -5.89740, 0.0, 0.0, 0.44255, 0.415158, 0.457, 0.71595)
-
-initialErrors=(0.05,  0.05,  0.01,  1.0,   100,  0.1,   0.5,    1., 1., 0.1,   0.1,  0.1,    0.1)
-searchLimits=((0.,4.),   (-4.,4.),  (0.,10.), (0.,10.),(0., 1000.),(0.,10.),None,None,None, (0.,5.),(0.,5.),(0.,5.),None)
-
-# True= FIX
-parametersToMinimize=(False, False, False, False,False, False, False, True,True, False, False, False, False)
-#parametersToMinimize=(False, False, True, True, True, True, True, True,True, True, True, True, True)
-
-m = Minuit(chi_2, initialValues)
-
-m.errors=initialErrors
-m.limits=searchLimits
-m.fixed=parametersToMinimize
-m.errordef=1
-
-print(m.params)
-
-m.tol=0.0001*totalN*10000 ### the last 0.0001 is to compensate MINUIT def
-m.strategy=1
-m.migrad()
-
-print(m.params)
-
-harpy.setNPparameters(list(m.values))
-
-DataProcessor.harpyInterface.PrintChi2Table(setDY,printDecomposedChi2=True)
-DataProcessor.harpyInterface.PrintChi2Table(setSIDIS,printDecomposedChi2=True)
-
-#%%
-####################################
-# Search for minimum
-###################################
-
-# m.migrad()
-
-# print(m.params)
-
-# SaveToLog("MINIMIZATION FINISHED",str(m.params))
-# SaveToLog("CORRELATION MATRIX",str(m.matrix(correlation=True)))
-
-#%%
-for i in range(120):
-    b=i*0.04+0.0
-    print('{', b,",",harpy.get_R(b, 2., 4.),"},")
+    sDICT[keyNAME]=x
+    
+    with open(pltPATH+fname, "w") as outfile:
+        outfile.write(json.dumps(sDICT, indent=4))
