@@ -143,6 +143,7 @@ theData=DataProcessor.DataMultiSet.DataMultiSet("DYset",loadThisDataDY([
                           'A13-norm',
                           'CMS7', 'CMS8', 
                           'CMS13-00y04','CMS13-04y08','CMS13-08y12','CMS13-12y16','CMS13-16y24',
+                          #'CMS13_dQ_50to76',
                           #'CMS13_dQ_106to170','CMS13_dQ_170to350','CMS13_dQ_350to1000',
                           'LHCb7', 'LHCb8', 'LHCb13_dy(2021)', 
                           'PHE200', 'STAR510', 
@@ -174,13 +175,10 @@ print('Loaded experiments are', [i.name for i in setDY.sets])
 #harpy.setNPparameters([1.4094, 0.041582, 0.059136, 0.0, 0.117864, 1.9074, 0.964391, 1.2101, 0.039774, 39.6539, 2e-06, 0.000151, 0.346594, 0.539208, 5.7965, 0.0])
 #(11)
 harpy.setNPparameters([1.4107, 0.044607, 0.071958, 0.0, 0.920405, 1.2183, 1.0494, 4.095, 0.422448, 32.4762, 2e-06, 0.824624, 1.278, 2.7997, 11.1923, 0.0])
-# harpy.setNPparameters_TMDR([1.584237, 0.048428, 0.00,0.00])
-# harpy.setNPparameters_uTMDPDF([0.1121, 0.216501, 0.086422, 0.638894, 
-#                                 0.52901, 0.002356, 0.458209, 0.007681, 
-#                                 0.171196, 4.8701, 82.6934, 0.])
+
 
 DataProcessor.harpyInterface.PrintChi2Table(setDY,printDecomposedChi2=True)
-#DataProcessor.harpyInterface.PrintChi2Table(setSIDIS,printDecomposedChi2=True)
+
 
 
 #%%
