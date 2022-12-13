@@ -14,10 +14,17 @@ ROOT_DIR = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', '..'))
 ATMDE_DIR = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', '..','..'))+"/artemide/"
 HARPY_DIR = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', '..','..'))+"/artemide/harpy/"
 
+replicaFile =os.path.realpath(os.path.join(os.path.dirname(__file__))) +"/REPLICAS/replicaDY.dat"
+logFile =os.path.realpath(os.path.join(os.path.dirname(__file__))) +"/REPLICAS/LOG.log"
+
 import sys
 import numpy
 sys.path.append(ROOT_DIR)
 sys.path.append(HARPY_DIR)
+
+### number of circles that this code will run
+NumberOfReplicas=25
+
 
 #%%
 import DataProcessor.harpyInterface
@@ -31,24 +38,18 @@ MAINPATH=ROOT_DIR
 #######################################
 import harpy
 
-#path_to_constants=MAINPATH+"FittingPrograms/MVZ22/ConstantsFiles/DYonly/PDFb_DYonly_N3LL+N3LO"
 path_to_constants=MAINPATH+"FittingPrograms/MVZ22/ConstantsFiles/DYonly/PDFb_DYonly_N3LL+N4LO"
 
-#path_to_constants=MAINPATH+"FittingPrograms/MVZ22/ConstantsFiles/DYonly/SV22_DYonly_N4LL"
-#path_to_constants=MAINPATH+"FittingPrograms/MVZ22/ConstantsFiles/DYonly/SV19_DYonly_N4LL"
 
 harpy.initialize(path_to_constants)
 
-#harpy.setNPparameters([1.584237, 0.048428, 0.521983, 5.867221, 406.015479, 2.542726, -6.352752, 0.0, 0.1])
+initializationArray=[0.253434, 0.253434,0.253434, 0.253434,
+                     0.253434, 0.253434,0.253434, 0.253434,
+                     0.253434, 0.253434, 0.1,  0.1]
 
 harpy.setNPparameters_TMDR([1.584237, 0.048428,0.001,0.])
 
-harpy.setNPparameters_uTMDPDF([0.253434, 0.253434,
-                                0.253434, 0.253434,
-                                0.253434, 0.253434,
-                                0.253434, 0.253434,
-                                0.253434, 0.253434,
-                                346.999,  0.1])
+harpy.setNPparameters_uTMDPDF(initializationArray)
 
 #%%
 ### read the list of files and return the list of DataSets
@@ -69,9 +70,6 @@ def loadThisDataDY(listOfNames):
         
 
     return dataCollection
-
-
-
 #%%
 ##################Cut function
 def cutFunc(p):
@@ -110,50 +108,6 @@ def cutFunc(p):
     return ((delta<0.25 and p["<qT>"]<10.) or (delta<0.25 and par/err*delta**2<1)) , p
 
 #%%
-##################Cut function
-def cutFuncFORFIT(p):
-    par=0.5
-    
-    if("CDF1" in p['id']): return False, p
-    if("D01" in p['id']): return False, p
-    if("D02" in p['id']): return False, p
-    if("CMS7" in p['id']): return False, p
-    if("CMS8" in p['id']): return False, p
-    if("CDFrun1-W" in p['id']): return False, p
-    
-    if(p["xSec"]>0):
-        err=numpy.sqrt(sum([i**2 for i in p["uncorrErr"]]))/p["xSec"]
-    else:
-        err=100.
-    delta=p["<qT>"]/p["<Q>"]
-    
-    if(p["id"][0] == "E"):
-        delta=p["<qT>"]/p["Q"][1] 
-    
-    if("run1-W" in p["id"]):
-        delta=p["qT"][0]/(p["Q"][0]+5.)
-    
-    
-    if(p["id"][0:4] == "E605"):
-        if(p["Q"][0]==10.5):#UPSILON resonance-bin
-            return False , p
-    elif(p["id"][0:4] == "E772"):
-        if(p["Q"][0]<10):#these bins seems broken
-            return False , p
-    elif(p["id"][0:4] == "E615"):
-        if(9<p["<Q>"]<11.2):#UPSILON resonance-bin
-            return False , p
-    elif(p["id"][0:4] == "E228"):
-        if(9<p["<Q>"]<11):#UPSILON resonance-bin
-            return False , p
-    else:
-        if(9<p["<Q>"]<11):#UPSILON resonance-bin
-            return False , p    
-    
-#    return delta<0.5 and p.qT_avarage<80
-    return ((delta<0.25 and p["<qT>"]<15.) or (delta<0.25 and par/err*delta**2<0.)) , p
-
-#%%
 ### Loading the DY data set
 theData=DataProcessor.DataMultiSet.DataMultiSet("DYset",loadThisDataDY([
                           'CDF1', 'CDF2', 'D01', 'D02', 'D02m', 
@@ -174,37 +128,18 @@ theData=DataProcessor.DataMultiSet.DataMultiSet("DYset",loadThisDataDY([
                           ]))
 
 setDY=theData.CutData(cutFunc) 
-setDYfit=theData.CutData(cutFuncFORFIT) 
+#setDYfit=theData.CutData(cutFuncFORFIT) 
 
 #print('Loaded experiments are', [i.name for i in setDY.sets])
 
 print('Loaded ', setDY.numberOfSets, 'data sets with', sum([i.numberOfPoints for i in setDY.sets]), 'points.')
-print('Loaded ', setDYfit.numberOfSets, 'data sets with', sum([i.numberOfPoints for i in setDYfit.sets]), 'points.')
+#print('Loaded ', setDYfit.numberOfSets, 'data sets with', sum([i.numberOfPoints for i in setDYfit.sets]), 'points.')
 
 
 #%%
-
-# harpy.setNPparameters([[1.584237, 0.048428, 0.521983, 5.867221, 406.015479, 2.542726, -6.352752, 0.0, 0.0]])
-
-# #(original)
-#harpy.setNPparameters([2., 0.0436918, 0.103944, 1.65603, 0.36681, 1.24648, 0.00360835, 57.5154, 0.00121168, 0.45159, 0.108631, 4.89878, 22.7981, 0])
-#(1)
-#harpy.setNPparameters([2.2893,2.2893, 0.044942,0., 0.054509, 1.3851, 0.12001, 1.3159, 0.0, 32.5008, 0.0, 0.044856, 0.027146, 3.1409, 18.4962,  0.0])
-#(8)
-#harpy.setNPparameters([1.7, 0.065702, 0.066928, 0., 0.10833, 2.7129, 0.611321, 0.333934, 0.0, 54.434, 0.0, 0.001766, 0.046555, 0.005283, 31.2679, 0.0])
-#(9)
-#harpy.setNPparameters([1.4264, 0.053155, 0.0654, 0.0, 0.11059, 2.9452, 0.659106, 0.991233, 0.000456, 76.373, 0., 0.298568, 0.105762, 1.1453, 19.4772, 0.0])
-#(10)
-#harpy.setNPparameters([1.4312, 0.045097, 0.065787, 0.0, 0.088258, 2.6835, 1.011, 0.946874, 0.000374, 64.1763, 2.4e-05, 0.05902, 0.178093, 1.2986, 11.1923, 0.0])
-#(10+A13)
-#harpy.setNPparameters([1.4094, 0.041582, 0.059136, 0.0, 0.117864, 1.9074, 0.964391, 1.2101, 0.039774, 39.6539, 2e-06, 0.000151, 0.346594, 0.539208, 5.7965, 0.0])
-#(11)
-#harpy.setNPparameters([1.4107, 0.044607, 0.071958, 0.0, 0.920405, 1.2183, 1.0494, 4.095, 0.422448, 32.4762, 2e-06, 0.824624, 1.278, 2.7997, 11.1923, 0.0])
 #(11+full data)
 harpy.setNPparameters([1.5004, 0.049098, 0.05979, 0.0, 0.834557, 0.914247, 0.910747, 4.5973, 0.004487, 38.5017, 0.001313, 1.2705, 1.1989, 0.173397, 0.0, 0.0])
-DataProcessor.harpyInterface.PrintChi2Table(setDYfit,printDecomposedChi2=True)
-
-
+DataProcessor.harpyInterface.PrintChi2Table(setDY,printDecomposedChi2=True)
 
 
 #%%
@@ -235,10 +170,6 @@ def chi_2DY(x):
 from iminuit import Minuit
 
 #---- PDFbias-like row
-# initialValues=([1.4312, 0.045097, 0.065787, 0.0,
-#                 1.0823, 1.5445, 1.0018, 0.002023,
-#                 0.51518, 33.5879, 1e-06, 0.013953, 
-#                 1.0528, 2.6348, 11.1923, 0.])
 initialValues=([1.5004, 0.049098, 0.05979, 0.0, 
                 0.834557, 0.914247, 0.910747, 4.5973, 
                 0.004487, 38.5017, 0.001313, 1.2705, 
@@ -253,35 +184,105 @@ searchLimits=((0.2,2.5),(0.0,1.) ,(0.,1.), (-5.,5.),
               (0.,10.), (0.,100.),(0,5000.), (0,100.))
 # True= FIX
 parametersToMinimize=(False, False,False,True,
-                      #True,True,True,True,
-                      #True,True,True,True,
-                      #True,True,True,True)
                       False, False, False,False,
                       False, False, False,False,
                       False, False, True,True)
 
+#%%
+#######################################
+# Generate replica of data and compute chi2
+#######################################
+def MinForReplica():
+    global totalN,setDY,initialValues,initialErrors,searchLimits,parametersToMinimize
+        
+    def repchi_2(x):        
+        global totalN
+        startT=time.time()
+        harpy.setNPparameters(x)
+        print('np set =',["{:8.3f}".format(i) for i in x], end =" ")    
+        
+        ccDY2,cc2=DataProcessor.harpyInterface.ComputeChi2(repDataDY)
+        
+        cc=(ccDY2)/totalN
+        endT=time.time()
+        print(':->',cc,'       t=',endT-startT)
+        return ccDY2
+    
+    repDataDY=setDY.GenerateReplica()
+    
+    localM = Minuit(repchi_2, initialValues)
+    
+    localM.errors=initialErrors
+    localM.limits=searchLimits
+    localM.fixed=parametersToMinimize
+    localM.errordef=1    
+    localM.tol=0.0001*totalN*10000 ### the last 0.0001 is to compensate MINUIT def
+    localM.strategy=1
 
+    localM.migrad()
+    
+    ### [chi^2, NP-parameters]
+    return [localM.fval,list(localM.values)]
 
+#%%
+#######################################
+# LOG save function
+#######################################
+savedTime=time.time()
+def SaveToLog(text):
+    global savedTime,logFile
+    newTime=time.time()
+    
+    import socket
+    PCname=socket.gethostname()
+    
+    passedTime=newTime-savedTime
+    hours=int(passedTime/3600)
+    minutes=int((passedTime-hours*3600)/60)
+    seconds=int(passedTime-hours*3600-minutes*60)
+    
+    with open(logFile, 'a') as file:
+        file.write(PCname+ ' : ' + time.ctime()+' :  [+'+str(hours)+':'+str(minutes)+':'+str(seconds)+' ]\n')
+        file.write(' --> '+text+'\n')
+        file.write('\n')
+    savedTime=time.time()
 
-m = Minuit(chi_2DY, initialValues)
+#%%
+#######################################
+# This is the main cicle. 
+# It generates replica of data take random PDF and minimize it
+# Save to log.
+#######################################
 
-m.errors=initialErrors
-m.limits=searchLimits
-m.fixed=parametersToMinimize
-m.errordef=1
+for i in range(NumberOfReplicas):
+    print('---------------------------------------------------------------')
+    print('------------REPLICA ',i,' from ',NumberOfReplicas,'------------------')
+    print('---------------------------------------------------------------')
+    savedTime=time.time()
+    
+    ## reset PDF        
+    PDFreplica=numpy.random.randint(1000)
+    harpy.setPDFreplica(PDFreplica)
+    print("Start computation with PDF replica "+str(PDFreplica))
+    
+    harpy.setNPparameters_uTMDPDF(initializationArray)    
+    print("Minimization started.")
+    
+    ## got to pseudo-data and minimization
+    repRes=MinForReplica()
+    print(repRes)
+    print("Minimization finished.")    
+    SaveToLog(" Minization with replica "+str(PDFreplica)+".")
+    
+    ## compute the chi2 for true data full
+    mainDY, mainDY2 =DataProcessor.harpyInterface.ComputeChi2(setDY)    
+    print("Central chi^2  computed.)")
+    
+    ## save to file
+    f=open(replicaFile,"a+")
+    print('SAVING >>  ',f.name)
+    ### [total chi^2(full data), total chi^2 (fit data), list of chi^2 for experiments(full data), 
+    ############# number of PDF, list of NP-parameters],penalty term(if used) ]    else:
+    f.write(str([mainDY,repRes[0],mainDY2,i,PDFreplica, repRes[1]])+"\n")
+    f.close()   
 
-print(m.params)
-
-m.tol=0.0001*setDY.numberOfPoints*10000 ### the last 0.0001 is to compensate MINUIT def
-m.strategy=1
-m.migrad()
-
-print(m.params)
-
-valsDY=list(m.values)
-
-chi_2DY(m.values)
-
-DataProcessor.harpyInterface.PrintChi2Table(setDY,printDecomposedChi2=True)
-
-print([round(x,1 if x >100 else 4 if x>1 else 6) for x in list(m.values)])
