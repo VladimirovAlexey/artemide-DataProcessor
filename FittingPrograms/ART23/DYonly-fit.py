@@ -31,11 +31,9 @@ MAINPATH=ROOT_DIR
 #######################################
 import harpy
 
-#path_to_constants=MAINPATH+"FittingPrograms/MVZ22/ConstantsFiles/DYonly/PDFb_DYonly_N3LL+N3LO"
-path_to_constants=MAINPATH+"FittingPrograms/MVZ22/ConstantsFiles/DYonly/PDFb_DYonly_N3LL+N4LO"
 
-#path_to_constants=MAINPATH+"FittingPrograms/MVZ22/ConstantsFiles/DYonly/SV22_DYonly_N4LL"
-#path_to_constants=MAINPATH+"FittingPrograms/MVZ22/ConstantsFiles/DYonly/SV19_DYonly_N4LL"
+#path_to_constants=MAINPATH+"FittingPrograms/MVZ22/ConstantsFiles/DYonly/ART23_MSHT_N4LL"
+path_to_constants=MAINPATH+"FittingPrograms/MVZ22/ConstantsFiles/DYonly/ART23_NNPDF_N4LL"
 
 harpy.initialize(path_to_constants)
 
@@ -184,25 +182,15 @@ print('Loaded ', setDYfit.numberOfSets, 'data sets with', sum([i.numberOfPoints 
 
 #%%
 
-# harpy.setNPparameters([[1.584237, 0.048428, 0.521983, 5.867221, 406.015479, 2.542726, -6.352752, 0.0, 0.0]])
+#(MSHT)
+#harpy.setNPparameters([1.4806, 0.038969, 0.051737, 1.0, 
+#                       0.851645, 0.69432, 0.934676, 5.2514, 
+#                       0.247602, 39.6123, 0.094435, 1.8872, 
+#                       1.2164, 0.936465, 0.0, 0.0])
 
-# #(original)
-#harpy.setNPparameters([2., 0.0436918, 0.103944, 1.65603, 0.36681, 1.24648, 0.00360835, 57.5154, 0.00121168, 0.45159, 0.108631, 4.89878, 22.7981, 0])
-#(1)
-#harpy.setNPparameters([2.2893,2.2893, 0.044942,0., 0.054509, 1.3851, 0.12001, 1.3159, 0.0, 32.5008, 0.0, 0.044856, 0.027146, 3.1409, 18.4962,  0.0])
-#(8)
-#harpy.setNPparameters([1.7, 0.065702, 0.066928, 0., 0.10833, 2.7129, 0.611321, 0.333934, 0.0, 54.434, 0.0, 0.001766, 0.046555, 0.005283, 31.2679, 0.0])
-#(9)
-#harpy.setNPparameters([1.4264, 0.053155, 0.0654, 0.0, 0.11059, 2.9452, 0.659106, 0.991233, 0.000456, 76.373, 0., 0.298568, 0.105762, 1.1453, 19.4772, 0.0])
-#(10)
-#harpy.setNPparameters([1.4312, 0.045097, 0.065787, 0.0, 0.088258, 2.6835, 1.011, 0.946874, 0.000374, 64.1763, 2.4e-05, 0.05902, 0.178093, 1.2986, 11.1923, 0.0])
-#(10+A13)
-#harpy.setNPparameters([1.4094, 0.041582, 0.059136, 0.0, 0.117864, 1.9074, 0.964391, 1.2101, 0.039774, 39.6539, 2e-06, 0.000151, 0.346594, 0.539208, 5.7965, 0.0])
-#(11)
-#harpy.setNPparameters([1.4107, 0.044607, 0.071958, 0.0, 0.920405, 1.2183, 1.0494, 4.095, 0.422448, 32.4762, 2e-06, 0.824624, 1.278, 2.7997, 11.1923, 0.0])
-#(11+full data)
-harpy.setNPparameters([1.5004, 0.049098, 0.05979, 0.0, 0.834557, 0.914247, 0.910747, 4.5973, 0.004487, 38.5017, 0.001313, 1.2705, 1.1989, 0.173397, 0.0, 0.0])
-DataProcessor.harpyInterface.PrintChi2Table(setDYfit,printDecomposedChi2=True)
+#(NNPDF)
+harpy.setNPparameters([1.9608, 0.051636, 0.065776, 1.0, 0.950443, 0.542395, 0.96724, 4.0706, 0.402134, 43.4538, 0.198087, 1.2893, 1.0357, 0.039715, 0.0, 0.0])
+DataProcessor.harpyInterface.PrintChi2Table(setDY,printDecomposedChi2=True)
 
 
 
@@ -218,8 +206,7 @@ def chi_2DY(x):
     startT=time.time()
     harpy.setNPparameters_TMDR([x[0],x[1],x[2],x[3]])
     harpy.setNPparameters_uTMDPDF(x[4:])
-    # harpy.setNPparameters_TMDR([x[0],x[1],x[2],x[3]])
-    # harpy.setNPparameters_uTMDPDF(x[4:])
+
     print('np set =',["{:8.3f}".format(i) for i in x], end =" ")    
     
     ccDY2,cc3=DataProcessor.harpyInterface.ComputeChi2(setDY)
@@ -235,13 +222,10 @@ def chi_2DY(x):
 from iminuit import Minuit
 
 #---- PDFbias-like row
-# initialValues=([1.4312, 0.045097, 0.065787, 0.0,
-#                 1.0823, 1.5445, 1.0018, 0.002023,
-#                 0.51518, 33.5879, 1e-06, 0.013953, 
-#                 1.0528, 2.6348, 11.1923, 0.])
+
 initialValues=([1.5004, 0.049098, 0.05979, 0.0, 
                 0.834557, 0.914247, 0.910747, 4.5973, 
-                0.004487, 38.5017, 0.001313, 1.2705, 
+                0.4487, 3.85017, 0.1313, 1.2705, 
                 1.1989, 0.173397, 0.0, 0.0])
 initialErrors=(0.1,0.1,0.1,0.1,
                 0.1,  1.0, 0.1,  1.0,

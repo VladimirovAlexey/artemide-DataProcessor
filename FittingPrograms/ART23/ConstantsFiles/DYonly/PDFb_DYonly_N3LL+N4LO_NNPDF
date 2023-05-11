@@ -47,7 +47,7 @@
 *p2  : reference number for hadrons
     1
 *p3  : LHAPDF set names for hadrons (line-by-line corresponding to reference number
- MSHT20_REP
+ NNPDF31_nnlo_as_0118_1000
 *p4  : list of initialization replicas
     0
  
@@ -281,7 +281,7 @@
 # ---------------------------------------------------------------------------
 *8   :
 *p1  : initialize TMDs-inKT module
- F
+ T
 *A   : ---- Numerical evaluation parameters ----
 *p1  : Tolerance (relative tolerance of summation in OGATA quadrature)
    1.0000000000000000E-004

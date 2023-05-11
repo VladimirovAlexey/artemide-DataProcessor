@@ -244,7 +244,7 @@ def SaveGrid_kT(path,Qrange=Qrange_default, Xrange=XrangePDF_default,Rrange=Rran
                 xval=float(Xrange[j])
                 rval=float(Rrange[k])
                 
-                if(xval<0.999):
+                if(xval>0.999):
                     TMDval=[0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.]
                 else:
                     TMDval=harpy.get_uTMDPDF_kT(xval,rval*Qval,1,Qval,Qval**2,includeGluon=False)
