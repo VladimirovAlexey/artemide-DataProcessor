@@ -35,10 +35,10 @@ MAINPATH=ROOT_DIR
 #######################################
 import harpy
 
-#PDFtoUSE="MSHT"
-PDFtoUSE="NNPDF"
+PDFtoUSE="MSHT"
+#PDFtoUSE="NNPDF"
 
-path_to_constants=MAINPATH+"FittingPrograms/ART23/ConstantsFiles/DYonly/ART23_"+PDFtoUSE+"_N4LL"
+path_to_constants=MAINPATH+"FittingPrograms/ART23/ConstantsFiles/DYonly/ART23_"+PDFtoUSE+"_N4LL.atmde"
 #path_to_constants=MAINPATH+"FittingPrograms/ART23/ConstantsFiles/DYonly/ART23_JAM_N4LL"
 
 harpy.initialize(path_to_constants)
@@ -78,6 +78,28 @@ def loadThisDataDY(listOfNames):
 def cutFunc(p):
     par=0.5
     
+    #  for artemide v3.    
+    # p["process"]=[p["process"][0],p["process"][2],1,1]
+    if(True):
+        if(p["process"][2]==1): p["process"]=[p["process"][0],1,1,1]
+        elif(p["process"][2]==2): p["process"]=[p["process"][0],1,1,-1]
+        elif(p["process"][2]==3): p["process"]=[p["process"][0],2,1,1]
+        elif(p["process"][2]==4): p["process"]=[p["process"][0],2,1,-1]
+        elif(p["process"][2]==5): p["process"]=[p["process"][0],3,1,1]
+        elif(p["process"][2]==6): p["process"]=[p["process"][0],3,1,-1]
+        elif(p["process"][2]==7): p["process"]=[p["process"][0],4,1,1]
+        elif(p["process"][2]==8): p["process"]=[p["process"][0],5,1,1]
+        elif(p["process"][2]==9): p["process"]=[p["process"][0],6,1,1]
+        elif(p["process"][2]==10): p["process"]=[p["process"][0],4,1,-1]
+        elif(p["process"][2]==11): p["process"]=[p["process"][0],5,1,-1]
+        elif(p["process"][2]==12): p["process"]=[p["process"][0],6,1,-1]
+        elif(p["process"][2]==1001): p["process"]=[p["process"][0],101,1,1]
+        elif(p["process"][2]==1002): p["process"]=[p["process"][0],102,1,1]
+        else:
+            print("UNKNOWN PROCESS IN ARTEMIDE 3"+str(p["process"]))
+        
+        
+    
     if(p["xSec"]>0):
         err=numpy.sqrt(sum([i**2 for i in p["uncorrErr"]]))/p["xSec"]
     else:
@@ -112,6 +134,26 @@ def cutFunc(p):
 
 def cutFuncPlot(p):
     if p["type"]=="DY":        
+        #  for artemide v3.
+        #p["process"]=[p["process"][0],p["process"][2],1,1]
+        if(True):
+            if(p["process"][2]==1): p["process"]=[p["process"][0],1,1,1]
+            elif(p["process"][2]==2): p["process"]=[p["process"][0],1,1,-1]
+            elif(p["process"][2]==3): p["process"]=[p["process"][0],2,1,1]
+            elif(p["process"][2]==4): p["process"]=[p["process"][0],2,1,-1]
+            elif(p["process"][2]==5): p["process"]=[p["process"][0],3,1,1]
+            elif(p["process"][2]==6): p["process"]=[p["process"][0],3,1,-1]
+            elif(p["process"][2]==7): p["process"]=[p["process"][0],4,1,1]
+            elif(p["process"][2]==8): p["process"]=[p["process"][0],5,1,1]
+            elif(p["process"][2]==9): p["process"]=[p["process"][0],6,1,1]
+            elif(p["process"][2]==10): p["process"]=[p["process"][0],4,1,-1]
+            elif(p["process"][2]==11): p["process"]=[p["process"][0],5,1,-1]
+            elif(p["process"][2]==12): p["process"]=[p["process"][0],6,1,-1]
+            elif(p["process"][2]==1001): p["process"]=[p["process"][0],101,1,1]
+            elif(p["process"][2]==1002): p["process"]=[p["process"][0],102,1,1]
+            else:
+                print("UNKNOWN PROCESS IN ARTEMIDE 3"+str(p["process"]))
+                
         delta=p["<qT>"]/p["<Q>"]
         
         if(p["id"][0] == "E"):
@@ -145,21 +187,21 @@ def cutFuncPlot(p):
 #%%
 ### Loading the DY data set
 theData=DataProcessor.DataMultiSet.DataMultiSet("DYset",loadThisDataDY([
-                          'CDF1', 'CDF2', 'D01', 'D02', 'D02m', 
-                          'A7-00y10', 'A7-10y20','A7-20y24', 
-                          'A8-00y04', 'A8-04y08', 'A8-08y12', 'A8-12y16', 'A8-16y20', 'A8-20y24', 
-                          'A8-46Q66', 'A8-116Q150', 
-                          'A13-norm',
-                          'CMS7', 'CMS8', 
-                          'CMS13-00y04','CMS13-04y08','CMS13-08y12','CMS13-12y16','CMS13-16y24',
-                          'CMS13_dQ_50to76',
-                          'CMS13_dQ_106to170','CMS13_dQ_170to350','CMS13_dQ_350to1000',
-                          'LHCb7', 'LHCb8', 'LHCb13_dy(2021)', 
-                          'PHE200', 'STAR510', 
-                          'E228-200', 'E228-300', 'E228-400', 
-                          'E772',
-                          'E605',
-                          'D0run1-W','CDFrun1-W'
+                           'CDF1', 'CDF2', 'D01', 'D02', 'D02m', 
+                           #'A7-00y10', 'A7-10y20','A7-20y24', 
+                           'A8-00y04', 'A8-04y08', 'A8-08y12', 'A8-12y16', 'A8-16y20', 'A8-20y24', 
+                           'A8-46Q66', 'A8-116Q150', 
+                           'A13-norm',
+                           'CMS7', 'CMS8', 
+                           'CMS13-00y04','CMS13-04y08','CMS13-08y12','CMS13-12y16','CMS13-16y24',
+                           #'CMS13_dQ_50to76',
+                           'CMS13_dQ_106to170','CMS13_dQ_170to350','CMS13_dQ_350to1000',
+                           'LHCb7', 'LHCb8', 'LHCb13_dy(2021)', 
+                           'PHE200', 'STAR510', 
+                           'E228-200', 'E228-300', 'E228-400', 
+                           'E772',
+                           'E605',
+                           'D0run1-W','CDFrun1-W'
                           ]))
 
 setDY=theData.CutData(cutFuncPlot) 
@@ -169,7 +211,13 @@ setDYFIT=theData.CutData(cutFunc)
 print('Loaded ', setDY.numberOfSets, 'data sets with', sum([i.numberOfPoints for i in setDY.sets]), 'points.')
 #%%
 
-#DataProcessor.harpyInterface.PrintChi2Table(setDYFIT,printDecomposedChi2=True)
+DataProcessor.harpyInterface.PrintChi2Table(setDYFIT,printDecomposedChi2=True)
+
+#%%
+
+A11=DataProcessor.harpyInterface.ComputeXSec(setDYFIT)
+A22=[p["id"] for p in setDYFIT.points]
+
 
 #%%
 DIR_PLOT='/data/WorkingFiles/TMD/Fit_Notes/ART23/Data_for_plot_'+PDFtoUSE+'/'

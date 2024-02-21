@@ -119,8 +119,8 @@ def FinalizePoint(point, framework="artemide"):
         if not isinstance(a,list):
             print("FinalizePoint(framework=artemide): 'process' is not a list")
             return False
-        if len(a)!=3:
-            print("FinalizePoint(framework=artemide): 'process' is not a list of length 3")
+        if (len(a)!=3 and len(a)!=4):
+            print("FinalizePoint(framework=artemide): 'process' is not a list of length 4")
             return False
         if not all(isinstance(elem,int) for elem in a):
             print("FinalizePoint(framework=artemide): 'process' is not a list of integers")
