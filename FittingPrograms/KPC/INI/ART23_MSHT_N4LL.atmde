@@ -26,7 +26,7 @@
  
 *C   : ---- aTMDe-control parameters ----
 *p1  : Maximum number of processors to use (used only if compiled with openMP)
-           16
+           25
  
  
  
@@ -338,7 +338,7 @@
 *p1  : Order of coefficient function
  N4LO
 *p2  : Utilize KPC formula (T=KPC formula, F=LP formula)
- F
+ T
 *p3  : Use resummation of pi^2-corrections in hard coefficient
  F
 *B   : ---- Numerical evaluation parameters ----
@@ -359,7 +359,7 @@
  T
 *D   : ---- Definition of TMD factorization with KPC ----
 *p1  : Include terms induced by fiducial cuts
- T
+ F
  
 # ---------------------------------------------------------------------------
 # ----                          PARAMETERS OF TMDX-SIDIS                -----
@@ -649,7 +649,7 @@
 # ---------------------------------------------------------------------------
 *15   :
 *p1  : initialize TMDF-KPC-DY module
- F
+ T
 *A   : ---- Main definitions ----
 *p1  : NOT YET
 

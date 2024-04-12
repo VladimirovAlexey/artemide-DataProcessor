@@ -45,6 +45,7 @@ def _ComputeXSec_Data(data,method="default"):
         default = usual one
         binless = evaluated with avarage values of bins only. Multiplied by area of the bin
         central = evaluated with avarage values of bins only. No further modifications.
+        approximate = evaluated with approximate procedure (very few points per bin integration)
     """
     
     if method=="default":        
@@ -117,6 +118,18 @@ def _ComputeXSec_Data(data,method="default"):
                                     [d["<x>"] for d in data.points],
                                     [d["<Q>"] for d in data.points],
                                     [[d["M_target"],d["M_product"]] for d in data.points])
+    elif method=="approximate":
+        if data.processType == "DY":
+            XX=harpy.DY.xSecListAPROX([d["process"] for d in data.points],
+                                    [d["s"] for d in data.points],
+                                    [d["qT"] for d in data.points],
+                                    [d["Q"] for d in data.points],
+                                    [d["y"] for d in data.points],
+                                    [d["includeCuts"] for d in data.points],
+                                    [d["cutParams"] for d in data.points])
+            
+        elif data.processType=="SIDIS":
+            raise ValueError("Method <approximate> is not yet implemented for SIDIS.")
     else:
         raise ValueError("Method is unknown.")
      

@@ -49,7 +49,7 @@
 *p2  : reference number for hadrons
     1
 *p3  : LHAPDF set names for hadrons (line-by-line corresponding to reference number
- MSHT20_REP
+ treyand-23
 *p4  : list of initialization replicas
     0
  
@@ -133,7 +133,7 @@
  
 *A   : ---- Main definitions ----
 *p1  : Order of evolution
- N4LO
+ N3LO
 *p2  : Override the general definition of the pertrubative order (in this case orders are defined by the list below)
    F
 *p3  : Order of Gamma-cusp (LO=1-loop, NLO=2-loop, ...)
@@ -173,7 +173,7 @@
 
 *B   : ---- OPE main definitions ----
 *p1  : Order of coefficient function
- N3LO
+ NLO
 *p2  : Prepare grid
  T
 *p3  : run the test of the grid (takes some time)
@@ -194,48 +194,26 @@
        10000
 
 *E   : ---- (OPE) Parameters of grid ----
-*p1  : Number of subgrids in X (required to read the next line)
-   4
-*p2  : Intervals for subgrids in X (must include 1., as the last point)
-0.00001  0.001  0.1  0.7  1.
-*p3  : Number of nodes in the X-subgrid
-   8
-*p4  : Number of subgrids in B (required to read the next line)
-   6
-*p5  : Intervals for subgrids in B (below and above ultimate points the value is frozen)
-0.00001  0.01  0.2  2.  8.  25. 50.
-*p6  : Number of nodes in the B-subgrid
-   8
-
-*F   : ---- Transform and grid in KT-space ----
-*p1  : Prepare grid
- T
-*p2  : run the test of the grid (takes some time)
- F
-*p3  : Number of subgrids in X (required to read the next line)
-   4
-*p4  : Intervals for subgrids in X (must include 1., as the last point)
-0.00001  0.001  0.1  0.7  1.
-*p5  : Number of nodes in the X-subgrid
-   16
-*p6  : Number of subgrids in KT (required to read the next line)
-   6
-*p7  : Intervals for subgrids in KT (below and above ultimate points the value is frozen)
-0.01  1.0  5.  15. 50. 100. 200.
-*p8  : Number of nodes in the KT-subgrid
-   16
-*p9  : Minimal Q in the grid
-   1.0000000000000
-*p10 : Maximal Q in the grid
-   200.0000000000000
-*p11 : Number of nodes in the Q-grid
-   40
-*p12 : Number of subgrids in B [for Hankel transform] (required to read the next line)
-   6
-*p13 : Intervals for subgrids in B [for Hankel transform]
-0.00001  0.01  0.2  2.  8.  25. 50.
-*p14 : Number of nodes in the B-subgrid [for Hankel transform]
-   16
+*p1  : xGrid_Min the minimal value of x in grid (max=1), make sure that it is enough)
+   1.0000000000000001E-005
+*p2  : Parameter for x-griding function (better not to change it)
+   2.0000000000000000
+*p3  : the minimum bT in grid, for smaller value the result is constant
+   9.9999999999999995E-007
+*p4  : the maximum bT in grid, for larger b the approximate extrapolation is done
+   30.000000000000000
+*p5  : Grid Size over X
+         400
+*p6  : Grid Size over B
+         250
+ 
+*F   : ---- Transformation to KT-space ----
+*p1  : Tolerance (relative tolerance of summation in OGATA quadrature)
+   1.0000000000000000E-004
+*p2  : Ogata quadrature integration step
+   1.0000000000000000E-003 
+*p3  : Minimum value of kT (below that value function is constant)
+   0.0001
    
 *G   : ---- Computation of Transverse Momentum Moments (TMM) ----
 *p1  : Tolerance (relative tolerance of summation in OGATA quadrature)
@@ -244,8 +222,31 @@
    1.0000000000000000E-003 
 *p3  : Minimum value of mu [GeV] (below that value the computation is terminated)
    0.8
-
-
+   
+*H   : ---- Grid in KT-space ----
+*p1  : Prepare grid
+ F
+*p2  : run the test of the grid (takes some time)
+ T
+*p3  : Minimal X in the grid
+   1.0000000000000000E-005
+*p4  : Minimal KT in the grid (below the value is frozen)
+   1.0000000000000000E-003
+*p5  : Minimal Q in the grid
+   1.0000000000000000
+*p6  : Maximal Q in the grid
+   200.0000000000000
+*p7  : Number of nodes in x-direction
+   200
+*p8  : Number of nodes in KT-direction
+   100
+*p9  : Number of nodes in Q-direction
+   50
+*p10 : Parameter of x-griding function (better not to change it)
+   2.0000000000000000
+*p11 : Upper limit for KT-grid (better not to change it)
+   1.5000000000000000
+ 
 # ---------------------------------------------------------------------------
 # ----                           PARAMETERS OF uTMDFF                   -----
 # ---------------------------------------------------------------------------
@@ -282,18 +283,18 @@
        10000
 
 *E   : ---- (OPE) Parameters of grid ----
-*p1  : Number of subgrids in X (required to read the next line)
-   3
-*p2  : Intervals for subgrids in X (must include 1., as the last point)
-0.001  0.1  0.5  1.
-*p3  : Number of nodes in the X-subgrid
-   8
-*p4  : Number of subgrids in B (required to read the next line)
-   4
-*p5  : Intervals for subgrids in B (below and above ultimate points the value is frozen)
-0.00001  0.01  0.2  2.  25.
-*p6  : Number of nodes in the B-subgrid
-   8
+*p1  : xGrid_Min the minimal value of x in grid (max=1), make sure that it is enough)
+   5.0000000000000003E-002
+*p2  : Parameter for x-griding function (better not to change it)
+   2.0000000000000000
+*p3  : the minimum bT in grid, for smaller value the result is constant
+   9.9999999999999995E-007
+*p4  : the maximum bT in grid, for larger b the approximate extrapolation is done
+   25.000000000000000
+*p5  : Grid Size over X
+         200
+*p6  : Grid Size over B
+         200
  
 *F   : ---- Transformation to KT-space ----
 *p1  : Tolerance (relative tolerance of summation in OGATA quadrature)
@@ -322,8 +323,6 @@
    1.0000000000000000E-004
 *p2  : Ogata quadrature integration step
    1.0000000000000000E-003
-*p3  : Minimal qT (for smaller values the expression is constant)
-   1.0000000000000000E-003
 *B   : ---- Global garameters of structure functions----
 *p1  : Mass parameter used in the structure function (mass of hadron)
   0.93827199935913086     
@@ -336,7 +335,7 @@
  T
 *A   : ---- Main definitions ----
 *p1  : Order of coefficient function
- N4LO
+ NLO
 *p2  : Utilize KPC formula (T=KPC formula, F=LP formula)
  F
 *p3  : Use resummation of pi^2-corrections in hard coefficient
@@ -434,18 +433,18 @@
        10000
 
 *E   : ---- (OPE) Parameters of grid ----
-*p1  : Number of subgrids in X (required to read the next line)
-   4
-*p2  : Intervals for subgrids in X (must include 1., as the last point)
-0.00001  0.001  0.1  0.5  1.
-*p3  : Number of nodes in the X-subgrid
-   8
-*p4  : Number of subgrids in B (required to read the next line)
-   4
-*p5  : Intervals for subgrids in B (below and above ultimate points the value is frozen)
-0.00001  0.01  0.2  2.  25.
-*p6  : Number of nodes in the B-subgrid
-   8
+*p1  : xGrid_Min the minimal value of x in grid (max=1), make sure that it is enough)
+   1.0000000000000001E-005
+*p2  : Parameter for x-griding function (better not to change it)
+   2.0000000000000000
+*p3  : the minimum bT in grid, for smaller value the result is constant
+   9.9999999999999995E-007
+*p4  : the maximum bT in grid, for larger b the approximate extrapolation is done
+   25.000000000000000
+*p5  : Grid Size over X
+         400
+*p6  : Grid Size over B
+         200
  
 *F   : ---- Transformation to KT-space ----
 *p1  : Tolerance (relative tolerance of summation in OGATA quadrature)
@@ -552,18 +551,18 @@
        10000
 
 *E   : ---- OPE[tw2] Parameters of grid ----
-*p1  : Number of subgrids in X (required to read the next line)
-   3
-*p2  : Intervals for subgrids in X (must include 1., as the last point)
-0.001  0.1  0.5  1.
-*p3  : Number of nodes in the X-subgrid
-   8
-*p4  : Number of subgrids in B (required to read the next line)
-   4
-*p5  : Intervals for subgrids in B (below and above ultimate points the value is frozen)
-0.00001  0.01  0.2  2.  25.
-*p6  : Number of nodes in the B-subgrid
-   8
+*p1  : xGrid_Min the minimal value of x in grid (max=1), make sure that it is enough)
+   1.0000000000000001E-005
+*p2  : Parameter for x-griding function (better not to change it)
+   2.0000000000000000
+*p3  : the minimum bT in grid, for smaller value the result is constant
+   1.0000000000000001E-006
+*p4  : the maximum bT in grid, for larger approximate extrapolation is done
+   25.00000000000000
+*p5  : Grid Size over X
+         400
+*p6  : Grid Size over B
+         200
 
 *F   : ---- OPE[tw3] main definitions ----
 *p1  : Order of coefficient function
