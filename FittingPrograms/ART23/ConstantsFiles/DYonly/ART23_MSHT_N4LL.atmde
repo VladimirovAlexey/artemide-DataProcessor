@@ -628,13 +628,35 @@
        
 *E   : ---- (OPE) Parameters of grid ----
  
-*F   : ---- Transformation to KT-space ----
-*p1  : Tolerance (relative tolerance of summation in OGATA quadrature)
-   1.0000000000000000E-004
-*p2  : Ogata quadrature integration step
-   1.0000000000000000E-003 
-*p3  : Minimum value of kT (below that value function is constant)
-   0.0001
+*F   : ---- Transform and grid in KT-space ----
+*p1  : Prepare grid
+ T
+*p2  : run the test of the grid (takes some time)
+ F
+*p3  : Number of subgrids in X (required to read the next line)
+   4
+*p4  : Intervals for subgrids in X (must include 1., as the last point)
+0.00001  0.001  0.1  0.7  1.
+*p5  : Number of nodes in the X-subgrid
+   16
+*p6  : Number of subgrids in KT (required to read the next line)
+   5
+*p7  : Intervals for subgrids in KT (below and above ultimate points the value is frozen)
+0.01  1.0  5.  15. 50. 200.
+*p8  : Number of nodes in the KT-subgrid
+   16
+*p9  : Minimal Q in the grid
+   1.0000000000000
+*p10 : Maximal Q in the grid
+   200.0000000000000
+*p11 : Number of nodes in the Q-grid
+   40
+*p12 : Number of subgrids in B [for Hankel transform] (required to read the next line)
+   5
+*p13 : Intervals for subgrids in B [for Hankel transform]
+0.00001  0.01  0.2  2.  8.  25.
+*p14 : Number of nodes in the B-subgrid [for Hankel transform]
+   16
    
 *G   : ---- Computation of Transverse Momentum Moments (TMM) ----
 *p1  : Tolerance (relative tolerance of summation in OGATA quadrature)
@@ -658,3 +680,5 @@
    1.0000000000000000E-006
 *p2  : Tolerance (Integration tollerance)
    1.0000000000000000E-004
+*p3  : Minimum qT value (below the qT-value is frozen)
+   1.0000000000000000E-003

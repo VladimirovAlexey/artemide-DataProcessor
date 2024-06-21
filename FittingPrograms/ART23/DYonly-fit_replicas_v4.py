@@ -62,14 +62,17 @@ def loadThisDataDY(listOfNames):
     
     path_to_data=ROOT_DIR+"DataLib/unpolDY/"
     path_to_dataW=ROOT_DIR+"DataLib/unpolW/"
+    path_to_dataA=ROOT_DIR+"DataLib/DY_angular/"
     
     
     dataCollection=[]
     for name in listOfNames:
-        
-        print(name)
         if(name[-1]=="W"):
             loadedData=DataProcessor.DataSet.LoadCSV(path_to_dataW+name+".csv")
+        elif("_A4" in name):
+            loadedData=DataProcessor.DataSet.LoadCSV(path_to_dataA+name+".csv")
+        elif("_Auu" in name):
+            loadedData=DataProcessor.DataSet.LoadCSV(path_to_dataA+name+".csv")
         else:
             loadedData=DataProcessor.DataSet.LoadCSV(path_to_data+name+".csv")
         dataCollection.append(loadedData)   
@@ -83,7 +86,7 @@ def cutFunc(p):
     
     #  for artemide v3.    
     # p["process"]=[p["process"][0],p["process"][2],1,1]
-    if(True):
+    if(len(p["process"])==3):
         if(p["process"][2]==1): p["process"]=[p["process"][0],1,1,1]
         elif(p["process"][2]==2): p["process"]=[p["process"][0],1,-1,1]
         elif(p["process"][2]==3): p["process"]=[p["process"][0],1,1,2]
@@ -132,6 +135,7 @@ def cutFunc(p):
     
 #    return delta<0.5 and p.qT_avarage<80
     return ((delta<0.25 and p["<qT>"]<10.) or (delta<0.25 and par/err*delta**2<1)) , p
+    #return (delta<0.25) , p
 
 #%%
 ### Loading the DY data set
@@ -162,15 +166,44 @@ print('Loaded ', setDY.numberOfSets, 'data sets with', sum([i.numberOfPoints for
 #print('Loaded ', setDYfit.numberOfSets, 'data sets with', sum([i.numberOfPoints for i in setDYfit.sets]), 'points.')
 
 #%%
+### Load the data for A4
+theDataA4=DataProcessor.DataMultiSet.DataMultiSet("DYset",loadThisDataDY(["A8_A4_0y1","A8_A4_1y2","A8_A4_2y35"]))
+setA4=theDataA4.CutData(cutFunc) 
+
+### Load the data for Auu
+theDataAuu=DataProcessor.DataMultiSet.DataMultiSet("DYset",loadThisDataDY(["A8_Auu_0y1","A8_Auu_1y2","A8_Auu_2y35"]))
+setAuu=theDataAuu.CutData(cutFunc) 
+
+#%%
 #(11+full data)
 #harpy.setNPparameters([1.5004, 0.049098, 0.05979, 0.0, 0.834557, 0.914247, 0.910747, 4.5973, 0.004487, 38.5017, 0.001313, 1.2705, 1.1989, 0.173397, 0.0, 0.0])
-harpy.setNPparameters([1.5004, 0.05614, 0.03862, 0.0, 0.565, 0.0539, 0.5697, 6.64, 0.565, 20.07, 0.5697, 0.537, 1.07, 2.39, 0.0, 0.0])
+harpy.setNPparameters([1.5004, 0.05614, 0.03862, 0.0, 0.565, 0.0539, 0.5697, 6.64, 0., 20.07, 0., 0.537, 1.07, 2.39, 0.0, 0.0])
 #rSet.SetReplica(0)
 #harpy.setNPparameters([1.4806, 0.038969, 0.051737, 0.0, 0.565, 0.0539, 0.5697, 6.64, 0.565, 20.07, 0.5697, 0.537, 1.07, 2.39, 0.0, 0.0])
 #FIT with cut facto from KPC (fast chi2=1.055)
 #harpy.setNPparameters([1.5, 0.053509, 0.037095, 0.0, 0.549212, 0.172144, 0.538113, 6.4105, 0.565, 19.8866, 0.5697, 0.638572, 1.0974, 10.0389, 0.004768, 0.0])
-
+#FIT of A4 only
+#harpy.setNPparameters([1.5, 0.05614, 0.03862, 0.0, 0.565, 0.0539, 0.5697, 6.64, 0.565, 20.07, 0.5697, 0.537, 1.07, 2.39, 0.0, 0.0])
 DataProcessor.harpyInterface.PrintChi2Table(setDY,printDecomposedChi2=True)
+
+#%% PLOT files
+# pathToPlot="/data/WorkingFiles/TMD/Fit_Notes/KPC/PlotsData/LP_ART23/"
+# import time
+# for s in setDY.sets:
+#     startT=time.time()
+#     XX=DataProcessor.harpyInterface.ComputeXSec(s)
+#     endT=time.time()
+#     print(':->',s.name,'       t=',endT-startT)
+#     f=open(pathToPlot+s.name+"dat","w")
+#     print('SAVING PLOTS>>  ',f.name)
+#     ### [total chi^2, list of NP-parameters],
+#     for i in range(len(XX)):
+#         p=s.points[i]
+#         f.write(str(p["qT"][0])+", "+str(p["qT"][1])+", "+
+#                 str(p["xSec"])+", "+str(numpy.sqrt(sum(numpy.array(p["uncorrErr"])**2)))+", "+
+#                 str(XX[i])+"\n")
+        
+#     f.close()
 
 #%%
 #######################################
@@ -185,10 +218,10 @@ def chi_2DY(x):
     startT=time.time()
     harpy.setNPparameters_TMDR([x[0],x[1],x[2],x[3]])
     #harpy.setNPparameters_uTMDPDF(x[4:])
-    harpy.setNPparameters_uTMDPDF([x[4],x[5],x[6],x[7],x[4],x[9],x[6],x[11],x[12],x[13],x[14],x[15]])
+    harpy.setNPparameters_uTMDPDF([x[4],x[5],x[6],x[7],x[8],x[9],x[10],x[11],x[12],x[13],x[14],x[15]])
     # harpy.setNPparameters_TMDR([x[0],x[1],x[2],x[3]])
     # harpy.setNPparameters_uTMDPDF(x[4:])
-    print('np set =',["{:8.3f}".format(i) for i in x], end =" ")        
+    print('np set =',["{:8.3f}".format(i) for i in x])        
     
     YY=DataProcessor.harpyInterface.ComputeXSec(setDY)
     ccDY2,cc3=setDY.chi2(YY)
@@ -196,13 +229,23 @@ def chi_2DY(x):
     penalty_array=numpy.array([max(0,abs(setDY.sets[i].DetermineAvarageSystematicShift(YY[setDY._i1[i]:setDY._i2[i]]))/setDY.sets[i].normErr[0]-1) for i in penalty_index])
     penalty_term=sum(penalty_array**6)
     
+    # YA4=DataProcessor.harpyInterface.ComputeXSec(setA4)
+    # YAuu=DataProcessor.harpyInterface.ComputeXSec(setAuu)
+    ccA4,cc4=0,0#=setA4.chi2(-numpy.array(YA4)/numpy.array(YAuu))
+    
     #ccDY2,cc3=DataProcessor.harpyInterface.ComputeChi2(setDY)
     #ccSIDIS2,cc3=DataProcessor.harpyInterface.ComputeChi2(setSIDIS)
     
+    #penalty_term=0.
+    #ccDY2=0.
+    
     cc=ccDY2/setDY.numberOfPoints
+    ccR=ccA4/setA4.numberOfPoints
+    
+    
     endT=time.time()
-    print(':->',cc,'   +p=',cc+penalty_term/setDY.numberOfPoints)
-    return ccDY2+penalty_term
+    print(':->',cc,'  ',ccR,'   +p=',penalty_term,"    time=",endT-startT)
+    return ccDY2+ccA4+penalty_term
 #%%
 # chi2=1.163 (muOPE->2)
 # [1.5, 0.049098, 0.05979, 0.0, 0.364806, 4.7486, 0.469411, 0.652846, 0.0, 33.8383, 0.0, 24.3613, 1.4598, 0.054165, 0.0, 0.0]
@@ -214,10 +257,11 @@ def chi_2DY(x):
 from iminuit import Minuit
 
 #---- PDFbias-like row
-initialValues=([1.5000, 0.05614, 0.03862, 0.0, 
+initialValues=([1.500, 0.05614, 0.03862, 0.0, 
                 0.565, 0.0539, 0.5697, 6.64, 
-                0.565, 20.07, 0.5697, 0.537, 
-                1.07, 2.39, 0.0, 0.0])
+                0.0, 2.07, 0.0, 0.537, 
+                1.07, 2.39, 0.0, 0.0
+    ])
 
 # initialValues=([1.56142, 0.0369174, 0.0581734, 1.0,
 #   0.874245, 0.913883, 0.991563, 6.05412,
@@ -227,14 +271,15 @@ initialErrors=(0.1,0.1,0.1,0.1,
                 0.1,  1.0, 0.1,  1.0,
                 0.1,  1.0, 0.1,  1.0,
                 0.1,  1.0, 10.,  1.)
-searchLimits=((1.0,2.5),(0.001,.2) ,(0.0,.2), (-5.,5.),
-              (0.,10.), (0,100.),(0.,10.), (0,100.),
-              (-0.1,10.), (0.,100.),(-0.1,10.), (0.,100.),
-              (0.,10.), (0.,25.),(0,5000.), (0,100.))
+searchLimits=((1.0,2.5),(0.005,0.15) ,(0.0,.2), (-5.,5.),
+              (0.0001,100.), (0.0001,100.),(0.0001,100.),(0.0001,100.),
+              (-100.,100.), (0.0001,100.),(-100.,100.),(0.0001,100.),
+              (0.0001,100.), (0.0001,100.),(0.,100.),(0.0001,100.))
+              
 # True= FIX
 parametersToMinimize=(True, False,False,True,
                       False, False, False,False,
-                      True, False, True,False,
+                      False, False, False,False,
                       False, False, False,True)
 
 #%%
@@ -262,6 +307,7 @@ DataProcessor.harpyInterface.PrintChi2Table(setDY,printDecomposedChi2=True)
 
 print([round(x,1 if x >100 else 4 if x>1 else 6) for x in list(m.values)])
 
+#%%
 sys.exit()
 
 #%%

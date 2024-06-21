@@ -74,6 +74,20 @@ def loadThisDataDY(listOfNames):
         
 
     return dataCollection
+
+#%%
+### read the list of files and return the list of DataSets
+def loadThisDataDY_angular(listOfNames):    
+    import DataProcessor.DataSet
+    path_to_dataA=ROOT_DIR+"DataLib/DY_angular/"
+    
+    
+    dataCollection=[]
+    for name in listOfNames:
+        loadedData=DataProcessor.DataSet.LoadCSV(path_to_dataA+name+".csv")
+        dataCollection.append(loadedData)           
+
+    return dataCollection
 #%%
 ##################Cut function
 def cutFunc(p):
@@ -81,7 +95,9 @@ def cutFunc(p):
     
     #  for artemide v3.    
     # p["process"]=[p["process"][0],p["process"][2],1,1]
-    if(True):
+    if(len(p["process"])==4):
+        if(p["process"][3]==3): p["process"][3]=2
+    if(len(p["process"])==3):
         if(p["process"][2]==1): p["process"]=[p["process"][0],1,1,1]
         elif(p["process"][2]==2): p["process"]=[p["process"][0],1,-1,1]
         elif(p["process"][2]==3): print("ERROR1")
@@ -129,25 +145,25 @@ def cutFunc(p):
             return False , p    
     
     #ART23
-    return ((delta<0.25 and p["<qT>"]<10.) or (delta<0.25 and par/err*delta**2<1)) , p
+    #return ((delta<0.25 and p["<qT>"]<10.) or (delta<0.25 and par/err*delta**2<1)) , p
     #return ((delta<0.25 and p["<qT>"]<10.)) , p
-    #return (delta<0.25) , p
+    return (delta<0.25) , p
 
 #%%
 ### Loading the DY data set
 theData=DataProcessor.DataMultiSet.DataMultiSet("DYset",loadThisDataDY([
-                          'CDF1', 'CDF2', 'D01', 'D02', 'D02m', 
+                          #'CDF1', 'CDF2', 'D01', 'D02', 'D02m', 
                           #'A7-00y10', 'A7-10y20','A7-20y24', 
                           'A8-00y04', 'A8-04y08', 'A8-08y12', 'A8-12y16', 'A8-16y20', 'A8-20y24', 
                           'A8-46Q66', 'A8-116Q150', 
                           'A13-norm',
-                          'CMS7', 'CMS8', 
+                          #'CMS7', 'CMS8', 
                           'CMS13-00y04','CMS13-04y08','CMS13-08y12','CMS13-12y16','CMS13-16y24',
                           #'CMS13_dQ_50to76',
                           #'CMS13_dQ_106to170','CMS13_dQ_170to350','CMS13_dQ_350to1000',
                           'LHCb7', 'LHCb8', 
                           'LHCb13_dy(2021)', 
-                          'PHE200', 'STAR510', 
+                          #'PHE200', 'STAR510', 
                           'E228-200', 'E228-300', 'E228-400', 
                           'E772','E605'
                           #'D0run1-W','CDFrun1-W'
@@ -167,55 +183,294 @@ theData=DataProcessor.DataMultiSet.DataMultiSet("DYset",loadThisDataDY([
 setA8=theData.CutData(cutFunc) 
 
 #%%
-#(11+full data)
-#harpy.setNPparameters([1.5004, 0.049098, 0.05979, 0.0, 0.834557, 0.914247, 0.910747, 4.5973, 0.004487, 38.5017, 0.001313, 1.2705, 1.1989, 0.173397, 0.0, 0.0])
+### Load the data for A4
+theDataA4=DataProcessor.DataMultiSet.DataMultiSet("DYset",loadThisDataDY_angular(["A8_A4_0y1","A8_A4_1y2","A8_A4_2y35"]))
+setA4=theDataA4.CutData(cutFunc) 
+
+### Load the data for Auu
+theDataAuu=DataProcessor.DataMultiSet.DataMultiSet("DYset",loadThisDataDY_angular(["A8_Auu_0y1","A8_Auu_1y2","A8_Auu_2y35"]))
+setAuu=theDataAuu.CutData(cutFunc) 
+
+#%%
+# MAIN FIT
 harpy.setNPparameters([1.5004, 0.05614, 0.03862, 0.0, 0.565, 0.0539, 0.5697, 6.64, 0.565, 20.07, 0.5697, 0.537, 1.07, 2.39, 0.0, 0.0])
+#%% 
+#FIT with cut facto from KPC (fast chi2=1.055)
+harpy.setNPparameters([1.5, 0.053509, 0.037095, 0.0, 0.549212, 0.172144, 0.538113, 6.4105, 0.565, 19.8866, 0.5697, 0.638572, 1.0974, 10.0389, 0.004768, 0.0])
 
 #%%
-# XX0=DataProcessor.harpyInterface.ComputeXSec(setA8)
-# #%%
-# def ToA1(p):
-#     p["process"][3]=3
-#     return True, p
+#### Computation of different contributions to the unpolarized fiducial cross-section
+XXN=DataProcessor.harpyInterface.ComputeXSec(setA8)
 
-# setA8_A1=setA8.CutData(ToA1)
+def ToA0(p):
+    p["process"][3]=20
+    return True, p
 
-# XX1=DataProcessor.harpyInterface.ComputeXSec(setA8_A1)
+setA8_A0=setA8.CutData(ToA0)
 
-# #%%
-# def ToA2(p):
-#     p["process"][3]=4
-#     return True, p
+XX0=DataProcessor.harpyInterface.ComputeXSec(setA8_A0)
+#%%
+def ToA1(p):
+    p["process"][3]=21
+    return True, p
 
-# setA8_A2=setA8.CutData(ToA2)
+setA8_A1=setA8.CutData(ToA1)
 
-# XX2=DataProcessor.harpyInterface.ComputeXSec(setA8_A2)
+XX1=DataProcessor.harpyInterface.ComputeXSec(setA8_A1)
 
-# #%%
-# def ToA3(p):
-#     p["process"][3]=5
-#     return True, p
+def ToA2(p):
+    p["process"][3]=22
+    return True, p
 
-# setA8_A3=setA8.CutData(ToA3)
+setA8_A2=setA8.CutData(ToA2)
 
-# XX3=DataProcessor.harpyInterface.ComputeXSec(setA8_A3)
+XX2=DataProcessor.harpyInterface.ComputeXSec(setA8_A2)
 
 #%%
-XX1=DataProcessor.harpyInterface.ComputeXSec(setDY)
-XX2=DataProcessor.harpyInterface.ComputeXSec(setDY,method="approximate")
-
-RAT=numpy.array(XX1)/numpy.array(XX2)
-
-
+XXuu=DataProcessor.harpyInterface.ComputeXSec(setAuu)
+XX4=DataProcessor.harpyInterface.ComputeXSec(setA4)
 
 #%%
+### Preparing data set for angular coefficients
+
+print("Done.  =>     Create points & append to data set ...")
+DataA4=DataProcessor.DataSet.DataSet('A8-A4',"DY")
+DataA4.comment="ATLAS8"
+DataA4.reference="1606.00689"
+
+DataA4.isNormalized=False
+proc_current=[1,1,1,24]
+s_current=64000000.0
+Q_current=[80.,100.]
+y_current=[0.,.1]
+lumUncertainty=0.039
+DataA4.normErr.append(lumUncertainty)
+
+ptBINS=[0.,2.5,5.0,8.0,11.4,14.9,18.5,22.0,25.5,29.0]
+yBINS=[0.,1.0,2.0,3.5]
+
+for i in range(len(ptBINS)-1):
+    for j in range(len(yBINS)-1):
+        # makeup a point
+        p=DataProcessor.Point.CreateDYPoint(DataA4.name+'.'+str(i))
+        p["process"]=proc_current
+        p["s"]=s_current
+        p["qT"]=[ptBINS[i],ptBINS[i+1]]
+        p["thFactor"]=1.
+        p["Q"]=Q_current
+        p["<Q>"]=91.2 ### to be sure that mass middle value is Z-boson mass
+        p["y"]=[yBINS[j],yBINS[j+1]]
+        p["includeCuts"]=False
+        p["xSec"]=0.1
+        p["uncorrErr"].append(0.1)
+        #
+        DataA4.AddPoint(p)
+
+print("Done.  ")
+
+print("Done.  =>     Create points & append to data set ...")
+DataA3=DataProcessor.DataSet.DataSet('A8-A3',"DY")
+DataA3.comment="ATLAS8"
+DataA3.reference="1606.00689"
+
+DataA3.isNormalized=False
+proc_current=[1,1,1,23]
+s_current=64000000.0
+Q_current=[80.,100.]
+y_current=[0.,.1]
+lumUncertainty=0.039
+DataA3.normErr.append(lumUncertainty)
+
+ptBINS=[0.,2.5,5.0,8.0,11.4,14.9,18.5,22.0,25.5,29.0]
+yBINS=[0.,1.0,2.0,3.5]
+
+for i in range(len(ptBINS)-1):
+    for j in range(len(yBINS)-1):
+        # makeup a point
+        p=DataProcessor.Point.CreateDYPoint(DataA3.name+'.'+str(i))
+        p["process"]=proc_current
+        p["s"]=s_current
+        p["qT"]=[ptBINS[i],ptBINS[i+1]]
+        p["thFactor"]=1.
+        p["Q"]=Q_current
+        p["<Q>"]=91.2 ### to be sure that mass middle value is Z-boson mass
+        p["y"]=[yBINS[j],yBINS[j+1]]
+        p["includeCuts"]=False
+        p["xSec"]=0.1
+        p["uncorrErr"].append(0.1)
+        #
+        DataA3.AddPoint(p)
+
+print("Done.  ")
+
+print("Done.  =>     Create points & append to data set ...")
+DataA0=DataProcessor.DataSet.DataSet('A8-A0',"DY")
+DataA0.comment="ATLAS8"
+DataA0.reference="1606.00689"
+
+DataA0.isNormalized=False
+proc_current=[1,1,1,20]
+s_current=64000000.0
+Q_current=[80.,100.]
+y_current=[0.,.1]
+lumUncertainty=0.039
+DataA3.normErr.append(lumUncertainty)
+
+ptBINS=[0.,2.5,5.0,8.0,11.4,14.9,18.5,22.0,25.5,29.0]
+yBINS=[0.,1.0,2.0,3.5]
+
+for i in range(len(ptBINS)-1):
+    for j in range(len(yBINS)-1):
+        # makeup a point
+        p=DataProcessor.Point.CreateDYPoint(DataA0.name+'.'+str(i))
+        p["process"]=proc_current
+        p["s"]=s_current
+        p["qT"]=[ptBINS[i],ptBINS[i+1]]
+        p["thFactor"]=1.
+        p["Q"]=Q_current
+        p["<Q>"]=91.2 ### to be sure that mass middle value is Z-boson mass
+        p["y"]=[yBINS[j],yBINS[j+1]]
+        p["includeCuts"]=False
+        p["xSec"]=0.1
+        p["uncorrErr"].append(0.1)
+        #
+        DataA0.AddPoint(p)
+
+print("Done.  ")
+
+print("Done.  =>     Create points & append to data set ...")
+DataA1=DataProcessor.DataSet.DataSet('A8-A3',"DY")
+DataA1.comment="ATLAS8"
+DataA1.reference="1606.00689"
+
+DataA1.isNormalized=False
+proc_current=[1,1,1,21]
+s_current=64000000.0
+Q_current=[80.,100.]
+y_current=[0.,.1]
+lumUncertainty=0.039
+DataA1.normErr.append(lumUncertainty)
+
+ptBINS=[0.,2.5,5.0,8.0,11.4,14.9,18.5,22.0,25.5,29.0]
+yBINS=[0.,1.0,2.0,3.5]
+
+for i in range(len(ptBINS)-1):
+    for j in range(len(yBINS)-1):
+        # makeup a point
+        p=DataProcessor.Point.CreateDYPoint(DataA1.name+'.'+str(i))
+        p["process"]=proc_current
+        p["s"]=s_current
+        p["qT"]=[ptBINS[i],ptBINS[i+1]]
+        p["thFactor"]=1.
+        p["Q"]=Q_current
+        p["<Q>"]=91.2 ### to be sure that mass middle value is Z-boson mass
+        p["y"]=[yBINS[j],yBINS[j+1]]
+        p["includeCuts"]=False
+        p["xSec"]=0.1
+        p["uncorrErr"].append(0.1)
+        #
+        DataA1.AddPoint(p)
+
+print("Done.  ")
+
+print("Done.  =>     Create points & append to data set ...")
+DataA2=DataProcessor.DataSet.DataSet('A8-A2',"DY")
+DataA2.comment="ATLAS8"
+DataA2.reference="1606.00689"
+
+DataA2.isNormalized=False
+proc_current=[1,1,1,23]
+s_current=64000000.0
+Q_current=[80.,100.]
+y_current=[0.,.1]
+lumUncertainty=0.039
+DataA2.normErr.append(lumUncertainty)
+
+ptBINS=[0.,2.5,5.0,8.0,11.4,14.9,18.5,22.0,25.5,29.0]
+yBINS=[0.,1.0,2.0,3.5]
+
+for i in range(len(ptBINS)-1):
+    for j in range(len(yBINS)-1):
+        # makeup a point
+        p=DataProcessor.Point.CreateDYPoint(DataA2.name+'.'+str(i))
+        p["process"]=proc_current
+        p["s"]=s_current
+        p["qT"]=[ptBINS[i],ptBINS[i+1]]
+        p["thFactor"]=1.
+        p["Q"]=Q_current
+        p["<Q>"]=91.2 ### to be sure that mass middle value is Z-boson mass
+        p["y"]=[yBINS[j],yBINS[j+1]]
+        p["includeCuts"]=False
+        p["xSec"]=0.1
+        p["uncorrErr"].append(0.1)
+        #
+        DataA2.AddPoint(p)
+
+print("Done.  ")
+
+print("Done.  =>     Create points & append to data set ...")
+DataAN=DataProcessor.DataSet.DataSet('A8-AN',"DY")
+DataAN.comment="ATLAS8"
+DataAN.reference="1606.00689"
+
+DataAN.isNormalized=False
+proc_current=[1,1,1,2]
+DataAN.normErr.append(lumUncertainty)
 
 
+for i in range(len(ptBINS)-1):
+    for j in range(len(yBINS)-1):
+        # makeup a point
+        p=DataProcessor.Point.CreateDYPoint(DataAN.name+'.'+str(i))
+        p["process"]=proc_current
+        p["s"]=s_current
+        p["qT"]=[ptBINS[i],ptBINS[i+1]]
+        p["thFactor"]=1.
+        p["Q"]=Q_current
+        p["<Q>"]=91.2 ### to be sure that mass middle value is Z-boson mass
+        p["y"]=[yBINS[j],yBINS[j+1]]
+        p["includeCuts"]=False
+        p["xSec"]=0.1
+        p["uncorrErr"].append(0.1)
+        #
+        DataAN.AddPoint(p)
+
+print("Done.  ")
+#%%
+
+XX4=DataProcessor.harpyInterface.ComputeXSec(DataA4)
+XX3=DataProcessor.harpyInterface.ComputeXSec(DataA3)
+XXN=DataProcessor.harpyInterface.ComputeXSec(DataAN)
+
+#%%
+XX0=DataProcessor.harpyInterface.ComputeXSec(DataA0)
+XX1=DataProcessor.harpyInterface.ComputeXSec(DataA1)
+XX2=DataProcessor.harpyInterface.ComputeXSec(DataA2)
 
 #%%
 #rSet.SetReplica(0)
+harpy.setNPparameters([1.5004, 0.05614, 0.03862, 0.0, 0.565, 0.0539, 0.5697, 6.64, 0.565, 20.07, 0.5697, 0.537, 1.07, 2.39, 0.0, 0.0])
 #harpy.setNPparameters([1.4806, 0.038969, 0.051737, 0.0, 0.565, 0.0539, 0.5697, 6.64, 0.565, 20.07, 0.5697, 0.537, 1.07, 2.39, 0.0, 0.0])
-#DataProcessor.harpyInterface.PrintChi2Table(setDY,printDecomposedChi2=True)
+DataProcessor.harpyInterface.PrintChi2Table(setDY,printDecomposedChi2=True)
+
+#%%
+pathToPlot="/data/WorkingFiles/TMD/Fit_Notes/KPC/PlotsData/KPC_ART23/"
+import time
+for s in setDY.sets:
+    startT=time.time()
+    XX=DataProcessor.harpyInterface.ComputeXSec(s)
+    endT=time.time()
+    print(':->',s.name,'       t=',endT-startT)
+    f=open(pathToPlot+s.name+".dat","w")
+    print('SAVING PLOTS>>  ',f.name)
+    ### [total chi^2, list of NP-parameters],
+    for i in range(len(XX)):
+        p=s.points[i]
+        f.write(str(p["qT"][0])+", "+str(p["qT"][1])+", "+
+                str(p["xSec"])+", "+str(numpy.sqrt(sum(numpy.array(p["uncorrErr"])**2)))+", "+
+                str(XX[i])+"\n")
+        
+    f.close()
 
 #%%
 #######################################
@@ -311,104 +566,4 @@ chi_2DY(m.values)
 DataProcessor.harpyInterface.PrintChi2Table(setDY,printDecomposedChi2=True)
 
 print([round(x,1 if x >100 else 4 if x>1 else 6) for x in list(m.values)])
-
-sys.exit()
-
-#%%
-#######################################
-# Generate replica of data and compute chi2
-#######################################
-def MinForReplica():
-    global totalN,setDY,initialValues,initialErrors,searchLimits,parametersToMinimize
-        
-    def repchi_2(x):        
-        global totalN
-        startT=time.time()
-        harpy.setNPparameters(x)
-        print('np set =',["{:8.3f}".format(i) for i in x], end =" ")    
-        
-        ccDY2,cc2=DataProcessor.harpyInterface.ComputeChi2(repDataDY)
-        
-        cc=(ccDY2)/totalN
-        endT=time.time()
-        print(':->',cc,'       t=',endT-startT)
-        return ccDY2
-    
-    repDataDY=setDY.GenerateReplica()
-    
-    localM = Minuit(repchi_2, initialValues)
-    
-    localM.errors=initialErrors
-    localM.limits=searchLimits
-    localM.fixed=parametersToMinimize
-    localM.errordef=1    
-    localM.tol=0.0001*totalN*10000 ### the last 0.0001 is to compensate MINUIT def
-    localM.strategy=1
-
-    localM.migrad()
-    
-    ### [chi^2, NP-parameters]
-    return [localM.fval,list(localM.values)]
-
-#%%
-#######################################
-# LOG save function
-#######################################
-savedTime=time.time()
-def SaveToLog(text):
-    global savedTime,logFile
-    newTime=time.time()
-    
-    import socket
-    PCname=socket.gethostname()
-    
-    passedTime=newTime-savedTime
-    hours=int(passedTime/3600)
-    minutes=int((passedTime-hours*3600)/60)
-    seconds=int(passedTime-hours*3600-minutes*60)
-    
-    with open(logFile, 'a') as file:
-        file.write(PCname+ ' : ' + time.ctime()+' :  [+'+str(hours)+':'+str(minutes)+':'+str(seconds)+' ]\n')
-        file.write(' --> '+text+'\n')
-        file.write('\n')
-    savedTime=time.time()
-
-#%%
-#######################################
-# This is the main cicle. 
-# It generates replica of data take random PDF and minimize it
-# Save to log.
-#######################################
-
-for i in range(NumberOfReplicas):
-    print('---------------------------------------------------------------')
-    print('------------REPLICA ',i,' from ',NumberOfReplicas,'------------------')
-    print('---------------------------------------------------------------')
-    savedTime=time.time()
-    
-    ## reset PDF        
-    PDFreplica=numpy.random.randint(1000)
-    harpy.setPDFreplica(PDFreplica)
-    print("Start computation with PDF replica "+str(PDFreplica))
-    
-    harpy.setNPparameters_uTMDPDF(initializationArray)    
-    print("Minimization started.")
-    
-    ## got to pseudo-data and minimization
-    repRes=MinForReplica()
-    print(repRes)
-    print("Minimization finished.")    
-    SaveToLog(" Minization with replica "+str(PDFreplica)+".")
-    
-    ## compute the chi2 for true data full
-    mainDY, mainDY2 =DataProcessor.harpyInterface.ComputeChi2(setDY)    
-    print("Central chi^2  computed.)")
-    
-    ## save to file
-    f=open(replicaFile,"a+")
-    print('SAVING >>  ',f.name)
-    ### [total chi^2(full data), total chi^2 (fit data), list of chi^2 for experiments(full data), 
-    ############# number of PDF, list of NP-parameters],penalty term(if used) ]    else:
-    f.write(str([mainDY,repRes[0],mainDY2,i,PDFreplica, repRes[1]])+"\n")
-    f.close()   
 

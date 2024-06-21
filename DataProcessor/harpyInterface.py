@@ -157,6 +157,17 @@ def _ComputeXSec_Point(p,method="default"):
             raise Exception('The dictionary is not a point.')
         
         XX=XX1[0]*p["thFactor"]
+    
+    elif method=="approximate":
+        if p["type"] == "DY":
+            XX1=harpy.DY.xSecListAPROX([p["process"]],[p["s"]],[p["<qT>"]],[p["<Q>"]],
+                                    [p["<y>"]],[p["includeCuts"]],[p["cutParams"]])
+        elif p["type"]=="SIDIS":
+            raise ValueError("Method <approximate> is not yet implemented for SIDIS.")
+        else:
+            raise Exception('The dictionary is not a point.')
+        
+        XX=XX1[0]*p["thFactor"]
         
     elif method=="binless":
         if p["type"] == "DY":

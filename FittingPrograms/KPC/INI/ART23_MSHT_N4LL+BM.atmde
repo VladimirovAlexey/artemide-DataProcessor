@@ -14,7 +14,7 @@
 *p1  : Input file Version (used to check version compatibility)
           30
 *p2  : Output level (0 = no output except critical, 1 = + WARNINGS, 2 = + info,  3 = + details)
-           2
+           1
 *p3  : Message trigger (the number of continious non-critical warning before stop showing them)
            6
  
@@ -227,9 +227,9 @@
 *p9  : Minimal Q in the grid
    1.0000000000000
 *p10 : Maximal Q in the grid
-   1200.00000000000
+   200.00000000000
 *p11 : Number of nodes in the Q-grid
-   70
+   40
 *p12 : Number of subgrids in B [for Hankel transform] (required to read the next line)
    6
 *p13 : Intervals for subgrids in B [for Hankel transform]
@@ -596,13 +596,13 @@
 # ---------------------------------------------------------------------------
 *14  :
 *p1  : initialize SiversTMDPDF module
- F
+ T
 
 *A   : ---- Main definitions ----
 *p1  : Include gluon TMDPDF
  F
 *p2  : Number of hadrons (in order starting with 1)
- 0
+ 1
 
 *B   : ---- OPE[tw3] main definitions ----
 *p1  : Order of coefficient function
@@ -614,7 +614,7 @@
 
 *C   : ---- Parameters of NP model ----
 *p1  : Length of lambdaNP
-           1
+           4
 *p2  : Absolute maximum b (for larger b, TMD=0)
    100.00000000000000
 

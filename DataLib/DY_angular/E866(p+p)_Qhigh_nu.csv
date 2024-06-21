@@ -1,0 +1,17 @@
+Name,E866(p+p)_Qhigh_nu
+Comment,Angular coefficient nu from E866 (p+p)
+Reference,arXiv:0811.4589
+Process type,DY
+Number of points,5
+Number of uncorr.errors,1
+Number of corr.errors,0
+Number of norm.errors,0
+List of norm.errors (relative),
+Total cross-section nomalized,False
+List of points 
+Point id,process id,s[GeV^2],<Q>[GeV],Qmin[GeV],Qmax[GeV],<y>,yMin,yMax,<qT>[GeV],qTMin[GeV],qTMax[GeV],xSec,Uncorr.Err.0,Th.Factor,FiducialCuts,kCut1[GeV],kCut2[GeV],etaMin,etaMax
+E866(p+p)_Qhigh_nu.0,2 - 1 - 1 - 212,1500.8,12.85,10.7,15.0,0.4,0.0,0.8,0.25,0.0,0.5,0.019,0.036,1.0,False,20.0,20.0,2.0,4.5
+E866(p+p)_Qhigh_nu.1,2 - 1 - 1 - 212,1500.8,12.85,10.7,15.0,0.4,0.0,0.8,0.75,0.5,1.0,0.051,0.026,1.0,False,20.0,20.0,2.0,4.5
+E866(p+p)_Qhigh_nu.2,2 - 1 - 1 - 212,1500.8,12.85,10.7,15.0,0.4,0.0,0.8,1.25,1.0,1.5,0.039,0.031,1.0,False,20.0,20.0,2.0,4.5
+E866(p+p)_Qhigh_nu.3,2 - 1 - 1 - 212,1500.8,12.85,10.7,15.0,0.4,0.0,0.8,1.75,1.5,2.0,0.046,0.046,1.0,False,20.0,20.0,2.0,4.5
+E866(p+p)_Qhigh_nu.4,2 - 1 - 1 - 212,1500.8,12.85,10.7,15.0,0.4,0.0,0.8,3.0,2.0,4.0,0.194,0.06,1.0,False,20.0,20.0,2.0,4.5
