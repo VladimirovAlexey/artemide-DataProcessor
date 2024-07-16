@@ -53,7 +53,7 @@ initializationArray=[0.253434, 0.253434,0.253434, 0.253434,
 harpy.setNPparameters_TMDR([1.584237, 0.048428,0.001,0.])
 
 harpy.setNPparameters_uTMDPDF(initializationArray)
-harpy.setNPparameters_BM_TMDPDF([0.1,0.1,0.1,0.1])
+harpy.setNPparameters_BM_TMDPDF([0.1,0.1,0.1,1.])
 
 #%%
 ### read the list of files and return the list of DataSets
@@ -281,7 +281,7 @@ def chi_BM(x):
     
     chiA=chi_ATLAS() 
         
-    chiE=chi_E866()
+    chiE=0.#chi_E866()
     
     endT=time.time()
     print(':->',chiA/setA2.numberOfPoints, '+', chiE/(setE1_2hh.numberOfPoints+setEdQ_2hh.numberOfPoints),' =',
@@ -324,10 +324,10 @@ def chi_E866():
 from iminuit import Minuit
 
 #---- PDFbias-like row
-initialValues=([0.2,-0.27,9.4,0.])
+initialValues=([0.2,-0.27,9.4,5.0])
 
 initialErrors=(0.5,0.3,0.3,0.5)
-searchLimits=((0.01,100.),(-100,100.),(1.,25.),(-100.,100.))
+searchLimits=((0.01,100.),(-100,100.),(1.,25.),(1.,100.))
 # True= FIX
 parametersToMinimize=(True, False,False,False)
 
@@ -500,6 +500,35 @@ for i in range(len(ptBINS)):
     p["thFactor"]=1.
     p["Q"]=Q_current
     p["y"]=y_current
+    p["includeCuts"]=False
+    p["xSec"]=0.1
+    p["uncorrErr"].append(0.1)
+    #
+    DataPP1.AddPoint(p)        
+
+print("Done.  ")
+
+#%%
+
+print("Done.  =>     Create points & append to data set ...")
+DataPP1=DataProcessor.DataSet.DataSet('nu p+p',"DY")
+
+DataPP1.isNormalized=False
+proc_current=[1,1,1,23]
+s_current=8000.**2
+Q_current=[80.,100.]
+y_current=[[0.1*i-3,0.1*i-2.9] for i in range(60)]
+ptBINS=[2.5,5.0]
+
+for i in range(len(y_current)):
+    # makeup a point
+    p=DataProcessor.Point.CreateDYPoint(DataPP1.name+'.'+str(i))
+    p["process"]=proc_current
+    p["s"]=s_current
+    p["qT"]=ptBINS
+    p["thFactor"]=1.
+    p["Q"]=Q_current
+    p["y"]=y_current[i]
     p["includeCuts"]=False
     p["xSec"]=0.1
     p["uncorrErr"].append(0.1)

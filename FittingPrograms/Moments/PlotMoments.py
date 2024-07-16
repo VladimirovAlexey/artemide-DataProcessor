@@ -111,6 +111,20 @@ for i in range(201):
     print('{'+str(b)+','+str(X0[3])+','+str(X0[4])+','+str(X0[6])+','+str(X0[7])+'},')
     
 #%%
+muValues=[i*1. for i in range(1,101)]
+xValues=[10**(-i/10) for i in range(51)]
+
+result=[]
+x=0.01
+mu=50.
+
+
+#for mu in muValues:
+for x in xValues:
+    X0=harpy.get_uTMDPDF_X0(x,mu,1)
+    AS=harpy.get_uTMDPDF_ASX0(x,mu,1)
+    print("{",x,",",X0[5+1],',',X0[5+2],',',X0[5+3],",",X0[5-1],',',X0[5-2],',',X0[5-3],"},")
+    #print("{",x,",",AS[5+1],',',AS[5+2],',',AS[5+3],",",AS[5-1],',',AS[5-2],',',AS[5-3],"},")
 #%%
 ######################
 ### This computed the uncertanty for X0-bar
@@ -136,7 +150,8 @@ def Compute68CI(dd):
     
     return [numpy.mean(lowers,axis=0),numpy.mean(uppers,axis=0)]
 
-rSet.SetReplica(0)
+#rSet.SetReplica(0)
+
 
 muValues=[i*1. for i in range(1,21)]
 xValues=[10**(-i/10) for i in range(41)]
@@ -144,41 +159,74 @@ xValues=[10**(-i/10) for i in range(41)]
 result=[]
 x=0.01
 mu=10.
-a0=1.014
+#a0=1.014
+a0=1.021
 result_u=[]
 result_d=[]
+result_s=[]
 result_ub=[]
 result_db=[]
+result_sb=[]
+
+result_u_val=[]
+result_d_val=[]
+result_s_val=[]
 
 for r in range(200):
     rnd=numpy.random.randint(1,high=1000)        
-    rSet.SetReplica(rnd)
+    #rSet.SetReplica(rnd)
+    harpy.setPDFreplica(rnd)
     
     ss_u=[]
     ss_d=[]
     ss_ub=[]
     ss_db=[]
+    ss_s=[]
+    ss_sb=[]
+    
+    ss_u_val=[]
+    ss_d_val=[]
+    ss_s_val=[]
     #for mu in muValues:
     for x in xValues:
         X0=harpy.get_uTMDPDF_X0(x,mu,1)
         AS=harpy.get_uTMDPDF_ASX0(x,mu,1)
-        ss_ub.append(X0[5-2]-(a0*mu)**2*AS[5-2])
-        ss_db.append(X0[5-1]-(a0*mu)**2*AS[5-1])
-        ss_d.append(X0[5+1]-(a0*mu)**2*AS[5+1])
-        ss_u.append(X0[5+2]-(a0*mu)**2*AS[5+2])
+        ss_sb.append(X0[5-3]-0.5*(a0*mu)**2*AS[5-3])
+        ss_ub.append(X0[5-2]-0.5*(a0*mu)**2*AS[5-2])
+        ss_db.append(X0[5-1]-0.5*(a0*mu)**2*AS[5-1])        
+        ss_d.append(X0[5+1]-0.5*(a0*mu)**2*AS[5+1])
+        ss_u.append(X0[5+2]-0.5*(a0*mu)**2*AS[5+2])
+        ss_s.append(X0[5+3]-0.5*(a0*mu)**2*AS[5+3])
+        
+        ss_d_val.append(X0[5+1]-X0[5-1]-0.5*(a0*mu)**2*(AS[5+1]-AS[5-1]))
+        ss_u_val.append(X0[5+2]-X0[5-2]-0.5*(a0*mu)**2*(AS[5+2]-AS[5-2]))
+        ss_s_val.append(X0[5+3]-X0[5-3]-0.5*(a0*mu)**2*(AS[5+3]-AS[5-3]))
     
     result_u.append(ss_u)
     result_d.append(ss_d)
+    result_s.append(ss_s)
     result_ub.append(ss_ub)
     result_db.append(ss_db)
+    result_sb.append(ss_sb)
+    
+    result_u_val.append(ss_u_val)
+    result_d_val.append(ss_d_val)
+    result_s_val.append(ss_s_val)
     print(r)
 #%%
 
 X0_U=[numpy.mean(result_u,axis=0)]+Compute68CI(result_u)
 X0_D=[numpy.mean(result_d,axis=0)]+Compute68CI(result_d)
+X0_S=[numpy.mean(result_s,axis=0)]+Compute68CI(result_s)
 X0_Ub=[numpy.mean(result_ub,axis=0)]+Compute68CI(result_ub)
 X0_Db=[numpy.mean(result_db,axis=0)]+Compute68CI(result_db)
+X0_Sb=[numpy.mean(result_sb,axis=0)]+Compute68CI(result_sb)
 
+X0_U_val=[numpy.mean(result_u_val,axis=0)]+Compute68CI(result_u_val)
+X0_D_val=[numpy.mean(result_d_val,axis=0)]+Compute68CI(result_d_val)
+X0_S_val=[numpy.mean(result_s_val,axis=0)]+Compute68CI(result_s_val)
+
+#%%
 r=X0_U
 [print("{"+str(xValues[i])+","+str(r[0][i])+","+str(r[1][i])+","+str(r[2][i])+"},") for i in range(len(xValues))]
 
