@@ -76,9 +76,9 @@ for r in range(rSet.numberOfReplicas):
 mean=numpy.mean(dist,axis=0)
 std=numpy.std(dist,axis=0)
 
-#%%
-import matplotlib.pyplot as plt
-
-plt.plot(bValues,central,"r",bValues,mean,"b",bValues,mean+std,"b",bValues,mean-std,"b")
-plt.ylabel('CS-kernel')
-plt.show()
+    #%%
+    import matplotlib.pyplot as plt
+    
+    plt.plot(bValues,central,"r",bValues,mean,"b",bValues,mean+std,"b",bValues,mean-std,"b")
+    plt.ylabel('CS-kernel')
+    plt.show()

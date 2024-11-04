@@ -9,13 +9,13 @@ Program that parse various DY data files to ADP-frendly formal
 """
 
 import sys
-sys.path.append("/home/vla18041/LinkData2/arTeMiDe_Repository/DataProcessor/")
+sys.path.append("/data/arTeMiDe_Repository/DataProcessor/")
 
 import DataProcessor.Point
 import DataProcessor.DataSet
 
-path_to_data="/home/vla18041/LinkData2/arTeMiDe_Repository/data/"
-path_to_save="/home/vla18041/LinkData2/arTeMiDe_Repository/DataProcessor/DataLib/unpolDY/"
+path_to_data="/data/arTeMiDe_Repository/data/"
+path_to_save="/data/arTeMiDe_Repository/DataProcessor/DataLib/unpolDY/"
 
 M_Z=91.### mass of Z-boson
 
@@ -54,7 +54,7 @@ DataCurrent.comment="ATLAS 8TeV 0.0<|y|<0.4 normalized to 1/sigma"
 DataCurrent.reference="arXiv:1512.02192"
 
 DataCurrent.isNormalized=True
-proc_current=[1,1,5]
+proc_current=[1,1,1,3]
 s_current=8000.**2
 Q_current=[66.,116.]
 y_current=[0.,0.4]
@@ -120,7 +120,7 @@ DataCurrent.comment="ATLAS 8TeV 0.4<|y|<0.8 normalized to 1/sigma"
 DataCurrent.reference="arXiv:1512.02192"
 
 DataCurrent.isNormalized=True
-proc_current=[1,1,5]
+proc_current=[1,1,1,3]
 s_current=8000.**2
 Q_current=[66.,116.]
 y_current=[0.4,0.8]
@@ -187,7 +187,7 @@ DataCurrent.comment="ATLAS 8TeV 0.8<|y|<1.2 normalized to 1/sigma"
 DataCurrent.reference="arXiv:1512.02192"
 
 DataCurrent.isNormalized=True
-proc_current=[1,1,5]
+proc_current=[1,1,1,3]
 s_current=8000.**2
 Q_current=[66.,116.]
 y_current=[0.8,1.2]
@@ -254,7 +254,7 @@ DataCurrent.comment="ATLAS 8TeV 1.2<|y|<1.6 normalized to 1/sigma"
 DataCurrent.reference="arXiv:1512.02192"
 
 DataCurrent.isNormalized=True
-proc_current=[1,1,5]
+proc_current=[1,1,1,3]
 s_current=8000.**2
 Q_current=[66.,116.]
 y_current=[1.2,1.6]
@@ -321,7 +321,7 @@ DataCurrent.comment="ATLAS 8TeV 1.6<|y|<2.0 normalized to 1/sigma"
 DataCurrent.reference="arXiv:1512.02192"
 
 DataCurrent.isNormalized=True
-proc_current=[1,1,5]
+proc_current=[1,1,1,3]
 s_current=8000.**2
 Q_current=[66.,116.]
 y_current=[1.6,2.0]
@@ -388,7 +388,7 @@ DataCurrent.comment="ATLAS 8TeV 2.0<|y|<2.4 normalized to 1/sigma"
 DataCurrent.reference="arXiv:1512.02192"
 
 DataCurrent.isNormalized=True
-proc_current=[1,1,5]
+proc_current=[1,1,1,3]
 s_current=8000.**2
 Q_current=[66.,116.]
 y_current=[2.0,2.4]
@@ -454,7 +454,7 @@ DataCurrent.comment="ATLAS 8TeV 46<Q<66 normalized to 1/sigma"
 DataCurrent.reference="arXiv:1512.02192"
 
 DataCurrent.isNormalized=True
-proc_current=[1,1,5]
+proc_current=[1,1,1,3]
 s_current=8000.**2
 Q_current=[46.,66.]
 y_current=[-2.4,2.4]
@@ -520,7 +520,7 @@ DataCurrent.comment="ATLAS 8TeV 116<Q<150 normalized to 1/sigma"
 DataCurrent.reference="arXiv:1512.02192"
 
 DataCurrent.isNormalized=True
-proc_current=[1,1,5]
+proc_current=[1,1,1,3]
 s_current=8000.**2
 Q_current=[116.,150.]
 y_current=[-2.4,2.4]

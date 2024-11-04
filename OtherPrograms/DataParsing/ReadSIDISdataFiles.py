@@ -7,18 +7,20 @@ Program that parse various SIDIS data files to ADP-frendly formal
 
 @author: vla18041
 """
+
+import os
+ROOT_DIR = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', '..'))
+
 import sys
-sys.path.append("/home/vla18041/LinkData2/arTeMiDe_Repository/DataProcessor/")
+sys.path.append(ROOT_DIR)
 
 import DataProcessor.Point
 import DataProcessor.DataSet
 import numpy
 
-path_to_data="/home/vla18041/LinkData2/arTeMiDe_Repository/data"
-path_to_HERMES="/HERMES/DataRefined-TargetMassCorr"
-path_to_COMPASS="/COMPASS/DataRefined-TargetMassCorr"
+path_to_data=os.path.realpath(os.path.join(os.path.dirname(__file__), '..', '..'))+'/DataLib/unpolSIDIS/Multiplicity_norm_byVMoos/'
+path_to_save=ROOT_DIR+"/DataLib/unpolSIDIS/"
 
-path_to_save="/home/vla18041/LinkData2/arTeMiDe_Repository/DataProcessor/DataLib/unpolSIDIS/"
 
 ## this trigger add normalization uncertanty due to DIS normalization for multiplicities
 addDISnormalizationUncertainty=True
@@ -30,7 +32,7 @@ m_kaon=0.494
 ###############################################################################
 ###########################hermes.proton.zxpt-3D pi+###########################
 print("hermes.proton.zxpt-3D pi+ file ...")
-f = open(path_to_data+path_to_HERMES+"/hermes.proton.zxpt-3D.no-vmsub.mults_piplus.dat")
+f = open(path_to_data+"hermes.proton.zxpt-3D.no-vmsub.mults_piplus.datnew_fortran")
 
 data_from_f=[]
 
@@ -38,7 +40,6 @@ for line in f:
     data_from_f.append(line.rstrip('\n'))
 
 f.close()
-
 
 print("Done.  =>     Convert to numbers ...")
 
@@ -49,13 +50,14 @@ for i in range(len(data_from_f)):
     del data_from_f[i][0]
     data_from_f[i]=[float(j) for j in data_from_f[i]]
     #k.spit("\t")
+#%%
 
 print("Done.  =>     Create points & append to data set ...")
 DataCurrent=DataProcessor.DataSet.DataSet('hermes.p.no-vmsub.zxpt.pi+',"SIDIS")
-DataCurrent.comment="HERMES proton-to-pi+ (zxpt-3D) no-vmsub. thFactor contains DIS normalization"
+DataCurrent.comment="HERMES proton-to-pi+ (zxpt-3D) no-vmsub. thFactor contains DIS normalization (by MSHT20nnlo)"
 DataCurrent.reference="1212.5407"
 
-proc_current=[1,1,2001]
+proc_current=[1,1,1,2001]
 s_current=2*27.6*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.85,10.,10000.]
@@ -90,7 +92,7 @@ for i in range(len(data_from_f)):
         if(data_from_f[i][0]==0):
             pass#p.corrErrors.append(0)
         else:
-            p["corrErr"].append(data_from_f[i][16]/data_from_f[i][15]*data_from_f[i][0])
+            p["corrErr"].append((data_from_f[i][16]+data_from_f[i][17])/2/data_from_f[i][15]*data_from_f[i][0])
     #
     DataCurrent.AddPoint(p)    
 
@@ -101,7 +103,7 @@ DataCurrent.SaveToCSV(path_to_save+DataCurrent.name+".csv")
 ###############################################################################
 ###########################hermes.proton.zxpt-3D pi-###########################
 print("hermes.proton.zxpt-3D pi- file ..." )
-f = open(path_to_data+path_to_HERMES+"/hermes.proton.zxpt-3D.no-vmsub.mults_piminus.dat")
+f = open(path_to_data+"hermes.proton.zxpt-3D.no-vmsub.mults_piminus.datnew_fortran")
 
 data_from_f=[]
 
@@ -124,10 +126,10 @@ for i in range(len(data_from_f)):
 
 print("Done.  =>     Create points & append to data set ...")
 DataCurrent=DataProcessor.DataSet.DataSet('hermes.p.no-vmsub.zxpt.pi-',"SIDIS")
-DataCurrent.comment="HERMES proton-to-pi- (zxpt-3D) no-vmsub. thFactor contains DIS normalization"
+DataCurrent.comment="HERMES proton-to-pi- (zxpt-3D) no-vmsub. thFactor contains DIS normalization (by MSHT20nnlo)"
 DataCurrent.reference="1212.5407"
 
-proc_current=[1,1,2021]
+proc_current=[1,1,-1,2001]
 s_current=2*27.6*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.85,10.,10000.]
@@ -165,7 +167,7 @@ for i in range(len(data_from_f)):
         if(data_from_f[i][0]==0):
             pass#p.corrErrors.append(0)
         else:
-            p["corrErr"].append(data_from_f[i][16]/data_from_f[i][15]*data_from_f[i][0])
+            p["corrErr"].append((data_from_f[i][16]+data_from_f[i][17])/2/data_from_f[i][15]*data_from_f[i][0])
     #
     if p["xSec"]<0.00000001:
         print (p["z"],p["<z>"],p["xSec"], "(point dropped)")
@@ -179,7 +181,7 @@ DataCurrent.SaveToCSV(path_to_save+DataCurrent.name+".csv")
 ###############################################################################
 ###########################hermes.proton.zxpt-3D K+###########################
 print("hermes.proton.zxpt-3D K+ file ...")
-f = open(path_to_data+path_to_HERMES+"/hermes.proton.zxpt-3D.no-vmsub.mults_kplus.dat")
+f = open(path_to_data+"hermes.proton.zxpt-3D.no-vmsub.mults_kplus.datnew_fortran")
 
 data_from_f=[]
 
@@ -202,10 +204,10 @@ for i in range(len(data_from_f)):
 
 print("Done.  =>     Create points & append to data set ...")
 DataCurrent=DataProcessor.DataSet.DataSet('hermes.p.no-vmsub.zxpt.k+',"SIDIS")
-DataCurrent.comment="HERMES proton-to-k+ (zxpt-3D) no-vmsub. thFactor contains DIS normalization"
+DataCurrent.comment="HERMES proton-to-k+ (zxpt-3D) no-vmsub. thFactor contains DIS normalization (by MSHT20nnlo)"
 DataCurrent.reference="1212.5407"
 
-proc_current=[1,1,2002]
+proc_current=[1,1,2,2001]
 s_current=2*27.6*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.85,10.,10000.]
@@ -240,7 +242,7 @@ for i in range(len(data_from_f)):
         if(data_from_f[i][0]==0):
             pass#p.corrErrors.append(0)
         else:
-            p["corrErr"].append(data_from_f[i][16]/data_from_f[i][15]*data_from_f[i][0])
+            p["corrErr"].append((data_from_f[i][16]+data_from_f[i][17])/2/data_from_f[i][15]*data_from_f[i][0])
     #
     if p["xSec"]<0.00000001:
         print(p["z"],p["<z>"],p["xSec"], "(point dropped)")
@@ -254,7 +256,7 @@ DataCurrent.SaveToCSV(path_to_save+DataCurrent.name+".csv")
 ###############################################################################
 ###########################hermes.proton.zxpt-3D K-###########################
 print("hermes.proton.zxpt-3D K- file ...")
-f = open(path_to_data+path_to_HERMES+"/hermes.proton.zxpt-3D.no-vmsub.mults_kminus.dat")
+f = open(path_to_data+"hermes.proton.zxpt-3D.no-vmsub.mults_kminus.datnew_fortran")
 
 data_from_f=[]
 
@@ -277,10 +279,10 @@ for i in range(len(data_from_f)):
 
 print("Done.  =>     Create points & append to data set ...")
 DataCurrent=DataProcessor.DataSet.DataSet('hermes.p.no-vmsub.zxpt.k-',"SIDIS")
-DataCurrent.comment="HERMES proton-to-k- (zxpt-3D) no-vmsub. thFactor contains DIS normalization"
+DataCurrent.comment="HERMES proton-to-k- (zxpt-3D) no-vmsub. thFactor contains DIS normalization (by MSHT20nnlo)"
 DataCurrent.reference="1212.5407"
 
-proc_current=[1,1,2022]
+proc_current=[1,1,-2,2001]
 s_current=2*27.6*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.85,10.,10000.]
@@ -315,7 +317,7 @@ for i in range(len(data_from_f)):
         if(data_from_f[i][0]==0):
             pass#p.corrErrors.append(0)
         else:
-            p["corrErr"].append(data_from_f[i][16]/data_from_f[i][15]*data_from_f[i][0])
+            p["corrErr"].append((data_from_f[i][16]+data_from_f[i][17])/2/data_from_f[i][15]*data_from_f[i][0])
     #
     if p["xSec"]<0.00000001:
         print(p["z"],p["<z>"],p["xSec"], "(point dropped)")
@@ -329,7 +331,7 @@ DataCurrent.SaveToCSV(path_to_save+DataCurrent.name+".csv")
 ###############################################################################
 ###########################hermes.proton.zxpt-3D pi+###########################
 print("hermes.proton.vmsub.zxpt-3D pi+ file ...")
-f = open(path_to_data+path_to_HERMES+"/hermes.proton.zxpt-3D.vmsub.mults_piplus.dat")
+f = open(path_to_data+"hermes.proton.zxpt-3D.vmsub.mults_piplus.datnew_fortran")
 
 data_from_f=[]
 
@@ -351,10 +353,10 @@ for i in range(len(data_from_f)):
 
 print("Done.  =>     Create points & append to data set ...")
 DataCurrent=DataProcessor.DataSet.DataSet('hermes.p.vmsub.zxpt.pi+',"SIDIS")
-DataCurrent.comment="HERMES proton-to-pi+ (zxpt-3D) vmsub. thFactor contains DIS normalization"
+DataCurrent.comment="HERMES proton-to-pi+ (zxpt-3D) vmsub. thFactor contains DIS normalization (by MSHT20nnlo)"
 DataCurrent.reference="1212.5407"
 
-proc_current=[1,1,2001]
+proc_current=[1,1,1,2001]
 s_current=2*27.6*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.85,10.,10000.]
@@ -389,7 +391,7 @@ for i in range(len(data_from_f)):
         if(data_from_f[i][0]==0):
             pass#p.corrErrors.append(0)
         else:
-            p["corrErr"].append(data_from_f[i][16]/data_from_f[i][15]*data_from_f[i][0])
+            p["corrErr"].append((data_from_f[i][16]+data_from_f[i][17])/2/data_from_f[i][15]*data_from_f[i][0])
     #
     if p["xSec"]<0.00000001:
         print(p["z"],p["<z>"],p["xSec"], "(point dropped)")
@@ -403,7 +405,7 @@ DataCurrent.SaveToCSV(path_to_save+DataCurrent.name+".csv")
 ###############################################################################
 ###########################hermes.proton.zxpt-3D pi-###########################
 print("hermes.proton.zxpt-3D pi- file ...")
-f = open(path_to_data+path_to_HERMES+"/hermes.proton.zxpt-3D.vmsub.mults_piminus.dat")
+f = open(path_to_data+"hermes.proton.zxpt-3D.vmsub.mults_piminus.datnew_fortran")
 
 data_from_f=[]
 
@@ -426,10 +428,10 @@ for i in range(len(data_from_f)):
 
 print("Done.  =>     Create points & append to data set ...")
 DataCurrent=DataProcessor.DataSet.DataSet('hermes.p.vmsub.zxpt.pi-',"SIDIS")
-DataCurrent.comment="HERMES proton-to-pi- (zxpt-3D) vmsub. thFactor contains DIS normalization"
+DataCurrent.comment="HERMES proton-to-pi- (zxpt-3D) vmsub. thFactor contains DIS normalization (by MSHT20nnlo)"
 DataCurrent.reference="1212.5407"
 
-proc_current=[1,1,2021]
+proc_current=[1,1,-1,2001]
 s_current=2*27.6*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.85,10.,10000.]
@@ -464,7 +466,7 @@ for i in range(len(data_from_f)):
         if(data_from_f[i][0]==0):
             pass#p.corrErrors.append(0)
         else:
-            p["corrErr"].append(data_from_f[i][16]/data_from_f[i][15]*data_from_f[i][0])
+            p["corrErr"].append((data_from_f[i][16]+data_from_f[i][17])/2/data_from_f[i][15]*data_from_f[i][0])
     #
     if p["xSec"]<0.00000001:
         print(p["z"],p["<z>"],p["xSec"], "(point dropped)")
@@ -478,7 +480,7 @@ DataCurrent.SaveToCSV(path_to_save+DataCurrent.name+".csv")
 ###############################################################################
 ###########################hermes.proton.zxpt-3D K+###########################
 print("hermes.proton.zxpt-3D K+ file ...")
-f = open(path_to_data+path_to_HERMES+"/hermes.proton.zxpt-3D.vmsub.mults_kplus.dat")
+f = open(path_to_data+"hermes.proton.zxpt-3D.vmsub.mults_kplus.datnew_fortran")
 
 data_from_f=[]
 
@@ -501,10 +503,10 @@ for i in range(len(data_from_f)):
 
 print("Done.  =>     Create points & append to data set ...")
 DataCurrent=DataProcessor.DataSet.DataSet('hermes.p.vmsub.zxpt.k+',"SIDIS")
-DataCurrent.comment="HERMES proton-to-k+ (zxpt-3D) vmsub. thFactor contains DIS normalization"
+DataCurrent.comment="HERMES proton-to-k+ (zxpt-3D) vmsub. thFactor contains DIS normalization (by MSHT20nnlo)"
 DataCurrent.reference="1212.5407"
 
-proc_current=[1,1,2002]
+proc_current=[1,1,2,2001]
 s_current=2*27.6*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.85,10.,10000.]
@@ -539,7 +541,7 @@ for i in range(len(data_from_f)):
         if(data_from_f[i][0]==0):
             pass#p.corrErrors.append(0)
         else:
-            p["corrErr"].append(data_from_f[i][16]/data_from_f[i][15]*data_from_f[i][0])
+            p["corrErr"].append((data_from_f[i][16]+data_from_f[i][17])/2/data_from_f[i][15]*data_from_f[i][0])
     #
     if p["xSec"]<0.00000001:
         print(p["z"],p["<z>"],p["xSec"], "(point dropped)")
@@ -553,7 +555,7 @@ DataCurrent.SaveToCSV(path_to_save+DataCurrent.name+".csv")
 ###############################################################################
 ###########################hermes.proton.zxpt-3D K-###########################
 print("hermes.proton.zxpt-3D K- file ...")
-f = open(path_to_data+path_to_HERMES+"/hermes.proton.zxpt-3D.vmsub.mults_kminus.dat")
+f = open(path_to_data+"hermes.proton.zxpt-3D.vmsub.mults_kminus.datnew_fortran")
 
 data_from_f=[]
 
@@ -576,10 +578,10 @@ for i in range(len(data_from_f)):
 
 print("Done.  =>     Create points & append to data set ...")
 DataCurrent=DataProcessor.DataSet.DataSet('hermes.p.vmsub.zxpt.k-',"SIDIS")
-DataCurrent.comment="HERMES proton-to-k- (zxpt-3D) vmsub. thFactor contains DIS normalization"
+DataCurrent.comment="HERMES proton-to-k- (zxpt-3D) vmsub. thFactor contains DIS normalization (by MSHT20nnlo)"
 DataCurrent.reference="1212.5407"
 
-proc_current=[1,1,2022]
+proc_current=[1,1,-2,2001]
 s_current=2*27.6*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.85,10.,10000.]
@@ -614,7 +616,7 @@ for i in range(len(data_from_f)):
         if(data_from_f[i][0]==0):
             pass#p.corrErrors.append(0)
         else:
-            p["corrErr"].append(data_from_f[i][16]/data_from_f[i][15]*data_from_f[i][0])
+            p["corrErr"].append((data_from_f[i][16]+data_from_f[i][17])/2/data_from_f[i][15]*data_from_f[i][0])
     
     if p["xSec"]<0.00000001:
         print(p["z"],p["<z>"],p["xSec"], "(point dropped)")
@@ -632,7 +634,7 @@ DataCurrent.SaveToCSV(path_to_save+DataCurrent.name+".csv")
 ###############################################################################
 ###########################hermes.deuteron.zxpt-3D pi+###########################
 print("hermes.deuteron.zxpt-3D pi+ file ...")
-f = open(path_to_data+path_to_HERMES+"/hermes.deuteron.zxpt-3D.no-vmsub.mults_piplus.dat")
+f = open(path_to_data+"hermes.deuteron.zxpt-3D.no-vmsub.mults_piplus.datnew_fortran")
 
 data_from_f=[]
 
@@ -654,10 +656,10 @@ for i in range(len(data_from_f)):
 
 print("Done.  =>     Create points & append to data set ...")
 DataCurrent=DataProcessor.DataSet.DataSet('hermes.d.no-vmsub.zxpt.pi+',"SIDIS")
-DataCurrent.comment="HERMES deutron-to-pi+ (zxpt-3D) no-vmsub. thFactor contains DIS normalization"
+DataCurrent.comment="HERMES deutron-to-pi+ (zxpt-3D) no-vmsub. thFactor contains DIS normalization (by MSHT20nnlo)"
 DataCurrent.reference="1212.5407"
 
-proc_current=[1,1,2011]
+proc_current=[1,1,1,2002]
 s_current=2*27.6*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.85,10.,10000.]
@@ -692,7 +694,7 @@ for i in range(len(data_from_f)):
         if(data_from_f[i][0]==0):
             pass#p.corrErrors.append(0)
         else:
-            p["corrErr"].append(data_from_f[i][16]/data_from_f[i][15]*data_from_f[i][0])
+            p["corrErr"].append((data_from_f[i][16]+data_from_f[i][17])/2/data_from_f[i][15]*data_from_f[i][0])
     
     if p["xSec"]<0.00000001:
         print(p["z"],p["<z>"],p["xSec"], "(point dropped)")
@@ -706,7 +708,7 @@ DataCurrent.SaveToCSV(path_to_save+DataCurrent.name+".csv")
 ###############################################################################
 ###########################hermes.deuteron.zxpt-3D pi-###########################
 print("hermes.deuteron.zxpt-3D pi- file ...")
-f = open(path_to_data+path_to_HERMES+"/hermes.deuteron.zxpt-3D.no-vmsub.mults_piminus.dat")
+f = open(path_to_data+"hermes.deuteron.zxpt-3D.no-vmsub.mults_piminus.datnew_fortran")
 
 data_from_f=[]
 
@@ -729,10 +731,10 @@ for i in range(len(data_from_f)):
 
 print("Done.  =>     Create points & append to data set ...")
 DataCurrent=DataProcessor.DataSet.DataSet('hermes.d.no-vmsub.zxpt.pi-',"SIDIS")
-DataCurrent.comment="HERMES deutron-to-pi- (zxpt-3D) no-vmsub. thFactor contains DIS normalization"
+DataCurrent.comment="HERMES deutron-to-pi- (zxpt-3D) no-vmsub. thFactor contains DIS normalization (by MSHT20nnlo)"
 DataCurrent.reference="1212.5407"
 
-proc_current=[1,1,2031]
+proc_current=[1,1,-1,2002]
 s_current=2*27.6*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.85,10.,10000.]
@@ -767,7 +769,7 @@ for i in range(len(data_from_f)):
         if(data_from_f[i][0]==0):
             pass#p.corrErrors.append(0)
         else:
-            p["corrErr"].append(data_from_f[i][16]/data_from_f[i][15]*data_from_f[i][0])
+            p["corrErr"].append((data_from_f[i][16]+data_from_f[i][17])/2/data_from_f[i][15]*data_from_f[i][0])
     
     if p["xSec"]<0.00000001:
         print(p["z"],p["<z>"],p["xSec"], "(point dropped)")
@@ -781,7 +783,7 @@ DataCurrent.SaveToCSV(path_to_save+DataCurrent.name+".csv")
 ###############################################################################
 ###########################hermes.deuteron.zxpt-3D K+###########################
 print("hermes.deuteron.zxpt-3D K+ file ...")
-f = open(path_to_data+path_to_HERMES+"/hermes.deuteron.zxpt-3D.no-vmsub.mults_kplus.dat")
+f = open(path_to_data+"hermes.deuteron.zxpt-3D.no-vmsub.mults_kplus.datnew_fortran")
 
 data_from_f=[]
 
@@ -804,10 +806,10 @@ for i in range(len(data_from_f)):
 
 print("Done.  =>     Create points & append to data set ...")
 DataCurrent=DataProcessor.DataSet.DataSet('hermes.d.no-vmsub.zxpt.k+',"SIDIS")
-DataCurrent.comment="HERMES deutron-to-k+ (zxpt-3D) no-vmsub. thFactor contains DIS normalization"
+DataCurrent.comment="HERMES deutron-to-k+ (zxpt-3D) no-vmsub. thFactor contains DIS normalization (by MSHT20nnlo)"
 DataCurrent.reference="1212.5407"
 
-proc_current=[1,1,2012]
+proc_current=[1,1,2,2002]
 s_current=2*27.6*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.85,10.,10000.]
@@ -842,7 +844,7 @@ for i in range(len(data_from_f)):
         if(data_from_f[i][0]==0):
             pass#p.corrErrors.append(0)
         else:
-            p["corrErr"].append(data_from_f[i][16]/data_from_f[i][15]*data_from_f[i][0])
+            p["corrErr"].append((data_from_f[i][16]+data_from_f[i][17])/2/data_from_f[i][15]*data_from_f[i][0])
     #
     if p["xSec"]<0.00000001:
         print(p["z"],p["<z>"],p["xSec"], "(point dropped)")
@@ -856,7 +858,7 @@ DataCurrent.SaveToCSV(path_to_save+DataCurrent.name+".csv")
 ###############################################################################
 ###########################hermes.deuteron.zxpt-3D K-###########################
 print("hermes.deuteron.zxpt-3D K- file ..." )
-f = open(path_to_data+path_to_HERMES+"/hermes.deuteron.zxpt-3D.no-vmsub.mults_kminus.dat")
+f = open(path_to_data+"hermes.deuteron.zxpt-3D.no-vmsub.mults_kminus.datnew_fortran")
 
 data_from_f=[]
 
@@ -879,11 +881,11 @@ for i in range(len(data_from_f)):
 
 print("Done.  =>     Create points & append to data set ...")
 DataCurrent=DataProcessor.DataSet.DataSet('hermes.d.no-vmsub.zxpt.k-',"SIDIS")
-DataCurrent.comment="HERMES deutron-to-k- (zxpt-3D) no-vmsub. thFactor contains DIS normalization"
+DataCurrent.comment="HERMES deutron-to-k- (zxpt-3D) no-vmsub. thFactor contains DIS normalization (by MSHT20nnlo)"
 DataCurrent.reference="1212.5407"
 
 
-proc_current=[1,1,2032]
+proc_current=[1,1,-2,2002]
 s_current=2*27.6*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.85,10.,10000.]
@@ -918,7 +920,7 @@ for i in range(len(data_from_f)):
         if(data_from_f[i][0]==0):
             pass#p.corrErrors.append(0)
         else:
-            p["corrErr"].append(data_from_f[i][16]/data_from_f[i][15]*data_from_f[i][0])
+            p["corrErr"].append((data_from_f[i][16]+data_from_f[i][17])/2/data_from_f[i][15]*data_from_f[i][0])
     #
     if p["xSec"]<0.00000001:
         print(p["z"],p["<z>"],p["xSec"], "(point dropped)")
@@ -932,7 +934,7 @@ DataCurrent.SaveToCSV(path_to_save+DataCurrent.name+".csv")
 ###############################################################################
 ###########################hermes.deuteron.zxpt-3D pi+###########################
 print("hermes.deuteron.vmsub.zxpt-3D pi+ file ...")
-f = open(path_to_data+path_to_HERMES+"/hermes.deuteron.zxpt-3D.vmsub.mults_piplus.dat")
+f = open(path_to_data+"hermes.deuteron.zxpt-3D.vmsub.mults_piplus.datnew_fortran")
 
 data_from_f=[]
 
@@ -954,10 +956,10 @@ for i in range(len(data_from_f)):
 
 print("Done.  =>     Create points & append to data set ...")
 DataCurrent=DataProcessor.DataSet.DataSet('hermes.d.vmsub.zxpt.pi+',"SIDIS")
-DataCurrent.comment="HERMES deutron-to-pi+ (zxpt-3D) vmsub. thFactor contains DIS normalization"
+DataCurrent.comment="HERMES deutron-to-pi+ (zxpt-3D) vmsub. thFactor contains DIS normalization (by MSHT20nnlo)"
 DataCurrent.reference="1212.5407"
 
-proc_current=[1,1,2011]
+proc_current=[1,1,1,2002]
 s_current=2*27.6*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.85,10.,10000.]
@@ -992,7 +994,7 @@ for i in range(len(data_from_f)):
         if(data_from_f[i][0]==0):
             pass#p.corrErrors.append(0)
         else:
-            p["corrErr"].append(data_from_f[i][16]/data_from_f[i][15]*data_from_f[i][0])
+            p["corrErr"].append((data_from_f[i][16]+data_from_f[i][17])/2/data_from_f[i][15]*data_from_f[i][0])
     #
     if p["xSec"]<0.00000001:
         print(p["z"],p["<z>"],p["xSec"], "(point dropped)")
@@ -1006,7 +1008,7 @@ DataCurrent.SaveToCSV(path_to_save+DataCurrent.name+".csv")
 ###############################################################################
 ###########################hermes.deuteron.zxpt-3D pi-###########################
 print("hermes.deuteron.zxpt-3D pi- file ...")
-f = open(path_to_data+path_to_HERMES+"/hermes.deuteron.zxpt-3D.vmsub.mults_piminus.dat")
+f = open(path_to_data+"hermes.deuteron.zxpt-3D.vmsub.mults_piminus.datnew_fortran")
 
 data_from_f=[]
 
@@ -1029,10 +1031,10 @@ for i in range(len(data_from_f)):
 
 print("Done.  =>     Create points & append to data set ...")
 DataCurrent=DataProcessor.DataSet.DataSet('hermes.d.vmsub.zxpt.pi-',"SIDIS")
-DataCurrent.comment="HERMES deutron-to-pi- (zxpt-3D) vmsub. thFactor contains DIS normalization"
+DataCurrent.comment="HERMES deutron-to-pi- (zxpt-3D) vmsub. thFactor contains DIS normalization (by MSHT20nnlo)"
 DataCurrent.reference="1212.5407"
 
-proc_current=[1,1,2031]
+proc_current=[1,1,-1,2002]
 s_current=2*27.6*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.85,10.,10000.]
@@ -1067,7 +1069,7 @@ for i in range(len(data_from_f)):
         if(data_from_f[i][0]==0):
             pass#p.corrErrors.append(0)
         else:
-            p["corrErr"].append(data_from_f[i][16]/data_from_f[i][15]*data_from_f[i][0])
+            p["corrErr"].append((data_from_f[i][16]+data_from_f[i][17])/2/data_from_f[i][15]*data_from_f[i][0])
     #
     if p["xSec"]<0.00000001:
         print(p["z"],p["<z>"],p["xSec"], "(point dropped)")
@@ -1081,7 +1083,7 @@ DataCurrent.SaveToCSV(path_to_save+DataCurrent.name+".csv")
 ###############################################################################
 ###########################hermes.proton.zxpt-3D K+###########################
 print("hermes.deuteron.zxpt-3D K+ file ..." )
-f = open(path_to_data+path_to_HERMES+"/hermes.deuteron.zxpt-3D.vmsub.mults_kplus.dat")
+f = open(path_to_data+"hermes.deuteron.zxpt-3D.vmsub.mults_kplus.datnew_fortran")
 
 data_from_f=[]
 
@@ -1104,10 +1106,10 @@ for i in range(len(data_from_f)):
 
 print("Done.  =>     Create points & append to data set ...")
 DataCurrent=DataProcessor.DataSet.DataSet('hermes.d.vmsub.zxpt.k+',"SIDIS")
-DataCurrent.comment="HERMES deutron-to-k+ (zxpt-3D) vmsub. thFactor contains DIS normalization"
+DataCurrent.comment="HERMES deutron-to-k+ (zxpt-3D) vmsub. thFactor contains DIS normalization (by MSHT20nnlo)"
 DataCurrent.reference="1212.5407"
 
-proc_current=[1,1,2012]
+proc_current=[1,1,2,2002]
 s_current=2*27.6*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.85,10.,10000.]
@@ -1142,7 +1144,7 @@ for i in range(len(data_from_f)):
         if(data_from_f[i][0]==0):
             pass#p.corrErrors.append(0)
         else:
-            p["corrErr"].append(data_from_f[i][16]/data_from_f[i][15]*data_from_f[i][0])
+            p["corrErr"].append((data_from_f[i][16]+data_from_f[i][17])/2/data_from_f[i][15]*data_from_f[i][0])
     #
     if p["xSec"]<0.00000001:
         print(p["z"],p["<z>"],p["xSec"], "(point dropped)")
@@ -1155,7 +1157,7 @@ DataCurrent.SaveToCSV(path_to_save+DataCurrent.name+".csv")
 ###############################################################################
 ###########################hermes.deuteron.zxpt-3D K-###########################
 print("hermes.deuteron.zxpt-3D K- file ...")
-f = open(path_to_data+path_to_HERMES+"/hermes.deuteron.zxpt-3D.vmsub.mults_kminus.dat")
+f = open(path_to_data+"hermes.deuteron.zxpt-3D.vmsub.mults_kminus.datnew_fortran")
 
 data_from_f=[]
 
@@ -1178,10 +1180,10 @@ for i in range(len(data_from_f)):
 
 print("Done.  =>     Create points & append to data set ...")
 DataCurrent=DataProcessor.DataSet.DataSet('hermes.d.vmsub.zxpt.k-',"SIDIS")
-DataCurrent.comment="HERMES deutron-to-k- (zxpt-3D) vmsub. thFactor contains DIS normalization"
+DataCurrent.comment="HERMES deutron-to-k- (zxpt-3D) vmsub. thFactor contains DIS normalization (by MSHT20nnlo)"
 DataCurrent.reference="1212.5407"
 
-proc_current=[1,1,2032]
+proc_current=[1,1,-2,2002]
 s_current=2*27.6*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.85,10.,10000.]
@@ -1216,7 +1218,7 @@ for i in range(len(data_from_f)):
         if(data_from_f[i][0]==0):
             pass#p.corrErrors.append(0)
         else:
-            p["corrErr"].append(data_from_f[i][16]/data_from_f[i][15]*data_from_f[i][0])
+            p["corrErr"].append((data_from_f[i][16]+data_from_f[i][17])/2/data_from_f[i][15]*data_from_f[i][0])
     #
     if p["xSec"]<0.00000001:
         print(p["z"],p["<z>"],p["xSec"], "(point dropped)")
@@ -1234,7 +1236,7 @@ DataCurrent.SaveToCSV(path_to_save+DataCurrent.name+".csv")
 ###############################################################################
 ###########################compass.deuteron.h+#################################
 print("compass.deuteron.h+ file ...")
-f = open(path_to_data+path_to_COMPASS+"/compass(1706.01473).d.hplus.dat")
+f = open(path_to_data+"/compass(1706.01473).d.hplus.datnew_fortran")
 
 data_from_f=[]
 
@@ -1254,12 +1256,10 @@ for i in range(len(data_from_f)):
 
 print("Done.  =>     Create points & append to data set ...")
 DataCurrent=DataProcessor.DataSet.DataSet('compass.d.h+',"SIDIS")
-DataCurrent.comment="COMPASS isoscalar h+. thFactor contains DIS normalization"
+DataCurrent.comment="COMPASS isoscalar h+. thFactor contains DIS normalization (by MSHT20nnlo)"
 DataCurrent.reference="1709.07374"
 
-#proc_current=[1,1,2015]
-#proc_current=[1,1,2013]
-proc_current=[1,1,2103]
+proc_current=[1,1,1,2103]
 s_current=2*160.*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.9,25.,10000.]
@@ -1285,9 +1285,9 @@ for i in range(len(data_from_f)):
         p["thFactor"]=1/(p["pT"][1]**2-p["pT"][0]**2)/(p["z"][1]-p["z"][0])/data_from_f[i][11]#devide by bin size multiply by DIS xSec
          
     p["uncorrErr"].append(data_from_f[i][9])
-    p["uncorrErr"].append(data_from_f[i][10])
+    p["uncorrErr"].append(data_from_f[i][10]*data_from_f[i][8]) #### for some unknown reasons the data-file gives relative uncertanty
     if(addDISnormalizationUncertainty):
-        p["corrErr"].append(data_from_f[i][12]/data_from_f[i][11]*data_from_f[i][8])
+        p["corrErr"].append((data_from_f[i][12]+data_from_f[i][13])/2/data_from_f[i][11]*data_from_f[i][8])
     #
     DataCurrent.AddPoint(p)
 
@@ -1298,7 +1298,7 @@ DataCurrent.SaveToCSV(path_to_save+DataCurrent.name+".csv")
 ###############################################################################
 ###########################compass.deuteron.h-#################################
 print("compass.deuteron.h- file ...")
-f = open(path_to_data+path_to_COMPASS+"/compass(1706.01473).d.hminus.dat")
+f = open(path_to_data+"/compass(1706.01473).d.hminus.datnew_fortran")
 
 data_from_f=[]
 
@@ -1318,10 +1318,10 @@ for i in range(len(data_from_f)):
 
 print("Done.  =>     Create points & append to data set ...")
 DataCurrent=DataProcessor.DataSet.DataSet('compass.d.h-',"SIDIS")
-DataCurrent.comment="COMPASS isoscalar h-. thFactor contains DIS normalization"
+DataCurrent.comment="COMPASS isoscalar h-. thFactor contains DIS normalization (by MSHT20nnlo)"
 DataCurrent.reference="1709.07374"
 
-proc_current=[1,1,2113]
+proc_current=[1,1,-1,2103]
 s_current=2*160.*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.9,25.,10000.]
@@ -1347,9 +1347,9 @@ for i in range(len(data_from_f)):
         p["thFactor"]=1/(p["pT"][1]**2-p["pT"][0]**2)/(p["z"][1]-p["z"][0])/data_from_f[i][11]#devide by bin size multiply by DIS xSec
          
     p["uncorrErr"].append(data_from_f[i][9])
-    p["uncorrErr"].append(data_from_f[i][10])
+    p["uncorrErr"].append(data_from_f[i][10]*data_from_f[i][8]) #### for some unknown reasons the data-file gives relative uncertanty
     if(addDISnormalizationUncertainty):
-        p["corrErr"].append(data_from_f[i][12]/data_from_f[i][11]*data_from_f[i][8])
+        p["corrErr"].append((data_from_f[i][12]+data_from_f[i][13])/2/data_from_f[i][11]*data_from_f[i][8])
     #
     DataCurrent.AddPoint(p)
 

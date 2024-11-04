@@ -19,7 +19,7 @@ import DataProcessor.DataSet
 
 path_to_data=os.path.realpath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))+'/data/ATLAS/Zangular_1606_00689/'
 path_to_save=ROOT_DIR+"/DataLib/DY_angular/"
-
+ 
 M_Z=91.1876### mass of Z-boson
 
 #%%
@@ -98,7 +98,7 @@ def FillTable(fileName,reg):
 DataCurrent=DataProcessor.DataSet.DataSet('A8_Auu_0y1',"DY")
 DataCurrent.comment="ATLAS 8TeV angular coefficent Auu (used for normalization)"
 
-proc_current=[1,1,1,2]
+proc_current=[1,1,1,3]
 
 print("Read ATLAS8 Auu 0y1 file...")
 

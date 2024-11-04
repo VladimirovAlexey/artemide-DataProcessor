@@ -41,15 +41,15 @@ MAINPATH=ROOT_DIR
 #######################################
 import harpy
 
-path_to_constants=MAINPATH+"FittingPrograms/ART23/ConstantsFiles/DYonly/ART23_MSHT_N4LL.atmde"
-#path_to_constants=MAINPATH+"FittingPrograms/ART23/ConstantsFiles/DYonly/ART23_JAM_NLL.atmde"
+#path_to_constants=MAINPATH+"FittingPrograms/ART23/ConstantsFiles/DYonly/ART23_MSHT_N4LL_v301_resum.atmde"
+path_to_constants=MAINPATH+"FittingPrograms/ART23/ConstantsFiles/DYonly/ART23_MSHT_N4LL_v301.atmde"
 
 
 harpy.initialize(path_to_constants)
 
 initializationArray=[0.253434, 0.253434,0.253434, 0.253434,
                      0.253434, 0.253434,0.253434, 0.253434,
-                     0.253434, 0.253434, 0.1,  0.1]
+                     0.253434, 0.253434, 0.1,  0.04]
 
 harpy.setNPparameters_TMDR([1.584237, 0.048428,0.001,0.])
 
@@ -86,22 +86,7 @@ def cutFunc(p):
     
     #  for artemide v3.    
     # p["process"]=[p["process"][0],p["process"][2],1,1]
-    if(len(p["process"])==3):
-        if(p["process"][2]==1): p["process"]=[p["process"][0],1,1,1]
-        elif(p["process"][2]==2): p["process"]=[p["process"][0],1,-1,1]
-        elif(p["process"][2]==3): p["process"]=[p["process"][0],1,1,2]
-        elif(p["process"][2]==4): p["process"]=[p["process"][0],1,-1,2]
-        elif(p["process"][2]==5): p["process"]=[p["process"][0],1,1,3]
-        elif(p["process"][2]==6): p["process"]=[p["process"][0],1,-1,3]
-        elif(p["process"][2]==7): p["process"]=[p["process"][0],1,1,4]
-        elif(p["process"][2]==8): p["process"]=[p["process"][0],1,1,5]
-        elif(p["process"][2]==9): p["process"]=[p["process"][0],1,1,6]
-        elif(p["process"][2]==10): p["process"]=[p["process"][0],1,-1,4]
-        elif(p["process"][2]==11): p["process"]=[p["process"][0],1,-1,5]
-        elif(p["process"][2]==12): p["process"]=[p["process"][0],1,-1,6]
-        elif(p["process"][2]==1001): p["process"]=[p["process"][0],1,1,101]
-        elif(p["process"][2]==1002): p["process"]=[p["process"][0],1,1,102]
-        else:
+    if(len(p["process"])==3):        
             print("UNKNOWN PROCESS IN ARTEMIDE 3"+str(p["process"]))
     
     if(p["xSec"]>0):
@@ -177,16 +162,14 @@ setAuu=theDataAuu.CutData(cutFunc)
 #%%
 #(11+full data)
 #harpy.setNPparameters([1.5004, 0.049098, 0.05979, 0.0, 0.834557, 0.914247, 0.910747, 4.5973, 0.004487, 38.5017, 0.001313, 1.2705, 1.1989, 0.173397, 0.0, 0.0])
-harpy.setNPparameters([1.5004, 0.05614, 0.03862, 0.0, 0.565, 0.0539, 0.5697, 6.64, 0., 20.07, 0., 0.537, 1.07, 2.39, 0.0, 0.0])
-#rSet.SetReplica(0)
-#harpy.setNPparameters([1.4806, 0.038969, 0.051737, 0.0, 0.565, 0.0539, 0.5697, 6.64, 0.565, 20.07, 0.5697, 0.537, 1.07, 2.39, 0.0, 0.0])
-#FIT with cut facto from KPC (fast chi2=1.055)
-#harpy.setNPparameters([1.5, 0.053509, 0.037095, 0.0, 0.549212, 0.172144, 0.538113, 6.4105, 0.565, 19.8866, 0.5697, 0.638572, 1.0974, 10.0389, 0.004768, 0.0])
-#FIT of A4 only
-#harpy.setNPparameters([1.5, 0.05614, 0.03862, 0.0, 0.565, 0.0539, 0.5697, 6.64, 0.565, 20.07, 0.5697, 0.537, 1.07, 2.39, 0.0, 0.0])
+harpy.setNPparameters([1.5004, 0.073018, 0.038048, 0.0, 0.521462, 0.000206, 0.402948, 7.0219, 1.0, 20.4051, 1.0, 0.000123, 1.1037, 0.660734, 0.0, 0.04])
+
+
+#
+#harpy.setNPparameters([1.5, 0.06889, 0.034798, 0.0, 0.230307, 0.000133, 0.325107, 9.3201, 5.4843, 1.8057, 6.8255, 0.006956, 1.1171, 3.8732, 9.5e-05, 0.0001])
 DataProcessor.harpyInterface.PrintChi2Table(setDY,printDecomposedChi2=True)
 
-#%% PLOT files
+    #%% PLOT files
 # pathToPlot="/data/WorkingFiles/TMD/Fit_Notes/KPC/PlotsData/LP_ART23/"
 # import time
 # for s in setDY.sets:
@@ -219,6 +202,8 @@ def chi_2DY(x):
     harpy.setNPparameters_TMDR([x[0],x[1],x[2],x[3]])
     #harpy.setNPparameters_uTMDPDF(x[4:])
     harpy.setNPparameters_uTMDPDF([x[4],x[5],x[6],x[7],x[8],x[9],x[10],x[11],x[12],x[13],x[14],x[15]])
+    #harpy.varyScales(1.,1.,1.,2.0)
+    #harpy.varyScales(1.,1.,1.,1.0)
     # harpy.setNPparameters_TMDR([x[0],x[1],x[2],x[3]])
     # harpy.setNPparameters_uTMDPDF(x[4:])
     print('np set =',["{:8.3f}".format(i) for i in x])        
@@ -229,9 +214,9 @@ def chi_2DY(x):
     penalty_array=numpy.array([max(0,abs(setDY.sets[i].DetermineAvarageSystematicShift(YY[setDY._i1[i]:setDY._i2[i]]))/setDY.sets[i].normErr[0]-1) for i in penalty_index])
     penalty_term=sum(penalty_array**6)
     
-    # YA4=DataProcessor.harpyInterface.ComputeXSec(setA4)
-    # YAuu=DataProcessor.harpyInterface.ComputeXSec(setAuu)
-    ccA4,cc4=0,0#=setA4.chi2(-numpy.array(YA4)/numpy.array(YAuu))
+    YA4=DataProcessor.harpyInterface.ComputeXSec(setA4)
+    YAuu=DataProcessor.harpyInterface.ComputeXSec(setAuu)
+    ccA4,cc4=setA4.chi2(-numpy.array(YA4)/numpy.array(YAuu))
     
     #ccDY2,cc3=DataProcessor.harpyInterface.ComputeChi2(setDY)
     #ccSIDIS2,cc3=DataProcessor.harpyInterface.ComputeChi2(setSIDIS)
@@ -246,6 +231,7 @@ def chi_2DY(x):
     endT=time.time()
     print(':->',cc,'  ',ccR,'   +p=',penalty_term,"    time=",endT-startT)
     return ccDY2+ccA4+penalty_term
+
 #%%
 # chi2=1.163 (muOPE->2)
 # [1.5, 0.049098, 0.05979, 0.0, 0.364806, 4.7486, 0.469411, 0.652846, 0.0, 33.8383, 0.0, 24.3613, 1.4598, 0.054165, 0.0, 0.0]
@@ -257,16 +243,12 @@ def chi_2DY(x):
 from iminuit import Minuit
 
 #---- PDFbias-like row
-initialValues=([1.500, 0.05614, 0.03862, 0.0, 
+initialValues=([1.5004, 0.05614, 0.03862, 0.0, 
                 0.565, 0.0539, 0.5697, 6.64, 
-                0.0, 2.07, 0.0, 0.537, 
-                1.07, 2.39, 0.0, 0.0
+                1., 20.07, 1., 0.537, 
+                1.07, 2.39, 0.0, 0.04
     ])
 
-# initialValues=([1.56142, 0.0369174, 0.0581734, 1.0,
-#   0.874245, 0.913883, 0.991563, 6.05412,
-#   0.353908, 46.6064, 0.115161, 1.53235,
-#   1.31966, 0.434833, 0.0, 0.0])
 initialErrors=(0.1,0.1,0.1,0.1,
                 0.1,  1.0, 0.1,  1.0,
                 0.1,  1.0, 0.1,  1.0,
@@ -274,13 +256,13 @@ initialErrors=(0.1,0.1,0.1,0.1,
 searchLimits=((1.0,2.5),(0.005,0.15) ,(0.0,.2), (-5.,5.),
               (0.0001,100.), (0.0001,100.),(0.0001,100.),(0.0001,100.),
               (-100.,100.), (0.0001,100.),(-100.,100.),(0.0001,100.),
-              (0.0001,100.), (0.0001,100.),(0.,100.),(0.0001,100.))
+              (0.0001,100.), (0.0001,100.),(0.,100.),(0.04,100.))
               
 # True= FIX
 parametersToMinimize=(True, False,False,True,
                       False, False, False,False,
-                      False, False, False,False,
-                      False, False, False,True)
+                      True, False, True, False,
+                      False, False, True,True)
 
 #%%
 

@@ -24,7 +24,7 @@ M_Z=91.1876### mass of Z-boson
 
 #%%
 ### given in the text
-proc_current=[1,1,5]
+proc_current=[1,1,1,3]
 s_current=13000.**2
 Q_current=[60.,120.]
 incCut=True

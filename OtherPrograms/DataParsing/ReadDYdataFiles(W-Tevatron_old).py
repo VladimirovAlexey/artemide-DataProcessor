@@ -42,7 +42,7 @@ DataCurrent.reference="arXiv:hep-ph/9803003"
 
 DataCurrent.isNormalized=True
 #### not clear is it 
-proc_current=[1,1,12]
+proc_current=[1,1,-1,6]
 s_current=1800.**2
 y_current=[-1.1,1.1]
 incCut=True
@@ -113,7 +113,7 @@ DataCurrent.reference="Phys.Rev.Lett. 66 (1991)"
 DataCurrent.isNormalized=True
 
 #### not clear is it 
-proc_current=[1,1,12]
+proc_current=[1,1,-1,6]
 s_current=1800.**2
 ## no restriction on y
 y_current=[-100.,100.]

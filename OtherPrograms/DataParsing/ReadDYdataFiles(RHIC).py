@@ -65,7 +65,7 @@ DataCurrent.comment="PHENIX 200GeV data"
 DataCurrent.reference="arXiv:1805.02448"
 
 DataCurrent.isNormalized=False
-proc_current=[1,1,5]
+proc_current=[1,1,1,3]
 s_current=200.**2
 Q_current=[4.8,8.2]
 y_current=[1.2,2.2]
@@ -135,7 +135,7 @@ DataCurrent.reference="preliminary"
 bins=[0., 1.25, 2.5, 3.75, 5., 7.5, 10., 12.5, 15., 17.5, 20., 25.]
 
 DataCurrent.isNormalized=False
-proc_current=[1,1,5]
+proc_current=[1,1,1,3]
 s_current=510.**2
 Q_current=[73.,114.]
 y_current=[-1.,1.]

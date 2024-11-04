@@ -18,7 +18,7 @@ import DataProcessor.Point
 import DataProcessor.DataSet
 
 path_to_data=ROOT_DIR+"data/"
-path_to_save=ROOT_DIR+"/DataProcessor/DataLib/unpolW/"
+path_to_save=ROOT_DIR+"DataProcessor/DataLib/unpolW/"
 
 M_W=80.### mass of Z-boson
 
@@ -40,7 +40,7 @@ DataCurrent.comment="CMS 8TeV normalized, W-boson production to electron"
 DataCurrent.reference="arXiv:1606.05864"
 
 DataCurrent.isNormalized=True
-proc_current=[1,1,9]
+proc_current=[1,1,1,6]
 s_current=8000.**2
 Q_current=[20.,300.]
 y_current=[-2.5,2.5]
@@ -93,7 +93,7 @@ DataCurrent.comment="CMS 8TeV normalized, W-boson production to muon"
 DataCurrent.reference="arXiv:1606.05864"
 
 DataCurrent.isNormalized=True
-proc_current=[1,1,9]
+proc_current=[1,1,1,6]
 s_current=8000.**2
 Q_current=[20.,300.]
 y_current=[-2.1,2.1]

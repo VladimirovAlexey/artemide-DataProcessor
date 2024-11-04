@@ -21,7 +21,7 @@ import numpy
 path_to_data=os.path.realpath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))+'/data/ATLAS/Zangular_1606_00689/'
 path_to_save=ROOT_DIR+"/DataLib/DY_angular/"
 
-M_Z=91.1876### mass of Z-boson
+M_Z=91.1876### mass of Z-boson 
 
 #%%
 ### given in the text

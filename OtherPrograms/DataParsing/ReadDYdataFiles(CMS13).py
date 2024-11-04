@@ -9,15 +9,15 @@ Program that parse various DY data files to ADP-frendly formal
 """
 
 import sys
-sys.path.append("/home/vla18041/LinkData2/arTeMiDe_Repository/DataProcessor/")
+sys.path.append("/data/arTeMiDe_Repository/DataProcessor/")
 
 import numpy
 
 import DataProcessor.Point
 import DataProcessor.DataSet
 
-path_to_data="/home/vla18041/LinkData2/arTeMiDe_Repository/data/"
-path_to_save="/home/vla18041/LinkData2/arTeMiDe_Repository/DataProcessor/DataLib/unpolDY/"
+path_to_data="/data/arTeMiDe_Repository/data/"
+path_to_save="/data/arTeMiDe_Repository/DataProcessor/DataLib/unpolDY/"
 
 M_Z=91.1876### mass of Z-boson
 
@@ -39,7 +39,7 @@ def FindBin(pt_in):
 
 #%%
 ### given in the text
-proc_current=[1,1,5]
+proc_current=[1,1,1,3]
 s_current=13000.**2
 Q_current=[M_Z-15.,M_Z+15.]
 incCut=True

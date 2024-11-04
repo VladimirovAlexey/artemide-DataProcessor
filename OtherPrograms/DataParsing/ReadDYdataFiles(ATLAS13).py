@@ -40,7 +40,7 @@ DataCurrent.comment="ATLAS 13TeV normalized to 1/sigma"
 DataCurrent.reference="arXiv:1912.02844"
 
 DataCurrent.isNormalized=True
-proc_current=[1,1,5]
+proc_current=[1,1,1,3]
 s_current=13000.**2
 Q_current=[66.,116.]
 y_current=[-2.5,2.5]

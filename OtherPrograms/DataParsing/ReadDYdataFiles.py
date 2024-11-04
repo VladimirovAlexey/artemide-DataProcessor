@@ -9,14 +9,14 @@ Program that parse various DY data files to ADP-frendly formal
 """
 
 import sys
-sys.path.append("/home/vla18041/LinkData2/arTeMiDe_Repository/DataProcessor/")
+sys.path.append("/data/arTeMiDe_Repository/DataProcessor/")
 
 import DataProcessor.Point
 import DataProcessor.DataSet
 import numpy
 
-path_to_data="/home/vla18041/LinkData2/arTeMiDe_Repository/data/"
-path_to_save="/home/vla18041/LinkData2/arTeMiDe_Repository/DataProcessor/DataLib/unpolDY/"
+path_to_data="/data/arTeMiDe_Repository/data/"
+path_to_save="/data/arTeMiDe_Repository/DataProcessor/DataLib/unpolDY/"
 
 M_Z=91.### mass of Z-boson
 
@@ -51,7 +51,7 @@ DataCurrent.comment="CDF run1"
 DataCurrent.reference="hep-ex/0001021"
 
 DataCurrent.isNormalized=False
-proc_current=[1,1,6]
+proc_current=[1,1,-1,3]
 s_current=1800.**2
 Q_current=[66.,116.]
 y_current=[-1000.,1000.]
@@ -112,7 +112,7 @@ DataCurrent=DataProcessor.DataSet.DataSet('CDF2',"DY")
 DataCurrent.comment="CDF run2"
 DataCurrent.reference="arXiv:1207.7138"
 
-proc_current=[1,1,6]
+proc_current=[1,1,-1,3]
 DataCurrent.isNormalized=False
 s_current=1960.**2
 Q_current=[66.,116.]
@@ -176,7 +176,7 @@ DataCurrent.comment="D0 run1"
 DataCurrent.reference="hep-ex/9907009"
 
 DataCurrent.isNormalized=False
-proc_current=[1,1,6]
+proc_current=[1,1,-1,3]
 s_current=1800.**2
 Q_current=[75.,105.]
 y_current=[-1000.,1000.]
@@ -237,7 +237,7 @@ DataCurrent.comment="D0 run2"
 DataCurrent.reference="arXiv:0712.0803"
 
 DataCurrent.isNormalized=True
-proc_current=[1,1,6]
+proc_current=[1,1,-1,3]
 s_current=1960.**2
 Q_current=[70.,110.]
 y_current=[-1000.,1000.]
@@ -299,7 +299,7 @@ DataCurrent.comment="D0 run2 data for muons"
 DataCurrent.reference="arXiv:1006.0618"
 
 DataCurrent.isNormalized=True
-proc_current=[1,1,6]
+proc_current=[1,1,-1,3]
 s_current=1960.**2
 Q_current=[65.,115.]
 y_current=[-1000.,1000.]
@@ -368,7 +368,7 @@ DataCurrent.comment="ATLAS 7TeV 0.0<|y|<1.0"
 DataCurrent.reference="arXiv:1406.3660"
 
 DataCurrent.isNormalized=True
-proc_current=[1,1,5]
+proc_current=[1,1,1,3]
 s_current=7000.**2
 Q_current=[66.,116.]
 y_current=[0.,1.]
@@ -435,7 +435,7 @@ DataCurrent.comment="ATLAS 7TeV 1.0<|y|<2.0"
 DataCurrent.reference="arXiv:1406.3660"
 
 DataCurrent.isNormalized=True
-proc_current=[1,1,5]
+proc_current=[1,1,1,3]
 s_current=7000.**2
 Q_current=[66.,116.]
 y_current=[1.,2.]
@@ -502,7 +502,7 @@ DataCurrent.comment="ATLAS 7TeV 2.0<|y|<2.4"
 DataCurrent.reference="arXiv:1406.3660"
 
 DataCurrent.isNormalized=True
-proc_current=[1,1,5]
+proc_current=[1,1,1,3]
 s_current=7000.**2
 Q_current=[66.,116.]
 y_current=[2.,2.4]
@@ -569,7 +569,7 @@ DataCurrent.comment="ATLAS 8TeV 0.0<|y|<0.4"
 DataCurrent.reference="arXiv:1512.02192"
 
 DataCurrent.isNormalized=False
-proc_current=[1,1,5]
+proc_current=[1,1,1,3]
 s_current=8000.**2
 Q_current=[66.,116.]
 y_current=[0.,0.4]
@@ -635,7 +635,7 @@ DataCurrent.comment="ATLAS 8TeV 0.4<|y|<0.8"
 DataCurrent.reference="arXiv:1512.02192"
 
 DataCurrent.isNormalized=False
-proc_current=[1,1,5]
+proc_current=[1,1,1,3]
 s_current=8000.**2
 Q_current=[66.,116.]
 y_current=[0.4,0.8]
@@ -702,7 +702,7 @@ DataCurrent.comment="ATLAS 8TeV 0.8<|y|<1.2"
 DataCurrent.reference="arXiv:1512.02192"
 
 DataCurrent.isNormalized=False
-proc_current=[1,1,5]
+proc_current=[1,1,1,3]
 s_current=8000.**2
 Q_current=[66.,116.]
 y_current=[0.8,1.2]
@@ -769,7 +769,7 @@ DataCurrent.comment="ATLAS 8TeV 1.2<|y|<1.6"
 DataCurrent.reference="arXiv:1512.02192"
 
 DataCurrent.isNormalized=False
-proc_current=[1,1,5]
+proc_current=[1,1,1,3]
 s_current=8000.**2
 Q_current=[66.,116.]
 y_current=[1.2,1.6]
@@ -836,7 +836,7 @@ DataCurrent.comment="ATLAS 8TeV 1.6<|y|<2.0"
 DataCurrent.reference="arXiv:1512.02192"
 
 DataCurrent.isNormalized=False
-proc_current=[1,1,5]
+proc_current=[1,1,1,3]
 s_current=8000.**2
 Q_current=[66.,116.]
 y_current=[1.6,2.0]
@@ -903,7 +903,7 @@ DataCurrent.comment="ATLAS 8TeV 2.0<|y|<2.4"
 DataCurrent.reference="arXiv:1512.02192"
 
 DataCurrent.isNormalized=False
-proc_current=[1,1,5]
+proc_current=[1,1,1,3]
 s_current=8000.**2
 Q_current=[66.,116.]
 y_current=[2.0,2.4]
@@ -969,7 +969,7 @@ DataCurrent.comment="ATLAS 8TeV 46<Q<66"
 DataCurrent.reference="arXiv:1512.02192"
 
 DataCurrent.isNormalized=False
-proc_current=[1,1,5]
+proc_current=[1,1,1,3]
 s_current=8000.**2
 Q_current=[46.,66.]
 y_current=[-2.4,2.4]
@@ -1035,7 +1035,7 @@ DataCurrent.comment="ATLAS 8TeV 116<Q<150"
 DataCurrent.reference="arXiv:1512.02192"
 
 DataCurrent.isNormalized=False
-proc_current=[1,1,5]
+proc_current=[1,1,1,3]
 s_current=8000.**2
 Q_current=[116.,150.]
 y_current=[-2.4,2.4]
@@ -1101,7 +1101,7 @@ DataCurrent.comment="CMS 7TeV"
 DataCurrent.reference="arXiv:1110.4973"
 
 DataCurrent.isNormalized=True
-proc_current=[1,1,5]
+proc_current=[1,1,1,3]
 s_current=7000.**2
 Q_current=[60.,120.]
 y_current=[-2.1,2.1]
@@ -1166,7 +1166,7 @@ DataCurrent.comment="CMS 8TeV"
 DataCurrent.reference="arXiv:1606.05864"
 
 DataCurrent.isNormalized=True
-proc_current=[1,1,5]
+proc_current=[1,1,1,3]
 s_current=8000.**2
 Q_current=[60.,120.]
 y_current=[-2.1,2.1]
@@ -1232,7 +1232,7 @@ DataCurrent.comment="LHCb 7TeV"
 DataCurrent.reference="arXiv:1505.07024"
 
 DataCurrent.isNormalized=False
-proc_current=[1,1,5]
+proc_current=[1,1,1,3]
 s_current=7000.**2
 Q_current=[60.,120.]
 y_current=[2.,4.5]
@@ -1300,7 +1300,7 @@ DataCurrent.comment="LHCb 8TeV"
 DataCurrent.reference="arXiv:1511.08039"
 
 DataCurrent.isNormalized=False
-proc_current=[1,1,5]
+proc_current=[1,1,1,3]
 s_current=8000.**2
 Q_current=[60.,120.]
 y_current=[2.,4.5]
@@ -1368,7 +1368,7 @@ DataCurrent.comment="LHCb 13TeV"
 DataCurrent.reference="arXiv:1607.06495"
 
 DataCurrent.isNormalized=False
-proc_current=[1,1,5]
+proc_current=[1,1,1,3]
 s_current=13000.**2
 Q_current=[60.,120.]
 y_current=[2.,4.5]
@@ -1441,7 +1441,7 @@ DataCurrent.comment="E288 (200) data"
 DataCurrent.reference="Phys.Rev.D 23 (1981) 604"
 
 DataCurrent.isNormalized=False
-proc_current=[1,2,1001]
+proc_current=[2,1,1,101]
 s_current=19.42**2
 y_current=[0.1,0.7]
 lumUncertainty=0.25
@@ -1504,7 +1504,7 @@ DataCurrent.comment="E288 (300) data"
 DataCurrent.reference="Phys.Rev.D 23 (1981) 604"
 
 DataCurrent.isNormalized=False
-proc_current=[1,2,1001]
+proc_current=[2,1,1,101]
 s_current=23.73**2
 y_current=[0.21-0.3,0.21+0.3]
 lumUncertainty=0.25
@@ -1569,7 +1569,7 @@ DataCurrent.comment="E288 (400) data"
 DataCurrent.reference="Phys.Rev.D 23 (1981) 604"
 
 DataCurrent.isNormalized=False
-proc_current=[1,2,1001]
+proc_current=[2,1,1,101]
 s_current=27.43**2
 y_current=[0.03-0.3,0.03+0.3]
 lumUncertainty=0.25
@@ -1635,7 +1635,7 @@ DataCurrent.comment="E772 data"
 DataCurrent.reference="Phys.Rev.D 50 (1994) 3-38 + Erratum D60 (1999) 119903"
 
 DataCurrent.isNormalized=False
-proc_current=[2,2,1002]
+proc_current=[2,1,1,102]
 s_current=38.76**2
 y_current=[0.1,0.3]
 lumUncertainty=0.10
@@ -1747,7 +1747,7 @@ DataCurrent.comment="E605 data"
 DataCurrent.reference="Phys.Rev.D 43 (1991) 2815"
 
 DataCurrent.isNormalized=False
-proc_current=[2,2,1002]
+proc_current=[2,1,1,102]
 s_current=38.76**2
 y_current=[-0.1,0.2]
 lumUncertainty=0.15
@@ -1996,7 +1996,7 @@ DataCurrent.comment="E537 data Q-differential"
 DataCurrent.reference="Phys.Rev.D 93 (1988) 1377"
 
 DataCurrent.isNormalized=False
-proc_current=[2,2,1003]
+proc_current=[2,-1,1,103]
 s_current=235.4
 y_current=[-0.1,1.0]
 sysError=0.08
@@ -2065,7 +2065,7 @@ DataCurrent.comment="E537 data xF-differential"
 DataCurrent.reference="Phys.Rev.D 93 (1988) 1377"
 
 DataCurrent.isNormalized=False
-proc_current=[2,2,1003]
+proc_current=[2,1,-1,103]
 s_current=235.4
 
 Q_current=[4.0,9.0]

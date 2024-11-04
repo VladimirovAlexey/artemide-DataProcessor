@@ -58,7 +58,7 @@ DataCurrent.comment="E288 (200) data"
 DataCurrent.reference="Phys.Rev.D 23 (1981) 604"
 
 DataCurrent.isNormalized=False
-proc_current=[1,2,1001]
+proc_current=[2,1,1,101]
 s_current=19.42**2
 y_current=[0.1,0.7]
 lumUncertainty=0.25
@@ -121,7 +121,7 @@ DataCurrent.comment="E288 (300) data"
 DataCurrent.reference="Phys.Rev.D 23 (1981) 604"
 
 DataCurrent.isNormalized=False
-proc_current=[1,2,1001]
+proc_current=[2,1,1,101]
 s_current=23.73**2
 y_current=[0.21-0.3,0.21+0.3]
 lumUncertainty=0.25
@@ -186,7 +186,7 @@ DataCurrent.comment="E288 (400) data"
 DataCurrent.reference="Phys.Rev.D 23 (1981) 604"
 
 DataCurrent.isNormalized=False
-proc_current=[1,2,1001]
+proc_current=[2,1,1,101]
 s_current=27.43**2
 y_current=[0.03-0.3,0.03+0.3]
 lumUncertainty=0.25
@@ -252,7 +252,7 @@ DataCurrent.comment="E772 data"
 DataCurrent.reference="Phys.Rev.D 50 (1994) 3-38 + Erratum D60 (1999) 119903"
 
 DataCurrent.isNormalized=False
-proc_current=[2,2,1002]
+proc_current=[2,1,1,102]
 s_current=38.76**2
 y_current=[0.1,0.3]
 lumUncertainty=0.10
@@ -364,7 +364,7 @@ DataCurrent.comment="E605 data"
 DataCurrent.reference="Phys.Rev.D 43 (1991) 2815"
 
 DataCurrent.isNormalized=False
-proc_current=[2,2,1002]
+proc_current=[2,1,1,102]
 s_current=38.76**2
 y_current=[-0.1,0.2]
 lumUncertainty=0.15
@@ -613,7 +613,7 @@ DataCurrent.comment="E537 data Q-differential"
 DataCurrent.reference="Phys.Rev.D 93 (1988) 1377"
 
 DataCurrent.isNormalized=False
-proc_current=[2,2,1003]
+proc_current=[2,-1,1,103]
 s_current=235.4
 y_current=[-0.1,1.0]
 sysError=0.08
@@ -682,7 +682,7 @@ DataCurrent.comment="E537 data xF-differential"
 DataCurrent.reference="Phys.Rev.D 93 (1988) 1377"
 
 DataCurrent.isNormalized=False
-proc_current=[2,2,1003]
+proc_current=[2,-1,1,103]
 s_current=235.4
 
 Q_current=[4.0,9.0]

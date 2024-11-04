@@ -676,7 +676,7 @@ class DataSet:
         for p in self.points:
             file.write(p["id"])
             file.write(",")
-            file.write(str(p["process"]).replace(","," -").replace("[","").replace("]",""))            
+            file.write(str(p["process"]).replace(","," /").replace("[","").replace("]",""))            
             file.write(",")
             if includeWeightProc:
                 file.write(str(p["weightProcess"]).replace(","," -").replace("[","").replace("]",""))            
@@ -848,9 +848,10 @@ def LoadCSV(path):
         else:
             raise Exception("Unknown process")
         
-        p["process"]=[int(ll) for ll in line[1].split("-")]
+        #print("-----",line[1], name)
+        p["process"]=[int(ll) for ll in line[1].split("/")]
         if includeWeightProc:
-            p["weightProcess"]=[int(ll) for ll in line[2].split("-")]
+            p["weightProcess"]=[int(ll) for ll in line[2].split("/")]
             k=2
         else:
             k=1
