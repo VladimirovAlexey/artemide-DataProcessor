@@ -11,12 +11,13 @@ Created on Thu Jan 24 16:40:59 2019
 import os
 ROOT_DIR = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', '..'))+"/"
 
-ATMDE_DIR = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', '..','..'))+"/artemide/"
-HARPY_DIR = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', '..','..'))+"/artemide/harpy/"
+ATMDE_DIR = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', '..','..'))+"/artemide-playground/"
+HARPY_DIR = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', '..','..'))+"/artemide-playground/harpy/"
 
 
 import sys
 import numpy
+sys.path.remove('/data/arTeMiDe_Repository/artemide/harpy')
 sys.path.append(ROOT_DIR)
 sys.path.append(HARPY_DIR)
 
@@ -32,15 +33,12 @@ MAINPATH=ROOT_DIR
 #######################################
 import harpy
 
-#path_to_constants=MAINPATH+"FittingPrograms/ART25/ConstantsFiles/ART25_N4LL.atmde"
-#path_to_constants=MAINPATH+"FittingPrograms/ART25/ConstantsFiles/ART25_N4LL_DYresum.atmde"
-path_to_constants=MAINPATH+"FittingPrograms/ART25/ConstantsFiles/ART25_N4LL_resum_MAPFF.atmde"
-#path_to_constants=MAINPATH+"FittingPrograms/ART25/ConstantsFiles/ART25_N4LL_NOresum_MAPFF.atmde"
+path_to_constants=MAINPATH+"FittingPrograms/ART25/ConstantsFiles/ART25_N4LL_resum_MAPFF_CS.atmde"
 
 
 harpy.initialize(path_to_constants)
 
-inARRAY_TMDR=[1.5, 0.071624, 0.064726, 0.0]
+inARRAY_TMDR=[1.5004, 0.073018, 0.038048, 0.0,1.,1.,1.]
 inARRAY_PDF=[0.521462, 0.000206, 0.402948, 7.0219, 1.0, 20.4051, 1.0, 0.000123, 1.1037, 0.660734, 0.0, 0.04]
 inARRAY_FF=[0.5, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0,0.0,0.0,0.0,0.0]
 
@@ -227,122 +225,101 @@ setDY=theData.CutData(cutFunc)
 print('Loaded ', setDY.numberOfSets, 'data sets with', sum([i.numberOfPoints for i in setDY.sets]), 'points.')
 
 #%%
-harpy.setNPparameters([1.5, 0.071624, 0.064726, 0.0, 
-                       0.723098, 0.751316, 0.390139, 8.1504,
-                       2.3844, 15.5514, 0.534788, 0.096972,
-                       1.3149, 25.4998, 0.0, 0.04, 
+harpy.setNPparameters([1.5, 0.073, 0.03805, 0.0,10.0,1.,1. ,
+                       0.526, 0.0001, 0.465, 1.46, 
+                       1.0, 19.86, 1.0, 0.00026, 
+                       0.819, 19.88, 0.0, 0.04, 
                        0.573, 0.418, 0.2450, 0.540, 
                        0.869, 1.14, -3.627, 1.4656,
                        0.0,-1.303,0.0,0.0])
 
-DataProcessor.harpyInterface.PrintChi2Table(setSIDIS,printDecomposedChi2=True)
-DataProcessor.harpyInterface.PrintChi2Table(setDY,printDecomposedChi2=True)
-
-#%%
-### ART23*+resum
-harpy.setNPparameters_TMDR([1.5004, 0.073018, 0.038048, 0.0])
-harpy.setNPparameters_uTMDPDF([0.521462, 0.000206, 0.402948, 7.0219, 1.0, 20.4051, 1.0, 0.000123, 1.1037, 0.660734, 0.0, 0.04])
-
-### ART23*
-#harpy.setNPparameters_TMDR([1.5004, 0.060236, 0.037013, 0.0])
-#harpy.setNPparameters_uTMDPDF([0.602249, 0.000103, 0.445843, 7.2217, 1.0, 18.6931, 1.0, 0.000101, 1.1114, 1.3137, 0.0, 0.04])
-
-harpy.setNPparameters_uTMDFF([0.704027, 0.780902, 0.711725, 0.372527,0.704027, 0.780902, 0.711725, 0.372527,0.0,0.0,0.0,0.0])
 #DataProcessor.harpyInterface.PrintChi2Table(setSIDIS,printDecomposedChi2=True)
-#DataProcessor.harpyInterface.PrintChi2Table(setDY,printDecomposedChi2=True)
-
-#%%
-#######################################
-# Minimisation
-#######################################
-import time
-
-penalty_index=[-7,-6,-5,-4,-3]
-
-def chi2(x):
-    startT=time.time()
-    #harpy.setNPparameters_uTMDFF([x[0],x[1],x[2],x[3],x[4],x[5],x[6],x[7]])
-    harpy.setNPparameters(x)
-    print('np set =',["{:8.3f}".format(i) for i in x])        
-    
-    YY=DataProcessor.harpyInterface.ComputeXSec(setSIDIS)
-    ccSIDIS2,cc3=setSIDIS.chi2(YY)
-        
-    YY=DataProcessor.harpyInterface.ComputeXSec(setDY)
-    ccDY2,cc3=setDY.chi2(YY)
-    
-    penalty_array=numpy.array([max(0,abs(setDY.sets[i].DetermineAvarageSystematicShift(YY[setDY._i1[i]:setDY._i2[i]]))/setDY.sets[i].normErr[0]-1) for i in penalty_index])
-    penalty_term=sum(penalty_array**6)
-    
-    cc=[ccSIDIS2/setSIDIS.numberOfPoints,ccDY2/setDY.numberOfPoints, 
-        (ccSIDIS2+ccDY2)/(setSIDIS.numberOfPoints+setDY.numberOfPoints)]
-    
-    endT=time.time()
-    print(':->',cc,'   +p=',penalty_term,"    time=",endT-startT)
-    return ccSIDIS2+ccDY2+penalty_term
-
-#%%
-#### Minimize SIDIS
-from iminuit import Minuit
-
-#---- PDFbias-like row
-initialValues=([
-    1.5, 0.071624, 0.064726, 0.0,
-    0.568631, 1.1114, 0.563709, 7.2062, 
-    4.5436, 17.3135, 0.976618, 0.006934, 
-    1.3213, 25.9727, 0.0, 0.04, 
-    0.674236, 0.781384, 0.441778, 0.941478, 
-    0.509997, 0.262662, -3.073866, 0.198287, 
-    0.0, -0.37617, 0.0, 0.0])
-
-
-initialErrors=(0.1,0.1,0.1,0.1,
-                0.5,  1.0, 0.1,  1.0,
-                0.5,  1.0, 0.1,  1.0,
-                0.5,  1.0, 10.,  1.,
-                0.5,0.5,0.5,0.5,
-                0.5,0.5,0.5,0.5,
-                0.5,0.5,0.5,0.5)
-searchLimits=((1.0,2.5),(0.005,0.15) ,(0.0,.2), (-5.,5.),
-              (0.00001,100.), (0.00001,100.),(0.00001,100.),(0.00001,100.),
-              (0.00001,100.), (0.00001,100.),(0.00001,100.),(0.00001,100.),
-              (0.00001,100.), (0.00001,100.),(0.,100.),(0.04,100.),
-              (0.0001,100.), (-100.,100.),(-100.,100.),(-100.,100.),
-              (0.0001,100.), (-100.,100.),(-100.,100.),(-100.,100),
-              (-100.,100.),(-100.,100.),(-100.,100.),(-100.,100.))
-              
-# True= FIX
-parametersToMinimize=(True, False,False,True,
-                      False, False, False,False,
-                      False, False, False, False,
-                      False, False, True,True,
-                      False, False, False,False,
-                      False, False, False,False,
-                      True, False, True,True)
-
-#%%
-
-m = Minuit(chi2, initialValues)
-
-m.errors=initialErrors
-m.limits=searchLimits
-m.fixed=parametersToMinimize
-m.errordef=1
-
-print(m.params)
-#%%
-m.tol=0.0001*(setSIDIS.numberOfPoints+setDY.numberOfPoints)*10000 ### the last 0.0001 is to compensate MINUIT def
-m.strategy=1
-m.migrad()
-
-print(m.params)
-
-chi2(list(m.values))
-
 DataProcessor.harpyInterface.PrintChi2Table(setDY,printDecomposedChi2=True)
-DataProcessor.harpyInterface.PrintChi2Table(setSIDIS,printDecomposedChi2=True)
-
-print([round(x,1 if x >100 else 4 if x>1 else 6) for x in list(m.values)])
 
 #%%
-sys.exit()
+chiBASE=1.2278753451919004
+#tt=[0.05,0.075,0.1,0.125,0.15,0.175]
+tt=[-0.05,-0.075,-0.1,-0.125,-0.15,-0.175]
+for ll in tt:
+    harpy.setNPparameters_TMDR([1.5, 0.073, 0.03805, -ll , 1.5,-1.,1.])
+    YY=DataProcessor.harpyInterface.ComputeXSec(setDY)
+    chi1,cc3=setDY.chi2(YY)
+    print("{",ll,",",chi1/627-chiBASE,"},")
+
+#%%
+saveFile="/data/WorkingFiles/TMD/Fit_Notes/ART25/CS_deltaCHI.dat"
+bTABLE=[0.5,0.75,1.0,1.25,1.5,1.75,2.0,2.5,3.,4.,5.]
+alphaTABLE=[0.5,0.75,1.0,1.5,2.,3.]
+tt=[0.05,0.075,0.1,0.125,0.15,0.175]
+for b in bTABLE:
+    for alpha in alphaTABLE:
+        a=0.05
+        
+        harpy.setNPparameters_TMDR([1.5, 0.073, 0.03805, a, b,-1.,alpha])
+        YY=DataProcessor.harpyInterface.ComputeXSec(setDY)
+        chi1,cc3=setDY.chi2(YY)
+        RR=chi1/627-chiBASE 
+        
+        f=open(saveFile,"a+")
+        f.write(str(b)+", "+str(alpha)+", "+str(a)+", "+str(RR)+"\n")
+        f.close()  
+        
+        while RR<0.02:
+            ss=1.
+            if(b<2): ss=0.5
+            if(b<1): ss=0.25
+            
+            if(RR<0.0001): a+=0.2*ss
+            elif(RR<0.001): a+=0.1*ss
+            elif(RR<0.005): a+=0.05*ss
+            else: a+=0.025*ss           
+            
+            print(b,alpha,a)
+            
+            harpy.setNPparameters_TMDR([1.5, 0.073, 0.03805, a, b,-1.,alpha])
+            YY=DataProcessor.harpyInterface.ComputeXSec(setDY)
+            chi1,cc3=setDY.chi2(YY)
+            RR=chi1/627-chiBASE 
+            
+            f=open(saveFile,"a+")
+            f.write(str(b)+", "+str(alpha)+", "+str(a)+", "+str(RR)+"\n")
+            f.close()  
+            
+#%%
+saveFile="/data/WorkingFiles/TMD/Fit_Notes/ART25/CS_deltaCHI_negative.dat"
+bTABLE=[0.5,0.75,1.0,1.25,1.5,1.75,2.0,2.5,3.,4.,5.]
+alphaTABLE=[0.5,0.75,1.0,1.5,2.,3.]
+for b in bTABLE:
+    for alpha in alphaTABLE:
+        a=-0.01
+        
+        harpy.setNPparameters_TMDR([1.5, 0.073, 0.03805, a, b,-1.,alpha])
+        YY=DataProcessor.harpyInterface.ComputeXSec(setDY)
+        chi1,cc3=setDY.chi2(YY)
+        RR=chi1/627-chiBASE 
+        
+        f=open(saveFile,"a+")
+        f.write(str(b)+", "+str(alpha)+", "+str(a)+", "+str(RR)+"\n")
+        f.close()  
+        
+        while RR<0.02:
+            ss=0.5
+            if(b<2): ss=0.25
+            if(b<1): ss=0.1
+            
+            
+            if(RR<0.0001): a-=0.2*ss
+            elif(RR<0.001): a-=0.1*ss
+            elif(RR<0.005): a-=0.05*ss
+            else: a-=0.025*ss           
+            
+            print(b,alpha,a)
+            
+            harpy.setNPparameters_TMDR([1.5, 0.073, 0.03805, a, b,-1.,alpha])
+            YY=DataProcessor.harpyInterface.ComputeXSec(setDY)
+            chi1,cc3=setDY.chi2(YY)
+            RR=chi1/627-chiBASE 
+            
+            f=open(saveFile,"a+")
+            f.write(str(b)+", "+str(alpha)+", "+str(a)+", "+str(RR)+"\n")
+            f.close()            

@@ -1,0 +1,60 @@
+alexey-MS-7D31 : Tue Nov  5 08:36:30 2024 :  [+20:52:59 ]
+ -->  Minization with PDF/FF replicas 156, 120, 29 completed.
+
+alexey-MS-7D31 : Wed Nov  6 03:45:34 2024 :  [+19:8:18 ]
+ -->  Minization with PDF/FF replicas 90, 197, 47 completed.
+
+alexey-MS-7D31 : Wed Nov  6 11:06:54 2024 :  [+7:20:32 ]
+ -->  Minization with PDF/FF replicas 358, 188, 106 completed.
+
+alexey-MS-7D31 : Wed Nov  6 17:26:37 2024 :  [+6:18:56 ]
+ -->  Minization with PDF/FF replicas 538, 39, 186 completed.
+
+alexey-MS-7D31 : Wed Nov  6 23:19:17 2024 :  [+5:51:51 ]
+ -->  Minization with PDF/FF replicas 725, 101, 173 completed.
+
+alexey-MS-7D31 : Thu Nov  7 21:22:00 2024 :  [+22:1:57 ]
+ -->  Minization with PDF/FF replicas 577, 32, 51 completed.
+
+alexey-MS-7D31 : Fri Nov  8 03:51:41 2024 :  [+6:28:51 ]
+ -->  Minization with PDF/FF replicas 245, 67, 32 completed.
+
+alexey-MS-7D31 : Fri Nov  8 11:07:21 2024 :  [+7:14:53 ]
+ -->  Minization with PDF/FF replicas 290, 47, 178 completed.
+
+alexey-MS-7D31 : Sat Nov  9 05:33:36 2024 :  [+18:25:27 ]
+ -->  Minization with PDF/FF replicas 20, 2, 141 completed.
+
+alexey-MS-7D31 : Sun Nov 10 06:03:53 2024 :  [+24:29:29 ]
+ -->  Minization with PDF/FF replicas 958, 188, 179 completed.
+
+alexey-MS-7D31 : Sun Nov 10 12:29:33 2024 :  [+6:24:55 ]
+ -->  Minization with PDF/FF replicas 193, 98, 159 completed.
+
+alexey-MS-7D31 : Sun Nov 10 22:09:31 2024 :  [+9:39:12 ]
+ -->  Minization with PDF/FF replicas 680, 93, 153 completed.
+
+alexey-MS-7D31 : Mon Nov 11 03:56:03 2024 :  [+5:45:42 ]
+ -->  Minization with PDF/FF replicas 245, 173, 184 completed.
+
+alexey-MS-7D31 : Mon Nov 11 10:58:56 2024 :  [+7:2:7 ]
+ -->  Minization with PDF/FF replicas 608, 54, 131 completed.
+
+alexey-MS-7D31 : Thu Nov 14 09:09:01 2024 :  [+0:0:0 ]
+ -->  ================================================================================
+
+alexey-MS-7D31 : Thu Nov 14 09:09:01 2024 :  [+0:0:0 ]
+ -->  ================================================================================
+
+alexey-MS-7D31 : Thu Nov 14 09:09:01 2024 :  [+0:0:0 ]
+ -->  ================================================================================
+
+alexey-MS-7D31 : Thu Nov 14 16:46:25 2024 :  [+7:37:24 ]
+ -->  Minization with PDF/FF replicas 677, 59, 81 completed.
+
+alexey-MS-7D31 : Fri Nov 15 11:21:39 2024 :  [+18:34:52 ]
+ -->  Minization with PDF/FF replicas 441, 8, 157 completed.
+
+alexey-MS-7D31 : Fri Nov 15 14:41:51 2024 :  [+3:19:49 ]
+ -->  Minization with PDF/FF replicas 768, 102, 3 completed.
+

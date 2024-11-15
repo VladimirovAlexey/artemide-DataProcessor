@@ -32,10 +32,7 @@ MAINPATH=ROOT_DIR
 #######################################
 import harpy
 
-#path_to_constants=MAINPATH+"FittingPrograms/ART25/ConstantsFiles/ART25_N4LL.atmde"
-#path_to_constants=MAINPATH+"FittingPrograms/ART25/ConstantsFiles/ART25_N4LL_DYresum.atmde"
-path_to_constants=MAINPATH+"FittingPrograms/ART25/ConstantsFiles/ART25_N4LL_resum_MAPFF.atmde"
-#path_to_constants=MAINPATH+"FittingPrograms/ART25/ConstantsFiles/ART25_N4LL_NOresum_MAPFF.atmde"
+path_to_constants=MAINPATH+"FittingPrograms/ART25/ConstantsFiles/ART25_N4LL_Valentin.atmde"
 
 
 harpy.initialize(path_to_constants)
@@ -234,7 +231,7 @@ harpy.setNPparameters([1.5, 0.071624, 0.064726, 0.0,
                        0.573, 0.418, 0.2450, 0.540, 
                        0.869, 1.14, -3.627, 1.4656,
                        0.0,-1.303,0.0,0.0])
-
+#%%
 DataProcessor.harpyInterface.PrintChi2Table(setSIDIS,printDecomposedChi2=True)
 DataProcessor.harpyInterface.PrintChi2Table(setDY,printDecomposedChi2=True)
 
