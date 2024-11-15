@@ -227,13 +227,13 @@ setDY=theData.CutData(cutFunc)
 print('Loaded ', setDY.numberOfSets, 'data sets with', sum([i.numberOfPoints for i in setDY.sets]), 'points.')
 
 #%%
-harpy.setNPparameters([1.5, 0.071624, 0.064726, 0.0, 
-                       0.723098, 0.751316, 0.390139, 8.1504,
-                       2.3844, 15.5514, 0.534788, 0.096972,
-                       1.3149, 25.4998, 0.0, 0.04, 
-                       0.573, 0.418, 0.2450, 0.540, 
-                       0.869, 1.14, -3.627, 1.4656,
-                       0.0,-1.303,0.0,0.0])
+harpy.setNPparameters([1.5, 0.071624, 0.064726, 0.0,
+                       0.568631, 1.1114, 0.563709, 7.2062, 
+                       4.5436, 17.3135, 0.976618, 0.006934, 
+                       1.3213, 25.9727, 0.0, 0.04, 
+                       0.674236, 0.781384, 0.441778, 0.941478, 
+                       0.509997, 0.262662, -3.073866, 0.198287, 
+                       0.0, -0.37617, 0.0, 0.0])
 
 DataProcessor.harpyInterface.PrintChi2Table(setSIDIS,printDecomposedChi2=True)
 DataProcessor.harpyInterface.PrintChi2Table(setDY,printDecomposedChi2=True)
