@@ -8,15 +8,15 @@ Program that parse various DY data files to ADP-frendly formal
 @author: vla18041
 """
 
-import sys
-sys.path.append("/home/vla18041/LinkData2/arTeMiDe_Repository/DataProcessor/")
-
+import os
 import DataProcessor.Point
 import DataProcessor.DataSet
 import numpy
 
-path_to_data="/home/vla18041/LinkData2/arTeMiDe_Repository/data/"
-path_to_savePI="/home/vla18041/LinkData2/arTeMiDe_Repository/DataProcessor/DataLib/piDY/"
+ROOT_DIR = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', '..'))+"/"
+path_to_data=os.path.realpath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))+"/data/"
+path_to_savePI=ROOT_DIR+"/DataLib/piDY/"
+
 
 M_Z=91.### mass of Z-boson
 
@@ -40,7 +40,7 @@ DataCurrent.comment="E537 pi-data Q-differential"
 DataCurrent.reference="Phys.Rev.D 93 (1988) 1377"
 
 DataCurrent.isNormalized=False
-proc_current=[2,2,1004]
+proc_current=[2,2,1,103]
 s_current=235.4
 
 y_current=[-0.1,1.0]
@@ -111,7 +111,7 @@ DataCurrent.comment="E537(pi) data xF-differential"
 DataCurrent.reference="Phys.Rev.D 93 (1988) 1377"
 
 DataCurrent.isNormalized=False
-proc_current=[2,2,1004]
+proc_current=[2,2,1,103]
 s_current=235.4
 
 Q_current=[4.0,9.0]
@@ -180,7 +180,7 @@ DataCurrent.comment="E615 pi-data Q-differential"
 DataCurrent.reference="Phys.Rev.D 39 (1989) 92-122"
 
 DataCurrent.isNormalized=False
-proc_current=[2,2,1004]
+proc_current=[2,2,1,103]
 s_current=473.6
 
 y_current=[0.0,1.0]
@@ -264,7 +264,7 @@ DataCurrent.comment="E615 pi-data x-differential"
 DataCurrent.reference="Phys.Rev.D 39 (1989) 92-122"
 
 DataCurrent.isNormalized=False
-proc_current=[2,2,1004]
+proc_current=[2,2,1,103]
 s_current=473.6
 
 Q_current=[4.05,8.55]
@@ -327,8 +327,3 @@ for yy in [0.0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9]:
         if(p["y"][0]==yy):
             dNew.AddPoint(p)
     dNew.SaveToCSV(path_to_savePI+dNew.name+".csv")
-
-#%%
-
-dd=DataProcessor.DataSet.LoadCSV("/home/vla18041/LinkData2/arTeMiDe_Repository/DataProcessor/DataLib/unpolDY/"+"A8-46Q66.csv")
-dd.SaveToCSV("/home/vla18041/LinkData2/arTeMiDe_Repository/DataProcessor/DataLib/unpolDY/"+"A8-46Q66++.csv")
