@@ -32,10 +32,7 @@ MAINPATH=ROOT_DIR
 #######################################
 import harpy
 
-#path_to_constants=MAINPATH+"FittingPrograms/ART25/ConstantsFiles/ART25_N4LL.atmde"
-#path_to_constants=MAINPATH+"FittingPrograms/ART25/ConstantsFiles/ART25_N4LL_DYresum.atmde"
-path_to_constants=MAINPATH+"FittingPrograms/ART25/ConstantsFiles/ART25_N4LL_resum_MAPFF.atmde"
-#path_to_constants=MAINPATH+"FittingPrograms/ART25/ConstantsFiles/ART25_N4LL_NOresum_MAPFF.atmde"
+path_to_constants=MAINPATH+"FittingPrograms/ART25/ConstantsFiles/ART25_main.atmde"
 
 
 harpy.initialize(path_to_constants)
@@ -227,29 +224,18 @@ setDY=theData.CutData(cutFunc)
 print('Loaded ', setDY.numberOfSets, 'data sets with', sum([i.numberOfPoints for i in setDY.sets]), 'points.')
 
 #%%
-harpy.setNPparameters([1.5, 0.071624, 0.064726, 0.0,
-                       0.568631, 1.1114, 0.563709, 7.2062, 
-                       4.5436, 17.3135, 0.976618, 0.006934, 
-                       1.3213, 25.9727, 1.0, 1.0, 
-                       0.674236, 0.781384, 0.441778, 0.941478, 
-                       0.509997, 0.262662, -3.073866, 0.198287, 
-                       0.0, -0.37617, 0.0, 0.0])
+
+harpy.setNPparameters([1.5, 0.083931, 0.030641, 0.0, 
+                       0.51638, 0.002073, 0.478567, 0.373111, 
+                       2.407, 22.1996, 3.7876, 0.00128, 
+                       0.403343, 5e-05, 1.0, 1.0, 
+                       0.69769, 0.712969, -0.133895, -0.841651, 0.846846,
+                       0.774759, 1.5565, 1.1863, 0.692877, -0.569062, 
+                       0.0, 0.0])
+
 
 DataProcessor.harpyInterface.PrintChi2Table(setSIDIS,printDecomposedChi2=True)
 DataProcessor.harpyInterface.PrintChi2Table(setDY,printDecomposedChi2=True)
-
-#%%
-### ART23*+resum
-harpy.setNPparameters_TMDR([1.5004, 0.073018, 0.038048, 0.0])
-harpy.setNPparameters_uTMDPDF([0.521462, 0.000206, 0.402948, 7.0219, 1.0, 20.4051, 1.0, 0.000123, 1.1037, 0.660734, 0.0, 0.04])
-
-### ART23*
-#harpy.setNPparameters_TMDR([1.5004, 0.060236, 0.037013, 0.0])
-#harpy.setNPparameters_uTMDPDF([0.602249, 0.000103, 0.445843, 7.2217, 1.0, 18.6931, 1.0, 0.000101, 1.1114, 1.3137, 0.0, 0.04])
-
-harpy.setNPparameters_uTMDFF([0.704027, 0.780902, 0.711725, 0.372527,0.704027, 0.780902, 0.711725, 0.372527,0.0,0.0,0.0,0.0])
-#DataProcessor.harpyInterface.PrintChi2Table(setSIDIS,printDecomposedChi2=True)
-#DataProcessor.harpyInterface.PrintChi2Table(setDY,printDecomposedChi2=True)
 
 #%%
 #######################################
@@ -271,14 +257,20 @@ def chi2(x):
     YY=DataProcessor.harpyInterface.ComputeXSec(setDY)
     ccDY2,cc3=setDY.chi2(YY)
     
+    #### This penalty term prevents low-energy DY to have extremely low normalization
     penalty_array=numpy.array([max(0,abs(setDY.sets[i].DetermineAvarageSystematicShift(YY[setDY._i1[i]:setDY._i2[i]]))/setDY.sets[i].normErr[0]-1) for i in penalty_index])
     penalty_term=sum(penalty_array**6)
+    
+    #### This penalty term prevents SIDIS to be much lower than 1 (changes the slope of chi2 below 1)
+    #pSIDIS=ccSIDIS2/setSIDIS.numberOfPoints
+    #if pSIDIS<1.:
+    #    penalty_term+=0.9*(1-pSIDIS)*setSIDIS.numberOfPoints
     
     cc=[ccSIDIS2/setSIDIS.numberOfPoints,ccDY2/setDY.numberOfPoints, 
         (ccSIDIS2+ccDY2)/(setSIDIS.numberOfPoints+setDY.numberOfPoints)]
     
     endT=time.time()
-    print(':->',cc,'   +p=',penalty_term,"    time=",endT-startT)
+    print(':->',cc,'   +p=',penalty_term/(setSIDIS.numberOfPoints+setDY.numberOfPoints),"    time=",endT-startT)
     return ccSIDIS2+ccDY2+penalty_term
 
 #%%
@@ -286,14 +278,13 @@ def chi2(x):
 from iminuit import Minuit
 
 #---- PDFbias-like row
-initialValues=([
-    1.5, 0.071624, 0.064726, 0.0,
-    0.568631, 1.1114, 0.563709, 7.2062, 
-    4.5436, 17.3135, 0.976618, 0.006934, 
-    1.3213, 25.9727, 1.0, 1.0, 
-    0.674236, 0.781384, 0.441778, 0.941478, 
-    0.509997, 0.262662, -3.073866, 0.198287, 
-    0.0, -0.37617, 0.0, 0.0])
+initialValues=([1.5, 0.083931, 0.030641, 0.0, 
+                       0.51638, 0.002073, 0.478567, 0.373111, 
+                       2.407, 22.1996, 3.7876, 0.00128, 
+                       0.403343, 5e-05, 1.0, 1.0, 
+                       0.69769, 0.712969, -0.133895, -0.841651, 0.846846,
+                       0.774759, 1.5565, 1.1863, 0.692877, -0.569062, 
+                       0.0, 0.0])
 
 
 initialErrors=(0.1,0.1,0.1,0.1,
@@ -315,10 +306,10 @@ searchLimits=((1.0,2.5),(0.005,0.15) ,(0.0,.2), (-5.,5.),
 parametersToMinimize=(True, False,False,True,
                       False, False, False,False,
                       False, False, False, False,
+                      False, False, True,True,
                       False, False, False,False,
                       False, False, False,False,
-                      False, False, False,False,
-                      True, False, True,True)
+                      False, False, True,True)
 
 #%%
 
