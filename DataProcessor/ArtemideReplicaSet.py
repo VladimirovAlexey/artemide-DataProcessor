@@ -371,12 +371,19 @@ class ArtemideReplicaSet:
             
         if(douTMDPDF and self._uTMDPDFend>=self._uTMDPDFstart+1 >0):            
             if(self._c_uTMDPDFend>=self._c_uTMDPDFstart+1 >0):
-                harpy.setPDFreplica(r[self._c_uTMDPDFstart])
+                ### udating collinear input for every input hadron
+                hh=1
+                for i in range(self._c_uTMDPDFstart,self._c_uTMDPDFend):
+                    harpy.setPDFreplica(r[i],h=hh)
+                    hh+=1
             harpy.setNPparameters_uTMDPDF(r[self._uTMDPDFstart:self._uTMDPDFend])            
             
         if(douTMDFF and self._uTMDFFend>=self._uTMDFFstart+1 >0):
             if(self._c_uTMDFFend>=self._c_uTMDFFstart+1 >0):
-                print("Modification of FF replica is not implimented")
+                hh=1
+                for i in range(self._c_uTMDFFstart,self._c_uTMDFFend):
+                    harpy.setFFreplica(r[i],h=hh)
+                    hh+=1
             harpy.setNPparameters_uTMDFF(r[self._uTMDFFstart:self._uTMDFFend])
             
         if(dolpTMDPDF and self._lpTMDPDFend>=self._lpTMDPDFstart+1 >0):

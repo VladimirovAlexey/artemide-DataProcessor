@@ -35,10 +35,7 @@ replicaFile ="/data/WorkingFiles/TMD/Fit_Notes/ART25/REPLICAS/attempt0_3.dat"
 #######################################
 import harpy
 
-#path_to_constants=MAINPATH+"FittingPrograms/ART25/ConstantsFiles/ART25_N4LL.atmde"
-#path_to_constants=MAINPATH+"FittingPrograms/ART25/ConstantsFiles/ART25_N4LL_DYresum.atmde"
-path_to_constants=MAINPATH+"FittingPrograms/ART25/ConstantsFiles/ART25_N4LL_resum_MAPFF.atmde"
-#path_to_constants=MAINPATH+"FittingPrograms/ART25/ConstantsFiles/ART25_N4LL_NOresum_MAPFF.atmde"
+path_to_constants=MAINPATH+"FittingPrograms/ART25/ConstantsFiles/ART25_main.atmde"
 
 
 harpy.initialize(path_to_constants)
@@ -230,13 +227,13 @@ setDY=theData.CutData(cutFunc)
 print('Loaded ', setDY.numberOfSets, 'data sets with', sum([i.numberOfPoints for i in setDY.sets]), 'points.')
 
 #%%
-harpy.setNPparameters([1.5, 0.073, 0.038, 0.0, 
-                       0.497, 0.0001, 0.4608, 1.5041, 
-                       0.0, 20.24, 0.0, 0.0001, 
-                       0.844, 20.20, 0.0, 0.04, 
-                       0.573, 0.418, 0.2450, 0.540, 
-                       0.869, 1.14, -3.627, 1.4656,
-                       0.0,-1.303,0.0,0.0])
+harpy.setNPparameters([1.5, 0.083931, 0.030641, 0.0, 
+                       0.51638, 0.002073, 0.478567, 0.373111, 
+                       2.407, 22.1996, 3.7876, 0.00128, 
+                       0.403343, 5e-05, 1.0, 1.0, 
+                       0.69769, 0.712969, -0.133895, -0.841651, 0.846846,
+                       0.774759, 1.5565, 1.1863, 0.692877, -0.569062, 
+                       0.0, 0.0])
 
 DataProcessor.harpyInterface.PrintChi2Table(setSIDIS,printDecomposedChi2=True)
 DataProcessor.harpyInterface.PrintChi2Table(setDY,printDecomposedChi2=True)
@@ -266,7 +263,7 @@ initialErrors=(0.1,0.1,0.1,0.1,
 searchLimits=((1.0,2.5),(0.005,0.15) ,(0.0,.2), (-5.,5.),
               (0.00001,100.), (0.00001,100.),(0.00001,100.),(0.00001,100.),
               (0.00001,100.), (0.00001,100.),(0.00001,100.),(0.00001,100.),
-              (0.00001,100.), (0.00001,100.),(0.,100.),(0.04,100.),
+              (0.00001,100.), (0.00000,100.),(0.,100.),(0.04,100.),
               (0.0001,100.), (-100.,100.),(-100.,100.),(-100.,100.),
               (0.0001,100.), (-100.,100.),(-100.,100.),(-100.,100),
               (-100.,100.),(-100.,100.),(-100.,100.),(-100.,100.))
@@ -377,10 +374,8 @@ for i in range(NumberOfReplicas):
     FFreplicaPI=numpy.random.randint(200)
     FFreplicaK=numpy.random.randint(200)
     harpy.setPDFreplica(PDFreplica)
-    harpy.setFFreplica(FFreplicaPI)
-    harpy.setFFreplica(FFreplicaPI)
-    harpy.setFFreplica(FFreplicaK)
-    harpy.setFFreplica(FFreplicaK)
+    harpy.setFFreplica(FFreplicaPI,h=1)
+    harpy.setFFreplica(FFreplicaK,h=2)
     print("Start computation with PDF/FF replicas "+str(PDFreplica)+", "+str(FFreplicaPI)+", "+str(FFreplicaK))
     
     harpy.setNPparameters(initialValues)    

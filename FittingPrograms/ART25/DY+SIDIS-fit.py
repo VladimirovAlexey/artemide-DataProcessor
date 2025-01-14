@@ -245,16 +245,18 @@ import time
 
 penalty_index=[-7,-6,-5,-4,-3]
 
+
 def chi2(x):
     startT=time.time()
     #harpy.setNPparameters_uTMDFF([x[0],x[1],x[2],x[3],x[4],x[5],x[6],x[7]])
     harpy.setNPparameters(x)
     print('np set =',["{:8.3f}".format(i) for i in x])        
     
+    
     YY=DataProcessor.harpyInterface.ComputeXSec(setSIDIS)
     ccSIDIS2,cc3=setSIDIS.chi2(YY)
         
-    YY=DataProcessor.harpyInterface.ComputeXSec(setDY)
+    YY=DataProcessor.harpyInterface.ComputeXSec(setDY)    
     ccDY2,cc3=setDY.chi2(YY)
     
     #### This penalty term prevents low-energy DY to have extremely low normalization
@@ -286,7 +288,6 @@ initialValues=([1.5, 0.083931, 0.030641, 0.0,
                        0.774759, 1.5565, 1.1863, 0.692877, -0.569062, 
                        0.0, 0.0])
 
-
 initialErrors=(0.1,0.1,0.1,0.1,
                 0.5,  1.0, 0.1,  1.0,
                 0.5,  1.0, 0.1,  1.0,
@@ -300,7 +301,7 @@ searchLimits=((1.0,2.5),(0.005,0.15) ,(0.0,.2), (-5.,5.),
               (0.00001,100.), (0.00001,100.),(0.0001,100.),(0.0001,100.),
               (0.0001,100.), (-100.,100.),(-100.,100.),(-100.,100.),
               (0.0001,100.), (-100.,100.),(-100.,100.),(-100.,100),
-              (-100.,100.),(-100.,100.),(-100.,100.),(-100.,100.))
+              (-100.,100.),(-100.,100.),(-100.,100.),(0.1,2.))
               
 # True= FIX
 parametersToMinimize=(True, False,False,True,

@@ -56,12 +56,10 @@
 
 *C   : ---- uFF sets----
 *p1  : total number of FFs to initialize (0= initialization is skipped; maximum 3)
-           4
+           2
 *p2  : LHAPDF set names for hadrons (line-by-line corresponding to reference number
  MAPFF10NNLOPIp
  MAPFF10NNLOKAp
- MAPFF10NNLOPIm
- MAPFF10NNLOKAm
 
 
 *D   : ----lpPDF sets----
@@ -255,7 +253,7 @@
 *p1  : Include gluon TMDPDF
  F
 *p2  : Number of hadrons (in order starting with 1)
- 4
+ 2
 
 *B   : ---- OPE main definitions ----
 *p1  : Order of coefficient function
