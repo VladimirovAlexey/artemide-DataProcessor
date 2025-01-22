@@ -127,21 +127,6 @@ def cutFunc(p):
         if p["<Q>"]<2 :
             return False , p
         
-        #### in the case of MAPFF I use special sets for pi- and K-
-        if('MAPFF' in path_to_constants):            
-            if(p["process"][3]==2101 and p["process"][2]<0): 
-                p["process"][3]=2107
-                p["process"][2]=3
-            if(p["process"][3]==2103 and p["process"][2]<0): 
-                p["process"][3]=2108
-                p["process"][2]=3
-            if(p["process"][3]==2105 and p["process"][2]<0): 
-                p["process"][3]=2109
-                p["process"][2]=3
-            if(p["process"][2]==-1): p["process"][2]=3
-            if(p["process"][2]==-2): p["process"][2]=4
-            
-        
         return (delta<0.1 or (delta<0.25 and par/err*delta**2<1)) , p
     elif p["type"]=="DY":
         par=0.5

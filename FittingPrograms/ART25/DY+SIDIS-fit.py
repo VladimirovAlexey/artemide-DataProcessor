@@ -225,6 +225,7 @@ print('Loaded ', setDY.numberOfSets, 'data sets with', sum([i.numberOfPoints for
 
 #%%
 
+####### Best fast result
 harpy.setNPparameters([1.5, 0.083931, 0.030641, 0.0, 
                        0.51638, 0.002073, 0.478567, 0.373111, 
                        2.407, 22.1996, 3.7876, 0.00128, 
@@ -233,6 +234,14 @@ harpy.setNPparameters([1.5, 0.083931, 0.030641, 0.0,
                        0.774759, 1.5565, 1.1863, 0.692877, -0.569062, 
                        0.0, 0.0])
 
+####### Best complete result
+harpy.setNPparameters([1.5, 0.089952, 0.030591, 0.0, 
+                       0.343842, 0.011714, 0.588161, 0.012262, 
+                       7.682, 22.6267, 3.2397, 0.015181, 
+                       0.052558, 1.2e-05, 1.0, 1.0, 
+                       0.700419, 0.669345, -0.058065, -0.667958, 
+                       0.863101, 0.7739, 1.396, 1.3471, 
+                       0.654023, -0.490042, 0.0, 0.1])
 
 DataProcessor.harpyInterface.PrintChi2Table(setSIDIS,printDecomposedChi2=True)
 DataProcessor.harpyInterface.PrintChi2Table(setDY,printDecomposedChi2=True)
@@ -263,10 +272,10 @@ def chi2(x):
     penalty_array=numpy.array([max(0,abs(setDY.sets[i].DetermineAvarageSystematicShift(YY[setDY._i1[i]:setDY._i2[i]]))/setDY.sets[i].normErr[0]-1) for i in penalty_index])
     penalty_term=sum(penalty_array**6)
     
-    #### This penalty term prevents SIDIS to be much lower than 1 (changes the slope of chi2 below 1)
-    #pSIDIS=ccSIDIS2/setSIDIS.numberOfPoints
-    #if pSIDIS<1.:
-    #    penalty_term+=0.9*(1-pSIDIS)*setSIDIS.numberOfPoints
+    ### This penalty term prevents SIDIS to be much lower than 1 (changes the slope of chi2 below 1)
+    pSIDIS=ccSIDIS2/setSIDIS.numberOfPoints
+    if pSIDIS<1.:
+        penalty_term+=0.9*(1-pSIDIS)*setSIDIS.numberOfPoints
     
     cc=[ccSIDIS2/setSIDIS.numberOfPoints,ccDY2/setDY.numberOfPoints, 
         (ccSIDIS2+ccDY2)/(setSIDIS.numberOfPoints+setDY.numberOfPoints)]
@@ -274,6 +283,7 @@ def chi2(x):
     endT=time.time()
     print(':->',cc,'   +p=',penalty_term/(setSIDIS.numberOfPoints+setDY.numberOfPoints),"    time=",endT-startT)
     return ccSIDIS2+ccDY2+penalty_term
+
 
 #%%
 #### Minimize SIDIS
