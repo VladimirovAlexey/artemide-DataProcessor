@@ -88,6 +88,8 @@ def loadThisDataDY(listOfNames):
 
 #%%
 ##################Cut function
+R=0.25
+
 def cutFunc(p):
     
     if p["type"]=="SIDIS":        
@@ -97,7 +99,7 @@ def cutFunc(p):
         if p["<z>"]<0.2:
             return False , p
         
-        par=1.0
+        par=4*R
         if p["xSec"]<0.00000001:
             err=1
             delta=1
@@ -139,9 +141,9 @@ def cutFunc(p):
             if(p["process"][2]==-2): p["process"][2]=4
             
         
-        return (delta<0.1 or (delta<0.25 and par/err*delta**2<1)) , p
+        return (delta<0.1 or (delta<R and par/err*delta**2<1)) , p
     elif p["type"]=="DY":
-        par=0.5
+        par=R*2
         
         #  for artemide v3.    
         # p["process"]=[p["process"][0],p["process"][2],1,1]
@@ -177,28 +179,23 @@ def cutFunc(p):
             if(9<p["<Q>"]<11):#UPSILON resonance-bin
                 return False , p    
         
-        return ((delta<0.25 and p["<qT>"]<10.) or (delta<0.25 and par/err*delta**2<1)) , p
-    
-   
+        return ((delta<R and p["<qT>"]<10.) or (delta<R and par/err*delta**2<1)) , p 
 
 #%%
 ### Loading the SIDIS data set
-theData=DataProcessor.DataMultiSet.DataMultiSet("SIDISset",loadThisDataSIDIS([
+theDataSIDIS=DataProcessor.DataMultiSet.DataMultiSet("SIDISset",loadThisDataSIDIS([
                       'hermes.p.vmsub.zxpt.pi+','hermes.p.vmsub.zxpt.pi-',
                       'hermes.d.vmsub.zxpt.pi+','hermes.d.vmsub.zxpt.pi-',
                       'hermes.p.vmsub.zxpt.k+','hermes.p.vmsub.zxpt.k-',
                       'hermes.d.vmsub.zxpt.k+','hermes.d.vmsub.zxpt.k-',
                       'compass.d.h+','compass.d.h-']))
 
-setSIDIS=theData.CutData(cutFunc) 
-
-#print('Loaded experiments are', [i.name for i in setDY.sets])
-
+setSIDIS=theDataSIDIS.CutData(cutFunc) 
 print('Loaded ', setSIDIS.numberOfSets, 'data sets with', sum([i.numberOfPoints for i in setSIDIS.sets]), 'points.')
 
 #%%
 ### Loading the DY data set
-theData=DataProcessor.DataMultiSet.DataMultiSet("DYset",loadThisDataDY([
+theDataDY=DataProcessor.DataMultiSet.DataMultiSet("DYset",loadThisDataDY([
                           'CDF1', 'CDF2', 'D01', 'D02', 'D02m', 
                           #'A7-00y10', 'A7-10y20','A7-20y24', 
                           'A8-00y04', 'A8-04y08', 'A8-08y12', 'A8-12y16', 'A8-16y20', 'A8-20y24', 
@@ -216,34 +213,11 @@ theData=DataProcessor.DataMultiSet.DataMultiSet("DYset",loadThisDataDY([
                           'D0run1-W','CDFrun1-W'
                           ]))
 
-setDY=theData.CutData(cutFunc) 
-#setDYfit=theData.CutData(cutFuncFORFIT) 
-
-#print('Loaded experiments are', [i.name for i in setDY.sets])
-
+setDY=theDataDY.CutData(cutFunc) 
 print('Loaded ', setDY.numberOfSets, 'data sets with', sum([i.numberOfPoints for i in setDY.sets]), 'points.')
 
 #%%
-
-####### Best fast result
-harpy.setNPparameters([1.5, 0.083931, 0.030641, 0.0, 
-                       0.51638, 0.002073, 0.478567, 0.373111, 
-                       2.407, 22.1996, 3.7876, 0.00128, 
-                       0.403343, 5e-05, 1.0, 1.0, 
-                       0.69769, 0.712969, -0.133895, -0.841651, 0.846846,
-                       0.774759, 1.5565, 1.1863, 0.692877, -0.569062, 
-                       0.0, 0.0])
-
 ####### Best complete result
-harpy.setNPparameters([1.5, 0.089952, 0.030591, 0.0, 
-                       0.343842, 0.011714, 0.588161, 0.012262, 
-                       7.682, 22.6267, 3.2397, 0.015181, 
-                       0.052558, 1.2e-05, 1.0, 1.0, 
-                       0.700419, 0.669345, -0.058065, -0.667958, 
-                       0.863101, 0.7739, 1.396, 1.3471, 
-                       0.654023, -0.490042, 0.0, 0.1])
-
-####### Best complete result (with restriction for chi2_SIDIS)
 harpy.setNPparameters([1.5, 0.084129, 0.030506, 0.0, 
                        0.483576, 0.05925, 0.535823, 0.090043, 
                        2.3559, 21.449, 2.7327, 0.176472, 
@@ -252,8 +226,8 @@ harpy.setNPparameters([1.5, 0.084129, 0.030506, 0.0,
                        0.849316, 0.816016, 1.475, 1.1538, 
                        0.643635, -0.461771, 0.0, 0.1])
 
-DataProcessor.harpyInterface.PrintChi2Table(setSIDIS,printDecomposedChi2=True)
-DataProcessor.harpyInterface.PrintChi2Table(setDY,printDecomposedChi2=True)
+#DataProcessor.harpyInterface.PrintChi2Table(setSIDIS,printDecomposedChi2=True)
+#DataProcessor.harpyInterface.PrintChi2Table(setDY,printDecomposedChi2=True)
 
 #%%
 #######################################
@@ -293,55 +267,18 @@ def chi2(x):
     print(':->',cc,'   +p=',penalty_term/(setSIDIS.numberOfPoints+setDY.numberOfPoints),"    time=",endT-startT)
     return ccSIDIS2+ccDY2+penalty_term
 
-### chi2 for only DY
-def chi2DY(x):
-    startT=time.time()
-    #harpy.setNPparameters_uTMDFF([x[0],x[1],x[2],x[3],x[4],x[5],x[6],x[7]])
-    harpy.setNPparameters(x)
-    print('np set =',["{:8.3f}".format(i) for i in x])        
-            
-    YY=DataProcessor.harpyInterface.ComputeXSec(setDY)    
-    ccDY2,cc3=setDY.chi2(YY)
-    
-    #### This penalty term prevents low-energy DY to have extremely low normalization
-    penalty_array=numpy.array([max(0,abs(setDY.sets[i].DetermineAvarageSystematicShift(YY[setDY._i1[i]:setDY._i2[i]]))/setDY.sets[i].normErr[0]-1) for i in penalty_index])
-    penalty_term=sum(penalty_array**6)
-       
-    cc=ccDY2/setDY.numberOfPoints
-    
-    endT=time.time()
-    print(':->',cc,'   +p=',penalty_term/setDY.numberOfPoints, "    time=",endT-startT)
-    return ccDY2+penalty_term
-
-def chi2SIDIS(x):
-    startT=time.time()
-    #harpy.setNPparameters_uTMDFF([x[0],x[1],x[2],x[3],x[4],x[5],x[6],x[7]])
-    harpy.setNPparameters(x)
-    print('np set =',["{:8.3f}".format(i) for i in x])        
-    
-    
-    YY=DataProcessor.harpyInterface.ComputeXSec(setSIDIS)
-    ccSIDIS2,cc3=setSIDIS.chi2(YY)
-
-    cc=ccSIDIS2/setSIDIS.numberOfPoints
-    
-    penalty_term=0.
-    endT=time.time()
-    print(':->',cc,'   +p=',penalty_term/(setSIDIS.numberOfPoints),"    time=",endT-startT)
-    return ccSIDIS2+penalty_term
-
 #%%
 #### Minimize SIDIS
 from iminuit import Minuit
 
 #---- PDFbias-like row (0.083931)
-initialValues=([1.5, 0.038969, 0.030641, 0.0, 
-                       0.51638, 0.002073, 0.478567, 0.373111, 
-                       2.407, 22.1996, 3.7876, 0.00128, 
-                       0.403343, 5e-05, 1.0, 1.0, 
-                       0.69769, 0.712969, -0.133895, -0.841651, 0.846846,
-                       0.774759, 1.5565, 1.1863, 0.692877, -0.569062, 
-                       0.0, 0.0])
+initialValues=([1.5, 0.084129, 0.030506, 0.0, 
+                       0.483576, 0.05925, 0.535823, 0.090043, 
+                       2.3559, 21.449, 2.7327, 0.176472, 
+                       0.357338, 1.5e-05, 1.0, 1.0, 
+                       0.67726, 0.647933, -0.140838, -0.760952, 
+                       0.849316, 0.816016, 1.475, 1.1538, 
+                       0.643635, -0.461771, 0.0, 0.1])
 
 initialErrors=(0.1,0.1,0.1,0.1,
                 0.5,  1.0, 0.1,  1.0,
@@ -359,7 +296,7 @@ searchLimits=((1.0,2.5),(0.005,0.15) ,(0.0,.2), (-5.,5.),
               (-100.,100.),(-100.,100.),(-100.,100.),(0.1,2.))
               
 # True= FIX
-parametersToMinimize=(True, True,False,True,
+parametersToMinimize=(True, False,False,True,
                       False, False, False,False,
                       False, False, False, False,
                       False, False, True,True,
@@ -369,27 +306,51 @@ parametersToMinimize=(True, True,False,True,
 
 #%%
 
-m = Minuit(chi2, initialValues)
+saveFile="/data/WorkingFiles/TMD/Fit_Notes/ART25/DataForPLOTS/scan_qT.dat"
 
-m.errors=initialErrors
-m.limits=searchLimits
-m.fixed=parametersToMinimize
-m.errordef=1
+Rvalues=[0.1,0.125,0.15,0.175,0.2,0.225,0.25,0.275,0.3,0.325,0.35,0.375,0.4]
 
-print(m.params)
-#%%
-m.tol=0.0001*(setSIDIS.numberOfPoints+setDY.numberOfPoints)*10000 ### the last 0.0001 is to compensate MINUIT def
-m.strategy=1
-m.migrad()
-
-print(m.params)
-
-chi2(list(m.values))
-
-DataProcessor.harpyInterface.PrintChi2Table(setDY,printDecomposedChi2=True)
-DataProcessor.harpyInterface.PrintChi2Table(setSIDIS,printDecomposedChi2=True)
-
-print([round(x,1 if x >100 else 4 if x>1 else 6) for x in list(m.values)])
-
+for Rlocal in Rvalues:
+    
+    R=Rlocal
+    
+    print("------------- R="+str(R)+" --------------------")
+    setSIDIS=theDataSIDIS.CutData(cutFunc) 
+    print('Loaded ', setSIDIS.numberOfSets, 'data sets with', sum([i.numberOfPoints for i in setSIDIS.sets]), 'points.')
+    
+    setDY=theDataDY.CutData(cutFunc) 
+    print('Loaded ', setDY.numberOfSets, 'data sets with', sum([i.numberOfPoints for i in setDY.sets]), 'points.')
+    
+    m = Minuit(chi2, initialValues)
+    
+    m.errors=initialErrors
+    m.limits=searchLimits
+    m.fixed=parametersToMinimize
+    m.errordef=1
+    
+    print(m.params)
+    
+    m.tol=0.0001*(setSIDIS.numberOfPoints+setDY.numberOfPoints)*10000 ### the last 0.0001 is to compensate MINUIT def
+    m.strategy=1
+    m.migrad()
+    
+    print(m.params)
+    
+    print([round(x,1 if x >100 else 4 if x>1 else 6) for x in list(m.values)])
+    
+    
+    YY=DataProcessor.harpyInterface.ComputeXSec(setSIDIS)
+    ccSIDIS2,cc3=setSIDIS.chi2(YY)
+        
+    YY=DataProcessor.harpyInterface.ComputeXSec(setDY)    
+    ccDY2,cc3=setDY.chi2(YY)
+    
+    line=str(R)+", "+str(setSIDIS.numberOfPoints)+", "+str(ccSIDIS2)+", "+str(setDY.numberOfPoints)+", "+str(ccDY2)+", "
+    ", "+str(setDY.numberOfPoints)+", ".join(["{:12.8f}".format(x) for x in list(m.values)])
+    print(line)
+    
+    f=open(saveFile,"a+")
+    f.write(line+"\n")
+    f.close()
 #%%
 sys.exit()

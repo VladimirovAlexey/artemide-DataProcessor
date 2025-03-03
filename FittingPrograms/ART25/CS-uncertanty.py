@@ -33,12 +33,12 @@ MAINPATH=ROOT_DIR
 #######################################
 import harpy
 
-path_to_constants=MAINPATH+"FittingPrograms/ART25/ConstantsFiles/ART25_N4LL_resum_MAPFF_CS.atmde"
+path_to_constants=MAINPATH+"FittingPrograms/ART25/ConstantsFiles/ART25_CS_test.atmde"
 
 
 harpy.initialize(path_to_constants)
 
-inARRAY_TMDR=[1.5004, 0.073018, 0.038048, 0.0,1.,1.,1.]
+inARRAY_TMDR=[1.5004, 0.073018, 0.038048, 0.0,1.,1.]
 inARRAY_PDF=[0.521462, 0.000206, 0.402948, 7.0219, 1.0, 20.4051, 1.0, 0.000123, 1.1037, 0.660734, 0.0, 0.04]
 inARRAY_FF=[0.5, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0,0.0,0.0,0.0,0.0]
 
@@ -224,102 +224,138 @@ setDY=theData.CutData(cutFunc)
 
 print('Loaded ', setDY.numberOfSets, 'data sets with', sum([i.numberOfPoints for i in setDY.sets]), 'points.')
 
+
 #%%
-harpy.setNPparameters([1.5, 0.073, 0.03805, 0.0,10.0,1.,1. ,
-                       0.526, 0.0001, 0.465, 1.46, 
-                       1.0, 19.86, 1.0, 0.00026, 
-                       0.819, 19.88, 0.0, 0.04, 
-                       0.573, 0.418, 0.2450, 0.540, 
-                       0.869, 1.14, -3.627, 1.4656,
-                       0.0,-1.303,0.0,0.0])
+harpy.setNPparameters([1.5, 0.0859102,  0.030294, 0.0, 1.0, 1.0,
+ 0.48622, 0.0411753, 0.569024, 0.146933, 5.26034,
+ 21.1222, 7.71185, 0.1565, 0.240061, 0.0691505,  1.0, 1.0,
+ 0.696096, 0.626588, 0.00331303, -0.466377, 0.88367,
+ 0.882092, 1.74168, 1.15036, 0.610318, -0.101387,
+ 0.0, 0.0])
 
 #DataProcessor.harpyInterface.PrintChi2Table(setSIDIS,printDecomposedChi2=True)
-DataProcessor.harpyInterface.PrintChi2Table(setDY,printDecomposedChi2=True)
+#DataProcessor.harpyInterface.PrintChi2Table(setDY,printDecomposedChi2=True)
 
 #%%
-chiBASE=1.2278753451919004
+chiBASE_DY=733.3634803213168
+chiBASE_SIDIS=536.8536205509314
+chiBASE=chiBASE_SIDIS+chiBASE_DY
+
+#%%
+nPower=2
+PATHS="/data/WorkingFiles/TMD/Fit_Notes/ART25/DataForPLOTS/CS/Uncertanty2/"
+saveFile=PATHS+"CS_chiSCAN_DY_n="+str(nPower)+".dat"
 #tt=[0.05,0.075,0.1,0.125,0.15,0.175]
-tt=[-0.05,-0.075,-0.1,-0.125,-0.15,-0.175]
-for ll in tt:
-    harpy.setNPparameters_TMDR([1.5, 0.073, 0.03805, -ll , 1.5,-1.,1.])
-    YY=DataProcessor.harpyInterface.ComputeXSec(setDY)
-    chi1,cc3=setDY.chi2(YY)
-    print("{",ll,",",chi1/627-chiBASE,"},")
+tt=[0.005,0.0075,0.01,0.0125,0.015,0.0175, 0.02, 
+    0.025, 0.03, 0.035, 0.04, 0.045, 0.05,
+    0.06, 0.07, .08, 0.09, 0.1,
+    0.125, 0.15, 0.175, 0.2, 0.25 ,0.3,0.4,0.5,0.6,0.8,1.]
+kk=[0.1,0.3,0.5,0.7,0.9,1.,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8,1.9,2.,2.5]
 
-#%%
-saveFile="/data/WorkingFiles/TMD/Fit_Notes/ART25/CS_deltaCHI.dat"
-bTABLE=[0.5,0.75,1.0,1.25,1.5,1.75,2.0,2.5,3.,4.,5.]
-alphaTABLE=[0.5,0.75,1.0,1.5,2.,3.]
-tt=[0.05,0.075,0.1,0.125,0.15,0.175]
-for b in bTABLE:
-    for alpha in alphaTABLE:
-        a=0.05
+
+
+for l2 in kk:
+    for l1 in tt:        
         
-        harpy.setNPparameters_TMDR([1.5, 0.073, 0.03805, a, b,-1.,alpha])
+        if(l1*l2>1.): continue
+    
+        harpy.setNPparameters_TMDR([1.5, 0.0859102,  0.030294, l2, l1*l2, 1.*nPower])
         YY=DataProcessor.harpyInterface.ComputeXSec(setDY)
         chi1,cc3=setDY.chi2(YY)
-        RR=chi1/627-chiBASE 
+        DELTA=(chi1-chiBASE_DY)/setDY.numberOfPoints
+        
+        print("{",l1*l2,",",l2,",",DELTA,"},")
         
         f=open(saveFile,"a+")
-        f.write(str(b)+", "+str(alpha)+", "+str(a)+", "+str(RR)+"\n")
+        f.write("{:16.6f}".format(l1*l2)+", "+"{:16.6f}".format(l2)+", "+"{:16.6f}".format(DELTA)+"\n")
         f.close()  
         
-        while RR<0.02:
-            ss=1.
-            if(b<2): ss=0.5
-            if(b<1): ss=0.25
-            
-            if(RR<0.0001): a+=0.2*ss
-            elif(RR<0.001): a+=0.1*ss
-            elif(RR<0.005): a+=0.05*ss
-            else: a+=0.025*ss           
-            
-            print(b,alpha,a)
-            
-            harpy.setNPparameters_TMDR([1.5, 0.073, 0.03805, a, b,-1.,alpha])
-            YY=DataProcessor.harpyInterface.ComputeXSec(setDY)
-            chi1,cc3=setDY.chi2(YY)
-            RR=chi1/627-chiBASE 
-            
-            f=open(saveFile,"a+")
-            f.write(str(b)+", "+str(alpha)+", "+str(a)+", "+str(RR)+"\n")
-            f.close()  
-            
-#%%
-saveFile="/data/WorkingFiles/TMD/Fit_Notes/ART25/CS_deltaCHI_negative.dat"
-bTABLE=[0.5,0.75,1.0,1.25,1.5,1.75,2.0,2.5,3.,4.,5.]
-alphaTABLE=[0.5,0.75,1.0,1.5,2.,3.]
-for b in bTABLE:
-    for alpha in alphaTABLE:
-        a=-0.01
-        
-        harpy.setNPparameters_TMDR([1.5, 0.073, 0.03805, a, b,-1.,alpha])
+        if(-l1*l2<-1.): continue
+    
+        harpy.setNPparameters_TMDR([1.5, 0.0859102,  0.030294, l2, -l1*l2, 1.*nPower])
         YY=DataProcessor.harpyInterface.ComputeXSec(setDY)
         chi1,cc3=setDY.chi2(YY)
-        RR=chi1/627-chiBASE 
+        DELTA2=(chi1-chiBASE_DY)/setDY.numberOfPoints
+        
+        print("{",-l1*l2,",",l2,",",DELTA2,"},")
         
         f=open(saveFile,"a+")
-        f.write(str(b)+", "+str(alpha)+", "+str(a)+", "+str(RR)+"\n")
+        f.write("{:16.6f}".format(-l1*l2)+", "+"{:16.6f}".format(l2)+", "+"{:16.6f}".format(DELTA2)+"\n")
         f.close()  
         
-        while RR<0.02:
-            ss=0.5
-            if(b<2): ss=0.25
-            if(b<1): ss=0.1
-            
-            
-            if(RR<0.0001): a-=0.2*ss
-            elif(RR<0.001): a-=0.1*ss
-            elif(RR<0.005): a-=0.05*ss
-            else: a-=0.025*ss           
-            
-            print(b,alpha,a)
-            
-            harpy.setNPparameters_TMDR([1.5, 0.073, 0.03805, a, b,-1.,alpha])
-            YY=DataProcessor.harpyInterface.ComputeXSec(setDY)
-            chi1,cc3=setDY.chi2(YY)
-            RR=chi1/627-chiBASE 
-            
-            f=open(saveFile,"a+")
-            f.write(str(b)+", "+str(alpha)+", "+str(a)+", "+str(RR)+"\n")
-            f.close()            
+        if(DELTA>2 and DELTA2>2): 
+            break
+    
+#%%
+saveFile=PATHS+"CS_chiSCAN_SIDIS_n="+str(nPower)+".dat"
+
+for l2 in kk:
+    for l1 in tt:
+        
+        if(l1*l2>1.): continue
+    
+        harpy.setNPparameters_TMDR([1.5, 0.0859102,  0.030294, l2, l1*l2, 1.*nPower])
+        YY=DataProcessor.harpyInterface.ComputeXSec(setSIDIS)
+        chi1,cc3=setSIDIS.chi2(YY)
+        DELTA=(chi1-chiBASE_SIDIS)/setSIDIS.numberOfPoints
+        
+        print("{",l1*l2,",",l2,",",DELTA,"},")
+        
+        f=open(saveFile,"a+")
+        f.write("{:16.6f}".format(l1*l2)+", "+"{:16.6f}".format(l2)+", "+"{:16.6f}".format(DELTA)+"\n")
+        f.close()  
+        
+        if(-l1*l2<-1.): continue
+        
+        harpy.setNPparameters_TMDR([1.5, 0.0859102,  0.030294, l2, -l1*l2, 1.*nPower])
+        YY=DataProcessor.harpyInterface.ComputeXSec(setSIDIS)
+        chi1,cc3=setSIDIS.chi2(YY)
+        DELTA2=(chi1-chiBASE_SIDIS)/setSIDIS.numberOfPoints
+        
+        print("{",-l1*l2,",",l2,",",DELTA2,"},")
+        
+        f=open(saveFile,"a+")
+        f.write("{:16.6f}".format(-l1*l2)+", "+"{:16.6f}".format(l2)+", "+"{:16.6f}".format(DELTA2)+"\n")
+        f.close()  
+        
+        if(DELTA>4 and DELTA2>4): 
+            break
+    
+#%%
+saveFile=PATHS+"CS_chiSCAN_TOTAL_n="+str(nPower)+".dat"
+
+for l2 in kk:
+    for l1 in tt:
+        
+        if(l1*l2>1.): continue
+        
+        harpy.setNPparameters_TMDR([1.5, 0.0859102,  0.030294, l2, l1*l2, 1.*nPower])
+        YY=DataProcessor.harpyInterface.ComputeXSec(setSIDIS)
+        chi1,cc3=setSIDIS.chi2(YY)
+        YY=DataProcessor.harpyInterface.ComputeXSec(setDY)
+        chi2,cc3=setDY.chi2(YY)
+        DELTA=(chi1+chi2-chiBASE)/(setDY.numberOfPoints+setSIDIS.numberOfPoints)
+        
+        print("{",l1*l2,",",l2,",",DELTA,"},")
+        
+        f=open(saveFile,"a+")
+        f.write("{:16.6f}".format(l1*l2)+", "+"{:16.6f}".format(l2)+", "+"{:16.6f}".format(DELTA)+"\n")
+        f.close()  
+        
+        if(-l1*l2<-1.): continue
+        
+        harpy.setNPparameters_TMDR([1.5, 0.0859102,  0.030294, l2, -l1*l2, 1.*nPower])
+        YY=DataProcessor.harpyInterface.ComputeXSec(setSIDIS)
+        chi1,cc3=setSIDIS.chi2(YY)
+        YY=DataProcessor.harpyInterface.ComputeXSec(setDY)
+        chi2,cc3=setDY.chi2(YY)
+        DELTA2=(chi1+chi2-chiBASE)/(setDY.numberOfPoints+setSIDIS.numberOfPoints)
+        
+        print("{",-l1*l2,",",l2,",",DELTA2,"},")
+        
+        f=open(saveFile,"a+")
+        f.write("{:16.6f}".format(-l1*l2)+", "+"{:16.6f}".format(l2)+", "+"{:16.6f}".format(DELTA2)+"\n")
+        f.close()  
+        
+        if(DELTA>2 and DELTA2>2): 
+            break

@@ -312,12 +312,12 @@ print('Loaded ', setDY.numberOfSets, 'data sets with', sum([i.numberOfPoints for
 print('Loaded ', setDY_PLOT.numberOfSets, 'data sets with', sum([i.numberOfPoints for i in setDY_PLOT.sets]), 'points.')
 
 #%%
-#rSet.SetReplica(0)
+rSet.SetReplica(0)
 
 #listToSave=DataProcessor.harpyInterface.ComputeXSec(setSIDIS_PLOT)
 
-#DataProcessor.harpyInterface.PrintChi2Table(setSIDIS,printDecomposedChi2=True)
-#DataProcessor.harpyInterface.PrintChi2Table(setDY,printDecomposedChi2=True)
+# DataProcessor.harpyInterface.PrintChi2Table(setSIDIS,printDecomposedChi2=True)
+# DataProcessor.harpyInterface.PrintChi2Table(setDY,printDecomposedChi2=True)
 
 #%%
 
@@ -357,47 +357,47 @@ print('Loaded ', setDY_PLOT.numberOfSets, 'data sets with', sum([i.numberOfPoint
 
 #%%
 
-###  
-###   Saving the central replica value. It is better to do with the presice artemide mode
-###
-rSet.SetReplica(0)
+# ###  
+# ###   Saving the central replica value. It is better to do with the presice artemide mode
+# ###
+# rSet.SetReplica(0)
 
-PATH_TO_SAVE="/data/WorkingFiles/TMD/Fit_Notes/ART25/DataForPLOTS"
+# PATH_TO_SAVE="/data/WorkingFiles/TMD/Fit_Notes/ART25/DataForPLOTS"
 
-pointInFIT=[p["id"] for p in setSIDIS.points]
+# pointInFIT=[p["id"] for p in setSIDIS.points]
 
-with open(PATH_TO_SAVE+'/centralX_SIDIS.dat', "w") as filehandle:
-    filehandle.write("ID, <Q>, Qmin, Qmax, <x>, xmin, xmax, <z>, zmin, zmax, <pT>, pTmin, pTmax, Xsec, Err, inFIT, ART25(central)"+'\n')
+# with open(PATH_TO_SAVE+'/centralX_SIDIS.dat', "w") as filehandle:
+#     filehandle.write("ID, <Q>, Qmin, Qmax, <x>, xmin, xmax, <z>, zmin, zmax, <pT>, pTmin, pTmax, Xsec, Err, inFIT, ART25(central)"+'\n')
 
-listToSave=DataProcessor.harpyInterface.ComputeXSec(setSIDIS_PLOT)
+# listToSave=DataProcessor.harpyInterface.ComputeXSec(setSIDIS_PLOT)
    
-with open(PATH_TO_SAVE+'/centralX_SIDIS.dat', "a") as filehandle: 
-    i=0
-    for p in setSIDIS_PLOT.points:
+# with open(PATH_TO_SAVE+'/centralX_SIDIS.dat', "a") as filehandle: 
+#     i=0
+#     for p in setSIDIS_PLOT.points:
         
-        line=p["id"]\
-            +', '+'{:.4f}'.format(p["<Q>"])\
-            +', '+'{:.4f}'.format(p["Q"][0])\
-            +', '+'{:.4f}'.format(p["Q"][1])\
-            +', '+'{:.4f}'.format(p["<x>"])\
-            +', '+'{:.4f}'.format(p["x"][0])\
-            +', '+'{:.4f}'.format(p["x"][1])\
-            +', '+'{:.4f}'.format(p["<z>"])\
-            +', '+'{:.4f}'.format(p["z"][0])\
-            +', '+'{:.4f}'.format(p["z"][1])\
-            +', '+'{:.4f}'.format(p["<pT>"])\
-            +', '+'{:.4f}'.format(p["pT"][0])\
-            +', '+'{:.4f}'.format(p["pT"][1])\
-            +', '+'{:.8f}'.format(p["xSec"])\
-            +', '+'{:.8f}'.format(numpy.sqrt(numpy.sum(numpy.array(p["uncorrErr"])**2)))\
-            +', '+'{0}'.format(p["id"] in pointInFIT)\
-            +', '+'{:.8f}'.format(listToSave[i])\
-            +'\n'
-        filehandle.write(line)
+#         line=p["id"]\
+#             +', '+'{:.4f}'.format(p["<Q>"])\
+#             +', '+'{:.4f}'.format(p["Q"][0])\
+#             +', '+'{:.4f}'.format(p["Q"][1])\
+#             +', '+'{:.4f}'.format(p["<x>"])\
+#             +', '+'{:.4f}'.format(p["x"][0])\
+#             +', '+'{:.4f}'.format(p["x"][1])\
+#             +', '+'{:.4f}'.format(p["<z>"])\
+#             +', '+'{:.4f}'.format(p["z"][0])\
+#             +', '+'{:.4f}'.format(p["z"][1])\
+#             +', '+'{:.4f}'.format(p["<pT>"])\
+#             +', '+'{:.4f}'.format(p["pT"][0])\
+#             +', '+'{:.4f}'.format(p["pT"][1])\
+#             +', '+'{:.8f}'.format(p["xSec"])\
+#             +', '+'{:.8f}'.format(numpy.sqrt(numpy.sum(numpy.array(p["uncorrErr"])**2)))\
+#             +', '+'{0}'.format(p["id"] in pointInFIT)\
+#             +', '+'{:.8f}'.format(listToSave[i])\
+#             +'\n'
+#         filehandle.write(line)
         
-        i+=1
+#         i+=1
     
-sys.exit()
+# sys.exit()
 
 #%%
 # # ##################################
