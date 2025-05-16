@@ -58,7 +58,7 @@ KTrange_default= [0., 0.01, 0.025, 0.05, 0.1,
 ###########################################
 ## Save optimal TMDPDF in b-space
 ###########################################
-def SaveGrid_optimal(path,Xrange=XrangePDF_default,Brange=Brange_default,PDF="uTMDPDF",h=1):
+def SaveGrid_optimal(path,Xrange=XrangePDF_default,Brange=Brange_default,PDF="uTMDPDF",h=1,Q=-1):
     """
     Saves the grid for optimal TMDPDF in b space, as returned from the artmide (should be setup)
 
@@ -74,6 +74,8 @@ def SaveGrid_optimal(path,Xrange=XrangePDF_default,Brange=Brange_default,PDF="uT
         DESCRIPTION. Which TMD to save. Default=uTMDPDF
     h : TYPE, optional
         DESCRIPTION. Number of hadron
+    Q : TYPE, optional
+        DESCRIPTION. The grid is saved at particular Q. If Q is negative the optimal grid is saved.
 
     Returns
     -------
@@ -109,9 +111,9 @@ def SaveGrid_optimal(path,Xrange=XrangePDF_default,Brange=Brange_default,PDF="uT
                     TMDval=[0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.]
                 else:                    
                     if(PDF=="uTMDFF"):
-                        TMDval=harpy.get_uTMDFF(xval,rval,h,includeGluon=False)
+                        TMDval=harpy.get_uTMDFF(xval,rval,h,includeGluon=False,mu=Q)
                     else:
-                        TMDval=harpy.get_uTMDPDF(xval,rval,h,includeGluon=False)
+                        TMDval=harpy.get_uTMDPDF(xval,rval,h,includeGluon=False,mu=Q)
                 
                 valuesList[-5][i][j]='{:g}'.format(xval*TMDval[0])
                 valuesList[-4][i][j]='{:g}'.format(xval*TMDval[1])
@@ -220,7 +222,7 @@ def SaveGrid_optimal_kT(path,Xrange=XrangePDF_default,KTrange=KTrange_default,PD
 #######################################
 # Save TMDPDF in b-space at Q, Q^2
 #######################################
-def SaveGrid_Q(path,Qrange=Qrange_default, Xrange=XrangePDF_default,Brange=Brange_default,PDF="uTMDPDF",h=1):
+def SaveGrid_Q(path,Qrange=Qrange_default, Xrange=XrangePDF_default,Brange=Brange_default,PDF="uTMDPDF",h=1,includeGluon=False):
     """
     Saves the grid for TMDPDF in b space at Q, Q^2, as returned from the artmide (should be setup)
 
@@ -256,6 +258,7 @@ def SaveGrid_Q(path,Qrange=Qrange_default, Xrange=XrangePDF_default,Brange=Brang
     -3: zeros([len(Qrange),len(Xrange),len(Brange)]).tolist(),
     -2: zeros([len(Qrange),len(Xrange),len(Brange)]).tolist(),
     -1: zeros([len(Qrange),len(Xrange),len(Brange)]).tolist(),
+    0: zeros([len(Qrange),len(Xrange),len(Brange)]).tolist(),
     1: zeros([len(Qrange),len(Xrange),len(Brange)]).tolist(),
     2: zeros([len(Qrange),len(Xrange),len(Brange)]).tolist(),
     3: zeros([len(Qrange),len(Xrange),len(Brange)]).tolist(),
@@ -273,16 +276,16 @@ def SaveGrid_Q(path,Qrange=Qrange_default, Xrange=XrangePDF_default,Brange=Brang
                     TMDval=[0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.]
                 else:
                     if(PDF=="uTMDFF"):
-                        TMDval=harpy.get_uTMDFF(xval,rval,h,Qval,Qval**2,includeGluon=False)
+                        TMDval=harpy.get_uTMDFF(xval,rval,h,Qval,Qval**2,includeGluon=includeGluon)
                     else:
-                        TMDval=harpy.get_uTMDPDF(xval,rval,h,Qval,Qval**2,includeGluon=False)
+                        TMDval=harpy.get_uTMDPDF(xval,rval,h,Qval,Qval**2,includeGluon=includeGluon)
                 
                 valuesList[-5][i][j][k]='{:g}'.format(xval*TMDval[0])
                 valuesList[-4][i][j][k]='{:g}'.format(xval*TMDval[1])
                 valuesList[-3][i][j][k]='{:g}'.format(xval*TMDval[2])
                 valuesList[-2][i][j][k]='{:g}'.format(xval*TMDval[3])
                 valuesList[-1][i][j][k]='{:g}'.format(xval*TMDval[4])
-                #valuesList[0][i][j][k]='{:g}'.format(xval*TMDval[5])
+                if(includeGluon): valuesList[0][i][j][k]='{:g}'.format(xval*TMDval[5])
                 valuesList[1][i][j][k]='{:g}'.format(xval*TMDval[6])
                 valuesList[2][i][j][k]='{:g}'.format(xval*TMDval[7])
                 valuesList[3][i][j][k]='{:g}'.format(xval*TMDval[8])

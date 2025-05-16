@@ -29,36 +29,48 @@ GRIDNAME2="ART25_uTMDPDF_kT"
 GRIDNAME3="ART25_uTMDPDF_Q"
 GRIDNAME4="ART25_uTMDPDF_optimal_kT"
 GRIDNAME5="ART25_uTMDPDF_Q=2_kT"
+GRIDNAME6="ART25_uTMDPDF_Q=4"
+GRIDNAME7="ART25_uTMDPDF_Q=10"
 
 GRIDNAME11="ART25_uTMDFF_pi_optimal"
 GRIDNAME21="ART25_uTMDFF_pi_kT"
 GRIDNAME31="ART25_uTMDFF_pi_Q"
 GRIDNAME41="ART25_uTMDFF_pi_optimal_kT"
 GRIDNAME51="ART25_uTMDFF_pi_Q=2_kT"
+GRIDNAME61="ART25_uTMDFF_pi_Q=4"
+GRIDNAME71="ART25_uTMDFF_pi_Q=10"
 
 GRIDNAME12="ART25_uTMDFF_K_optimal"
 GRIDNAME22="ART25_uTMDFF_K_kT"
 GRIDNAME32="ART25_uTMDFF_K_Q"
 GRIDNAME42="ART25_uTMDFF_K_optimal_kT"
 GRIDNAME52="ART25_uTMDFF_K_Q=2_kT"
+GRIDNAME62="ART25_uTMDFF_K_Q=4"
+GRIDNAME72="ART25_uTMDFF_K_Q=10"
     
 SAVEPATH1="/data/WorkingFiles/TMD/Fit_Notes/ART25/TMDgrids/"+GRIDNAME1+"/"+GRIDNAME1
 SAVEPATH2="/data/WorkingFiles/TMD/Fit_Notes/ART25/TMDgrids/"+GRIDNAME2+"/"+GRIDNAME2
 SAVEPATH3="/data/WorkingFiles/TMD/Fit_Notes/ART25/TMDgrids/"+GRIDNAME3+"/"+GRIDNAME3
 SAVEPATH4="/data/WorkingFiles/TMD/Fit_Notes/ART25/TMDgrids/"+GRIDNAME4+"/"+GRIDNAME4
 SAVEPATH5="/data/WorkingFiles/TMD/Fit_Notes/ART25/TMDgrids/"+GRIDNAME5+"/"+GRIDNAME5
+SAVEPATH6="/data/WorkingFiles/TMD/Fit_Notes/ART25/TMDgrids/"+GRIDNAME6+"/"+GRIDNAME6
+SAVEPATH7="/data/WorkingFiles/TMD/Fit_Notes/ART25/TMDgrids/"+GRIDNAME7+"/"+GRIDNAME7
 
 SAVEPATH11="/data/WorkingFiles/TMD/Fit_Notes/ART25/TMDgrids/"+GRIDNAME11+"/"+GRIDNAME11
 SAVEPATH21="/data/WorkingFiles/TMD/Fit_Notes/ART25/TMDgrids/"+GRIDNAME21+"/"+GRIDNAME21
 SAVEPATH31="/data/WorkingFiles/TMD/Fit_Notes/ART25/TMDgrids/"+GRIDNAME31+"/"+GRIDNAME31
 SAVEPATH41="/data/WorkingFiles/TMD/Fit_Notes/ART25/TMDgrids/"+GRIDNAME41+"/"+GRIDNAME41
 SAVEPATH51="/data/WorkingFiles/TMD/Fit_Notes/ART25/TMDgrids/"+GRIDNAME51+"/"+GRIDNAME51
+SAVEPATH61="/data/WorkingFiles/TMD/Fit_Notes/ART25/TMDgrids/"+GRIDNAME61+"/"+GRIDNAME61
+SAVEPATH71="/data/WorkingFiles/TMD/Fit_Notes/ART25/TMDgrids/"+GRIDNAME71+"/"+GRIDNAME71
 
 SAVEPATH12="/data/WorkingFiles/TMD/Fit_Notes/ART25/TMDgrids/"+GRIDNAME12+"/"+GRIDNAME12
 SAVEPATH22="/data/WorkingFiles/TMD/Fit_Notes/ART25/TMDgrids/"+GRIDNAME22+"/"+GRIDNAME22
 SAVEPATH32="/data/WorkingFiles/TMD/Fit_Notes/ART25/TMDgrids/"+GRIDNAME32+"/"+GRIDNAME32
 SAVEPATH42="/data/WorkingFiles/TMD/Fit_Notes/ART25/TMDgrids/"+GRIDNAME42+"/"+GRIDNAME42
 SAVEPATH52="/data/WorkingFiles/TMD/Fit_Notes/ART25/TMDgrids/"+GRIDNAME52+"/"+GRIDNAME52
+SAVEPATH62="/data/WorkingFiles/TMD/Fit_Notes/ART25/TMDgrids/"+GRIDNAME62+"/"+GRIDNAME62
+SAVEPATH72="/data/WorkingFiles/TMD/Fit_Notes/ART25/TMDgrids/"+GRIDNAME72+"/"+GRIDNAME72
 
 #%%
 #######################################
@@ -67,6 +79,7 @@ SAVEPATH52="/data/WorkingFiles/TMD/Fit_Notes/ART25/TMDgrids/"+GRIDNAME52+"/"+GRI
 import harpy
 
 path_to_constants=MAINPATH+"FittingPrograms/ART25/ConstantsFiles/ART25_main.atmde"
+#path_to_constants=MAINPATH+"FittingPrograms/ART25/ConstantsFiles/ART25_gluon.atmde"
 harpy.initialize(path_to_constants)
 
 rSet=DataProcessor.ArtemideReplicaSet.ReadRepFile(\
@@ -517,6 +530,11 @@ with open(SAVEPATH52+'.info', 'w') as outfile:
     outfile.write("QMax: 200."+"\n"),
     outfile.write("KtoQMin: 0.0001"+"\n"),
     outfile.write("KtoQMax: 2.001"+"\n")  
+
+
+
+
+ 
 #%%
 rSet.SetReplica()
 DataProcessor.SaveTMDGrid.SaveGrid_optimal(SAVEPATH1+"_0000.dat")
@@ -546,6 +564,20 @@ DataProcessor.SaveTMDGrid.SaveGrid_optimal_kT(SAVEPATH42+"_0000.dat",
                                      Xrange=DataProcessor.SaveTMDGrid.XrangeFF_default,PDF="uTMDFF",h=2)
 DataProcessor.SaveTMDGrid.SaveGrid_optimal_kT(SAVEPATH52+"_0000.dat",
                                      Xrange=DataProcessor.SaveTMDGrid.XrangeFF_default,PDF="uTMDFF",h=2,Q=2.)
+
+#%%
+rSet.SetReplica()
+DataProcessor.SaveTMDGrid.SaveGrid_optimal(SAVEPATH6+"_0000.dat",Q=4.)
+DataProcessor.SaveTMDGrid.SaveGrid_optimal(SAVEPATH61+"_0000.dat",
+                                      Xrange=DataProcessor.SaveTMDGrid.XrangeFF_default,PDF="uTMDFF",h=1,Q=4.)
+DataProcessor.SaveTMDGrid.SaveGrid_optimal(SAVEPATH62+"_0000.dat",
+                                      Xrange=DataProcessor.SaveTMDGrid.XrangeFF_default,PDF="uTMDFF",h=2,Q=4.)
+
+DataProcessor.SaveTMDGrid.SaveGrid_optimal(SAVEPATH7+"_0000.dat",Q=10.)
+DataProcessor.SaveTMDGrid.SaveGrid_optimal(SAVEPATH71+"_0000.dat",
+                                      Xrange=DataProcessor.SaveTMDGrid.XrangeFF_default,PDF="uTMDFF",h=1,Q=10.)
+DataProcessor.SaveTMDGrid.SaveGrid_optimal(SAVEPATH72+"_0000.dat",
+                                      Xrange=DataProcessor.SaveTMDGrid.XrangeFF_default,PDF="uTMDFF",h=2,Q=10.)
 
 #%%
 for i in range(N_replicas_max+1):
@@ -578,3 +610,29 @@ for i in range(N_replicas_max+1):
                                                Xrange=DataProcessor.SaveTMDGrid.XrangeFF_default,PDF="uTMDFF",h=1,Q=2.)
     DataProcessor.SaveTMDGrid.SaveGrid_optimal_kT(SAVEPATH52+"_"+"{:04d}".format(i)+".dat",
                                                Xrange=DataProcessor.SaveTMDGrid.XrangeFF_default,PDF="uTMDFF",h=2,Q=2.)
+#%%
+for i in range(N_replicas_max+1):
+    print("Replica:"+ "{:04d}".format(i))
+    rSet.SetReplica(i)
+    DataProcessor.SaveTMDGrid.SaveGrid_optimal(SAVEPATH6+"_"+"{:04d}".format(i)+".dat",Q=4.)
+    DataProcessor.SaveTMDGrid.SaveGrid_optimal(SAVEPATH61+"_"+"{:04d}".format(i)+".dat",
+                                               Xrange=DataProcessor.SaveTMDGrid.XrangeFF_default,PDF="uTMDFF",h=1,Q=4.)
+    DataProcessor.SaveTMDGrid.SaveGrid_optimal(SAVEPATH62+"_"+"{:04d}".format(i)+".dat",
+                                               Xrange=DataProcessor.SaveTMDGrid.XrangeFF_default,PDF="uTMDFF",h=2,Q=4.)
+    
+    DataProcessor.SaveTMDGrid.SaveGrid_optimal(SAVEPATH7+"_"+"{:04d}".format(i)+".dat",Q=10.)
+    DataProcessor.SaveTMDGrid.SaveGrid_optimal(SAVEPATH71+"_"+"{:04d}".format(i)+".dat",
+                                               Xrange=DataProcessor.SaveTMDGrid.XrangeFF_default,PDF="uTMDFF",h=1,Q=10.)
+    DataProcessor.SaveTMDGrid.SaveGrid_optimal(SAVEPATH72+"_"+"{:04d}".format(i)+".dat",
+                                               Xrange=DataProcessor.SaveTMDGrid.XrangeFF_default,PDF="uTMDFF",h=2,Q=10.)
+#%%
+sys.exit()    
+#%%
+
+#######################################
+# Save Grid specification (special)
+#######################################
+GRIDNAMEs="ART25_uTMDPDF_Q_dd"
+SAVEPATHs="/data/WorkingFiles/TMD/Fit_Notes/ART25/TMDgrids/"+GRIDNAMEs+"/"+GRIDNAMEs
+
+DataProcessor.SaveTMDGrid.SaveGrid_Q(SAVEPATHs+"_0000.dat",Qrange=Qrange,includeGluon=True)

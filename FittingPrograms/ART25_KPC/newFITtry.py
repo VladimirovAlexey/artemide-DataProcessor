@@ -190,7 +190,17 @@ theData=DataProcessor.DataMultiSet.DataMultiSet("SIDISset",loadThisDataSIDIS([
                       'hermes.d.vmsub.zxpt.k+','hermes.d.vmsub.zxpt.k-',
                       'compass.d.h+','compass.d.h-']))
 
+### Loading the SIDIS data set
+theDataHP=DataProcessor.DataMultiSet.DataMultiSet("SIDISset",loadThisDataSIDIS([
+                      'hermes.p.vmsub.zxpt.pi+','hermes.p.vmsub.zxpt.pi-',
+                      'hermes.d.vmsub.zxpt.pi+','hermes.d.vmsub.zxpt.pi-',
+                      'hermes.p.vmsub.zxpt.k+','hermes.p.vmsub.zxpt.k-',
+                      'hermes.d.vmsub.zxpt.k+','hermes.d.vmsub.zxpt.k-',
+                      'compass.d.h+','compass.d.h-']))
+
 setSIDIS=theData.CutData(cutFunc) 
+
+setHP=theDataHP.CutData(cutFunc) 
 
 #print('Loaded experiments are', [i.name for i in setDY.sets])
 
@@ -224,25 +234,6 @@ setDY=theData.CutData(cutFunc)
 print('Loaded ', setDY.numberOfSets, 'data sets with', sum([i.numberOfPoints for i in setDY.sets]), 'points.')
 
 #%%
-
-####### Best fast result
-harpy.setNPparameters([1.5, 0.083931, 0.030641, 0.0, 
-                       0.51638, 0.002073, 0.478567, 0.373111, 
-                       2.407, 22.1996, 3.7876, 0.00128, 
-                       0.403343, 5e-05, 1.0, 1.0, 
-                       0.69769, 0.712969, -0.133895, -0.841651, 0.846846,
-                       0.774759, 1.5565, 1.1863, 0.692877, -0.569062, 
-                       0.0, 0.0])
-
-####### Best complete result
-harpy.setNPparameters([1.5, 0.089952, 0.030591, 0.0, 
-                       0.343842, 0.011714, 0.588161, 0.012262, 
-                       7.682, 22.6267, 3.2397, 0.015181, 
-                       0.052558, 1.2e-05, 1.0, 1.0, 
-                       0.700419, 0.669345, -0.058065, -0.667958, 
-                       0.863101, 0.7739, 1.396, 1.3471, 
-                       0.654023, -0.490042, 0.0, 0.1])
-
 ####### Best complete result (with restriction for chi2_SIDIS)
 harpy.setNPparameters([1.5, 0.084129, 0.030506, 0.0, 
                        0.483576, 0.05925, 0.535823, 0.090043, 
@@ -256,140 +247,170 @@ DataProcessor.harpyInterface.PrintChi2Table(setSIDIS,printDecomposedChi2=True)
 DataProcessor.harpyInterface.PrintChi2Table(setDY,printDecomposedChi2=True)
 
 #%%
-#######################################
-# Minimisation
-#######################################
-import time
+DataProcessor.harpyInterface.PrintChi2Table(setHP,printDecomposedChi2=True)
 
-penalty_index=[-7,-6,-5,-4,-3]
+#%%
+def setETA(y,x):
+    harpy.setNPparameters_uTMDFF([y[0], x[0],x[1],x[2],
+                                  y[1], x[4],x[5],x[6],
+                                  x[3], x[7], 
+                                 0.0, 0.1])
+def setETA1(y,i):    
+    arr=[0. for i in range(NUM)]
+    arr[i]=1.
+    setETA(y,arr)
 
-
-def chi2(x):
-    startT=time.time()
-    #harpy.setNPparameters_uTMDFF([x[0],x[1],x[2],x[3],x[4],x[5],x[6],x[7]])
-    harpy.setNPparameters(x)
-    print('np set =',["{:8.3f}".format(i) for i in x])        
+def setETA1m(y,i):
+    arr=[0. for i in range(NUM)]
+    arr[i]=-1.
+    setETA(y,arr)
     
+def setETA2(y,i,j):
+    arr=[0. for i in range(NUM)]
+    arr[i]=1.
+    arr[j]=1.
+    setETA(y,arr)
+#%%
+NUM=8
+R00=0.
+beta=[0 for i in range(NUM)]
+alpha=[[0 for x in range(NUM)] for y in range(NUM)] 
+def PrepareMatixALPHA(y):
+    global R00,beta,alpha
     
-    YY=DataProcessor.harpyInterface.ComputeXSec(setSIDIS)
-    ccSIDIS2,cc3=setSIDIS.chi2(YY)
+    nullArray=[0. for i in range(NUM)]
+    ### create empty array
+    beta=[0 for i in range(NUM)]
+    alpha=[[0 for x in range(NUM)] for y in range(NUM)] 
+    
+    ### restoring the matrix of the theory prediction
+    
+    #### constant part
+    setETA(y,nullArray)
+    R00=numpy.array(DataProcessor.harpyInterface.ComputeXSec(setHP))
+    
+    print("Constant part is made!")
+    
+    #### diagonal parts
+    for i in range(NUM):
+        print("....",i)
+        setETA1(y,i)
+        f1=numpy.array(DataProcessor.harpyInterface.ComputeXSec(setHP))
+        setETA1m(y,i)
+        f1m=numpy.array(DataProcessor.harpyInterface.ComputeXSec(setHP))
+        alpha[i][i]=(f1+f1m)/2-R00
+        beta[i]=f1-alpha[i][i]-R00
+    
+    print("Diagonal part is made!")
+    
+    ##### off-diagonal part
+    for i in range(NUM-1):
+        for j in range(i+1,NUM):
+            print("....",i,", ",j)
+            setETA2(y,i,j)
+            f1=numpy.array(DataProcessor.harpyInterface.ComputeXSec(setHP))
+            alpha[i][j]=f1-R00-beta[i]-beta[j]-alpha[i][i]-alpha[j][j]
+    
+    print("Off-diagonal part is made!")
+#%%
+import copy
+def PredictionX(x):
+    ### constant part
+    t=copy.copy(R00)
+    ### linear part
+    for i in range(NUM):
+        t=t+beta[i]*x[i]
         
-    YY=DataProcessor.harpyInterface.ComputeXSec(setDY)    
-    ccDY2,cc3=setDY.chi2(YY)
-    
-    #### This penalty term prevents low-energy DY to have extremely low normalization
-    penalty_array=numpy.array([max(0,abs(setDY.sets[i].DetermineAvarageSystematicShift(YY[setDY._i1[i]:setDY._i2[i]]))/setDY.sets[i].normErr[0]-1) for i in penalty_index])
-    penalty_term=sum(penalty_array**6)
-    
-    ### This penalty term prevents SIDIS to be much lower than 1 (changes the slope of chi2 below 1)
-    #pSIDIS=ccSIDIS2/setSIDIS.numberOfPoints
-    #if pSIDIS<1.:
-    #    penalty_term+=0.9*(1-pSIDIS)*setSIDIS.numberOfPoints
-    
-    cc=[ccSIDIS2/setSIDIS.numberOfPoints,ccDY2/setDY.numberOfPoints, 
-        (ccSIDIS2+ccDY2)/(setSIDIS.numberOfPoints+setDY.numberOfPoints)]
-    
-    endT=time.time()
-    print(':->',cc,'   +p=',penalty_term/(setSIDIS.numberOfPoints+setDY.numberOfPoints),"    time=",endT-startT)
-    return ccSIDIS2+ccDY2+penalty_term
+    ### quadratic part
+    for i in range(NUM):
+        for j in range(i,NUM):
+            t=t+alpha[i][j]*x[i]*x[j]            
+    return t
 
-### chi2 for only DY
-def chi2DY(x):
+#%%
+import time
+def chi2X(x):
     startT=time.time()
-    #harpy.setNPparameters_uTMDFF([x[0],x[1],x[2],x[3],x[4],x[5],x[6],x[7]])
-    harpy.setNPparameters(x)
-    print('np set =',["{:8.3f}".format(i) for i in x])        
-            
-    YY=DataProcessor.harpyInterface.ComputeXSec(setDY)    
-    ccDY2,cc3=setDY.chi2(YY)
-    
-    #### This penalty term prevents low-energy DY to have extremely low normalization
-    penalty_array=numpy.array([max(0,abs(setDY.sets[i].DetermineAvarageSystematicShift(YY[setDY._i1[i]:setDY._i2[i]]))/setDY.sets[i].normErr[0]-1) for i in penalty_index])
-    penalty_term=sum(penalty_array**6)
-       
-    cc=ccDY2/setDY.numberOfPoints
+    T1=PredictionX(x)
+    ccSIDIS2,cc3=setHP.chi2(T1)
+        
+    cc=ccSIDIS2/setHP.numberOfPoints
     
     endT=time.time()
-    print(':->',cc,'   +p=',penalty_term/setDY.numberOfPoints, "    time=",endT-startT)
-    return ccDY2+penalty_term
+    print(':->',cc,"    time=",endT-startT)
+    return ccSIDIS2
 
-def chi2SIDIS(x):
+#%%
+def MinimizeY(y,x):
+    PrepareMatixALPHA(y)
+    
+    from iminuit import Minuit
+    initialValues=(x)
+    initialErrors=(0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5)
+    searchLimits=((-100.,100.),(-100.,100.),(-100.,100.),(-100.,100.),(-100.,100.),(-100.,100.),(-100.,100.),(-100.,100.))
+    parametersToMinimize=(False, False, False,False,False, False, False,False)
+    
+    m = Minuit(chi2X, initialValues)
+
+    m.errors=initialErrors
+    m.limits=searchLimits
+    m.fixed=parametersToMinimize
+    m.errordef=1
+
+    m.migrad()
+    
+    return chi2X(list(m.values)), list(m.values)
+
+#%%
+GlobalX=[0. for i in range(NUM)]
+
+def chi2Y(y):
+    global GlobalX
     startT=time.time()
-    #harpy.setNPparameters_uTMDFF([x[0],x[1],x[2],x[3],x[4],x[5],x[6],x[7]])
-    harpy.setNPparameters(x)
-    print('np set =',["{:8.3f}".format(i) for i in x])        
+    cc,valX=MinimizeY(y,GlobalX)
+    GlobalX=valX
     
-    
-    YY=DataProcessor.harpyInterface.ComputeXSec(setSIDIS)
-    ccSIDIS2,cc3=setSIDIS.chi2(YY)
-
-    cc=ccSIDIS2/setSIDIS.numberOfPoints
-    
-    penalty_term=0.
     endT=time.time()
-    print(':->',cc,'   +p=',penalty_term/(setSIDIS.numberOfPoints),"    time=",endT-startT)
-    return ccSIDIS2+penalty_term
+    print(':->',cc/setHP.numberOfPoints,"    time=",endT-startT)
+    return cc
+#%%
+#T1=PredictionX([0.647933, -0.140838, -0.760952, 0.643635, 0.816016, 1.475, 1.1538, -0.461771])
+#setETA([0.647933, -0.140838, -0.760952, 0.643635, 0.816016, 1.475, 1.1538, -0.461771])
+#T2=numpy.array(DataProcessor.harpyInterface.ComputeXSec(setHP))
 
 #%%
 #### Minimize SIDIS
 from iminuit import Minuit
 
-#---- PDFbias-like row (0.083931)
-initialValues=([1.5, 0.038969, 0.030641, 0.0, 
-                       0.51638, 0.002073, 0.478567, 0.373111, 
-                       2.407, 22.1996, 3.7876, 0.00128, 
-                       0.403343, 5e-05, 1.0, 1.0, 
-                       0.69769, 0.712969, -0.133895, -0.841651, 0.846846,
-                       0.774759, 1.5565, 1.1863, 0.692877, -0.569062, 
-                       0.0, 0.0])
-
-initialErrors=(0.1,0.1,0.1,0.1,
-                0.5,  1.0, 0.1,  1.0,
-                0.5,  1.0, 0.1,  1.0,
-                0.5,  1.0, 10.,  1.,
-                0.5,0.5,0.5,0.5,
-                0.5,0.5,0.5,0.5,
-                0.5,0.5,0.5,0.5)
-searchLimits=((1.0,2.5),(0.005,0.15) ,(0.0,.2), (-5.,5.),
-              (0.00001,100.), (0.00001,100.),(0.00001,100.),(0.00001,100.),
-              (0.00001,100.), (0.00001,100.),(0.00001,100.),(0.00001,100.),
-              (0.00001,100.), (0.00001,100.),(0.0001,100.),(0.0001,100.),
-              (0.0001,100.), (-100.,100.),(-100.,100.),(-100.,100.),
-              (0.0001,100.), (-100.,100.),(-100.,100.),(-100.,100),
-              (-100.,100.),(-100.,100.),(-100.,100.),(0.1,2.))
-              
-# True= FIX
-parametersToMinimize=(True, False,False,True,
-                      False, False, False,False,
-                      False, False, False, False,
-                      False, False, True,True,
-                      False, False, False,False,
-                      False, False, False,False,
-                      False, False, True,True)
+initialX=numpy.random.rand(8)*2-1
+GlobalX=initialX
+initialY=(0.5,0.5)
+initialErrY=(0.5,0.5)
+searchLimitsY=((0.,100.),(0.,100.))
+parametersToMinimizeY=(False, False)
 
 #%%
 
-m = Minuit(chi2, initialValues)
+mY = Minuit(chi2Y, initialY)
 
-m.errors=initialErrors
-m.limits=searchLimits
-m.fixed=parametersToMinimize
-m.errordef=1
+mY.errors=initialErrY
+mY.limits=searchLimitsY
+mY.fixed=parametersToMinimizeY
+mY.errordef=1
 
-print(m.params)
 #%%
-m.tol=0.0001*(setSIDIS.numberOfPoints+setDY.numberOfPoints)*10000 ### the last 0.0001 is to compensate MINUIT def
-m.strategy=1
-m.migrad()
+#m.strategy=1
+mY.migrad()
 
-print(m.params)
+print(mY.params)
+print(GlobalX)
 
-chi2(list(m.values))
-
-DataProcessor.harpyInterface.PrintChi2Table(setDY,printDecomposedChi2=True)
+#%%
+setETA(list(mY.values),GlobalX)
+#DataProcessor.harpyInterface.PrintChi2Table(setDY,printDecomposedChi2=True)
 DataProcessor.harpyInterface.PrintChi2Table(setSIDIS,printDecomposedChi2=True)
 
-print([round(x,1 if x >100 else 4 if x>1 else 6) for x in list(m.values)])
+#print([round(x,1 if x >100 else 4 if x>1 else 6) for x in list(m.values)])
 
 #%%
 sys.exit()

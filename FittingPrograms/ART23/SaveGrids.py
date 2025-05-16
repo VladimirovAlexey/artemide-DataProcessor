@@ -19,6 +19,7 @@ HARPY_DIR = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', '..',
 #logFile =os.path.realpath(os.path.join(os.path.dirname(__file__))) +"/REPLICAS/LOG.log"
 
 import sys
+sys.path.remove('/data/arTeMiDe_Repository/artemide/harpy')
 sys.path.append(ROOT_DIR)
 sys.path.append(HARPY_DIR)
 
@@ -29,8 +30,8 @@ import DataProcessor.SaveTMDGrid
 
 MAINPATH=ROOT_DIR 
 
-PDFtoUSE="MSHT_0"
-#PDFtoUSE="MSHT"
+#PDFtoUSE="MSHT_0"
+PDFtoUSE="MSHT"
 #PDFtoUSE="NNPDF"
 
 if(PDFtoUSE=="MSHT"):
@@ -66,7 +67,7 @@ harpy.initialize(path_to_constants)
 if(PDFtoUSE=="MSHT"):
     rSet=DataProcessor.ArtemideReplicaSet.ReadRepFile(\
                             "/data/WorkingFiles/TMD/Fit_Notes/ART23/REPS/ART23_run2.rep")
-if(PDFtoUSE=="MSHT_0"):
+elif(PDFtoUSE=="MSHT_0"):
     rSet=DataProcessor.ArtemideReplicaSet.ReadRepFile(\
                             ATMDE_DIR+"Models/ART23/Replica-files/ART23_MSHT20_noPDF.rep")
 elif(PDFtoUSE=="NNPDF"):

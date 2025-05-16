@@ -90,7 +90,7 @@ def loadThisDataDY(listOfNames):
 ##################Cut function
 R=0.25
 
-def cutFunc(p):
+def cutFunc_qT(p):
     
     if p["type"]=="SIDIS":        
         if p["<z>"]>0.8:
@@ -180,6 +180,103 @@ def cutFunc(p):
                 return False , p    
         
         return ((delta<R and p["<qT>"]<10.) or (delta<R and par/err*delta**2<1)) , p 
+    
+#%%
+##################Cut function
+R=0.25
+
+def cutFunc_pT(p):
+    
+    if p["type"]=="SIDIS":        
+        if p["<z>"]>0.8:
+            return False , p
+        ## bins with low z drop
+        if p["<z>"]<0.2:
+            return False , p
+        
+        par=1.
+        if p["xSec"]<0.00000001:
+            err=1
+            delta=1
+        else:
+            ##############3 I MULTIPLY THE ERROR BY 100 (so it does not affect the cuts)
+            err=10000#*numpy.sqrt(p.uncorrErrorsSquare)/p.xSec    
+            gamma2=(2.0*p["M_target"]*p["<x>"]/p["<Q>"])**2
+            rho2=(p["M_product"]/p["<z>"]/(p["<Q>"]))**2
+            qT=p["<pT>"]/p["<z>"]*numpy.sqrt((1+gamma2)/(1-gamma2*rho2))
+            delta=qT/(p["<Q>"])
+            
+            deltaPerp=p["<pT>"]/(p["<Q>"])
+            
+            ### compute the largest possible qT (approximate)
+            gamma2WORST=(2.0*p["M_target"]*p["x"][1]/p["<Q>"])**2
+            # it is definitely not a TMD point
+            if gamma2WORST*rho2>1:
+                return False , p
+            qTWORST=p["pT"][1]/p["z"][0]*numpy.sqrt((1+gamma2WORST)/(1-gamma2WORST*rho2))
+    
+            ## drop if qT>Q/2
+            if qTWORST>p["<Q>"]/2:
+                return False , p
+    
+        ### drop Q<2
+        if p["<Q>"]<2 :
+            return False , p
+        
+        #### in the case of MAPFF I use special sets for pi- and K-
+        if('MAPFF' in path_to_constants):            
+            if(p["process"][3]==2101 and p["process"][2]<0): 
+                p["process"][3]=2107
+                p["process"][2]=3
+            if(p["process"][3]==2103 and p["process"][2]<0): 
+                p["process"][3]=2108
+                p["process"][2]=3
+            if(p["process"][3]==2105 and p["process"][2]<0): 
+                p["process"][3]=2109
+                p["process"][2]=3
+            if(p["process"][2]==-1): p["process"][2]=3
+            if(p["process"][2]==-2): p["process"][2]=4
+            
+        
+        return (delta<0.1 or deltaPerp<R or (delta<0.25 and par/err*delta**2<1)) , p
+    elif p["type"]=="DY":
+        par=0.5
+        
+        #  for artemide v3.    
+        # p["process"]=[p["process"][0],p["process"][2],1,1]
+        if(len(p["process"])==3):        
+                print("UNKNOWN PROCESS IN ARTEMIDE 3"+str(p["process"]))
+        
+        if(p["xSec"]>0):
+            err=numpy.sqrt(sum([i**2 for i in p["uncorrErr"]]))/p["xSec"]
+        else:
+            err=100.
+        delta=p["<qT>"]/p["<Q>"]
+        
+        if(p["id"][0] == "E"):
+            delta=p["<qT>"]/p["Q"][1] 
+        
+        if("run1-W" in p["id"]):
+            delta=p["qT"][0]/(p["Q"][0]+5.)
+        
+        
+        if(p["id"][0:4] == "E605"):
+            if(p["Q"][0]==10.5):#UPSILON resonance-bin
+                return False , p
+        elif(p["id"][0:4] == "E772"):
+            if(p["Q"][0]<10):#these bins seems broken
+                return False , p
+        elif(p["id"][0:4] == "E615"):
+            if(9<p["<Q>"]<11.2):#UPSILON resonance-bin
+                return False , p
+        elif(p["id"][0:4] == "E228"):
+            if(9<p["<Q>"]<11):#UPSILON resonance-bin
+                return False , p
+        else:
+            if(9<p["<Q>"]<11):#UPSILON resonance-bin
+                return False , p    
+        
+        return ((delta<0.25 and p["<qT>"]<10.) or (delta<0.25 and par/err*delta**2<1)) , p 
 
 #%%
 ### Loading the SIDIS data set
@@ -190,7 +287,8 @@ theDataSIDIS=DataProcessor.DataMultiSet.DataMultiSet("SIDISset",loadThisDataSIDI
                       'hermes.d.vmsub.zxpt.k+','hermes.d.vmsub.zxpt.k-',
                       'compass.d.h+','compass.d.h-']))
 
-setSIDIS=theDataSIDIS.CutData(cutFunc) 
+R=0.
+setSIDIS=theDataSIDIS.CutData(cutFunc_pT) 
 print('Loaded ', setSIDIS.numberOfSets, 'data sets with', sum([i.numberOfPoints for i in setSIDIS.sets]), 'points.')
 
 #%%
@@ -213,7 +311,7 @@ theDataDY=DataProcessor.DataMultiSet.DataMultiSet("DYset",loadThisDataDY([
                           'D0run1-W','CDFrun1-W'
                           ]))
 
-setDY=theDataDY.CutData(cutFunc) 
+setDY=theDataDY.CutData(cutFunc_pT) 
 print('Loaded ', setDY.numberOfSets, 'data sets with', sum([i.numberOfPoints for i in setDY.sets]), 'points.')
 
 #%%
@@ -226,8 +324,8 @@ harpy.setNPparameters([1.5, 0.084129, 0.030506, 0.0,
                        0.849316, 0.816016, 1.475, 1.1538, 
                        0.643635, -0.461771, 0.0, 0.1])
 
-#DataProcessor.harpyInterface.PrintChi2Table(setSIDIS,printDecomposedChi2=True)
-#DataProcessor.harpyInterface.PrintChi2Table(setDY,printDecomposedChi2=True)
+DataProcessor.harpyInterface.PrintChi2Table(setSIDIS,printDecomposedChi2=True)
+DataProcessor.harpyInterface.PrintChi2Table(setDY,printDecomposedChi2=True)
 
 #%%
 #######################################
@@ -248,24 +346,27 @@ def chi2(x):
     YY=DataProcessor.harpyInterface.ComputeXSec(setSIDIS)
     ccSIDIS2,cc3=setSIDIS.chi2(YY)
         
-    YY=DataProcessor.harpyInterface.ComputeXSec(setDY)    
-    ccDY2,cc3=setDY.chi2(YY)
+    #YY=DataProcessor.harpyInterface.ComputeXSec(setDY)    
+    #ccDY2,cc3=0,0#setDY.chi2(YY)
     
     #### This penalty term prevents low-energy DY to have extremely low normalization
-    penalty_array=numpy.array([max(0,abs(setDY.sets[i].DetermineAvarageSystematicShift(YY[setDY._i1[i]:setDY._i2[i]]))/setDY.sets[i].normErr[0]-1) for i in penalty_index])
-    penalty_term=sum(penalty_array**6)
+    #penalty_array=numpy.array([max(0,abs(setDY.sets[i].DetermineAvarageSystematicShift(YY[setDY._i1[i]:setDY._i2[i]]))/setDY.sets[i].normErr[0]-1) for i in penalty_index])
+    #penalty_term=sum(penalty_array**6)
     
     ### This penalty term prevents SIDIS to be much lower than 1 (changes the slope of chi2 below 1)
     #pSIDIS=ccSIDIS2/setSIDIS.numberOfPoints
     #if pSIDIS<1.:
     #    penalty_term+=0.9*(1-pSIDIS)*setSIDIS.numberOfPoints
     
-    cc=[ccSIDIS2/setSIDIS.numberOfPoints,ccDY2/setDY.numberOfPoints, 
-        (ccSIDIS2+ccDY2)/(setSIDIS.numberOfPoints+setDY.numberOfPoints)]
+    cc=ccSIDIS2/setSIDIS.numberOfPoints#[ccSIDIS2/setSIDIS.numberOfPoints,ccDY2/setDY.numberOfPoints, 
+        #(ccSIDIS2+ccDY2)/(setSIDIS.numberOfPoints+setDY.numberOfPoints)]
     
     endT=time.time()
-    print(':->',cc,'   +p=',penalty_term/(setSIDIS.numberOfPoints+setDY.numberOfPoints),"    time=",endT-startT)
-    return ccSIDIS2+ccDY2+penalty_term
+    #print(':->',cc,'   +p=',penalty_term/(setSIDIS.numberOfPoints+setDY.numberOfPoints),"    time=",endT-startT)
+    #return ccSIDIS2+ccDY2+penalty_term
+    
+    print(':->',cc,"    time=",endT-startT)
+    return ccSIDIS2
 
 #%%
 #### Minimize SIDIS
@@ -304,21 +405,29 @@ parametersToMinimize=(True, False,False,True,
                       False, False, False,False,
                       False, False, True,True)
 
+parametersToMinimize=(True, True,True,True,
+                      True, True, True,True,
+                      True, True, True, True,
+                      True, True, True,True,
+                      False, False, False,False,
+                      False, False, False,False,
+                      False, False, True,True)
+
 #%%
 
-saveFile="/data/WorkingFiles/TMD/Fit_Notes/ART25/DataForPLOTS/scan_qT.dat"
+saveFile="/data/WorkingFiles/TMD/Fit_Notes/ART25/DataForPLOTS/scan_pT.dat"
 
-Rvalues=[0.1,0.125,0.15,0.175,0.2,0.225,0.25,0.275,0.3,0.325,0.35,0.375,0.4]
+Rvalues=[0.075,0.1,0.125,0.15,0.175,0.2,0.225,0.25,0.275,0.3]
 
 for Rlocal in Rvalues:
     
     R=Rlocal
     
     print("------------- R="+str(R)+" --------------------")
-    setSIDIS=theDataSIDIS.CutData(cutFunc) 
+    setSIDIS=theDataSIDIS.CutData(cutFunc_pT) 
     print('Loaded ', setSIDIS.numberOfSets, 'data sets with', sum([i.numberOfPoints for i in setSIDIS.sets]), 'points.')
     
-    setDY=theDataDY.CutData(cutFunc) 
+    setDY=theDataDY.CutData(cutFunc_pT) 
     print('Loaded ', setDY.numberOfSets, 'data sets with', sum([i.numberOfPoints for i in setDY.sets]), 'points.')
     
     m = Minuit(chi2, initialValues)
