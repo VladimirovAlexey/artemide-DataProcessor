@@ -68,6 +68,30 @@ def CreateSIDISPoint(name):
             "uncorrErr":[],
             "corrErr":[]
             }
+
+def CreateD2Point(name):
+    """Creates dictionary with type="D2" (preserve), and empty lists.
+    
+    name: identifier for the point (string)
+    """
+    return {
+            "type":"D2",
+            "id":name,
+            "uncorrErr":[],
+            "corrErr":[]
+            }
+
+def CreateG2Point(name):
+    """Creates dictionary with type="G2" (preserve), and empty lists.
+    
+    name: identifier for the point (string)
+    """
+    return {
+            "type":"D2",
+            "id":name,
+            "uncorrErr":[],
+            "corrErr":[]
+            }
   
 def FinalizePoint(point, framework="artemide"):
     """Checks the presence and type of all must-be fields in a point-dictionary.
@@ -94,8 +118,8 @@ def FinalizePoint(point, framework="artemide"):
         print("FinalizePoint: point-dictionary must have key 'type'")
         return False
     
-    if not(point["type"]=="DY" or point["type"]=="SIDIS"):        
-        print("FinalizePoint: point-dictionary must have 'type'= 'DY' or 'SIDIS'")
+    if not(point["type"] in ["DY","SIDIS","G2"]):        
+        print("FinalizePoint: point-dictionary must have 'type'= ['DY','SIDIS','G2']")
         return False
     
     ######################################################################
@@ -108,7 +132,8 @@ def FinalizePoint(point, framework="artemide"):
     if not isinstance(point.get("id"),str):
         print("FinalizePoint: 'id' is not a string")
         return False
-    #---- "process" -----
+    
+    #---- "process" -----    
     if not "process" in point:
         print("FinalizePoint: 'process' is not present")
         return False
@@ -116,15 +141,20 @@ def FinalizePoint(point, framework="artemide"):
     ## artemide set the process by 3 integers
     if framework=="artemide":
         a=point.get("process")
-        if not isinstance(a,list):
-            print("FinalizePoint(framework=artemide): 'process' is not a list")
-            return False
-        if (len(a)!=3 and len(a)!=4):
-            print("FinalizePoint(framework=artemide): 'process' is not a list of length 4")
-            return False
-        if not all(isinstance(elem,int) for elem in a):
-            print("FinalizePoint(framework=artemide): 'process' is not a list of integers")
-            return False
+        if(point["type"] in ["DY","SIDIS"]):
+            if not isinstance(a,list):
+                print("FinalizePoint(framework=artemide): 'process' is not a list")
+                return False
+            if (len(a)!=3 and len(a)!=4):
+                print("FinalizePoint(framework=artemide): 'process' is not a list of length 4")
+                return False
+            if not all(isinstance(elem,int) for elem in a):
+                print("FinalizePoint(framework=artemide): 'process' is not a list of integers")
+                return False
+        if(point["type"] in ["D2","G2"]):
+            if not isinstance(a,int):
+                print("FinalizePoint(framework=artemide): 'process' is not a list of integers")
+                return False
     
     #---- xSec -----
     if not "xSec" in point:
@@ -173,57 +203,59 @@ def FinalizePoint(point, framework="artemide"):
         return False
     
     #---- s -----
-    if not "s" in point:
-        print("FinalizePoint: 's' is not present")
-        return False
-    
-    if not isinstance(point.get("s"),float):
-        print("FinalizePoint: 's' is not a float")
-        return False
+    if(point["type"] in ["DY","SIDIS"]):
+        if not "s" in point:
+            print("FinalizePoint: 's' is not present")
+            return False
+        
+        if not isinstance(point.get("s"),float):
+            print("FinalizePoint: 's' is not a float")
+            return False
     
     #---- Q -----
     if not(_TestBin(point,"Q","<Q>")):
         return False
         
     #---- includeCuts -----
-    if not "includeCuts" in point:
-        print("FinalizePoint: 'includeCuts' is not present")
-        return False
-    
-    if not isinstance(point.get("includeCuts"),bool):
-        print("FinalizePoint: 'includeCuts' is not a bool")
-        return False
-    
-    #---- includeCuts -----
-    if not "cutParams" in point:
-        if point["includeCuts"]:
-            print("FinalizePoint(includeCuts=true): 'cutParams' are not present")
-            return False
-        else:
-            # if cuts are not needed fill with some generic stuff
-            if framework=="artemide":
-                if point["type"]=="DY":
-                    point["cutParams"]=[0.,0.,-1000.,+1000.]
-                elif point["type"]=="SIDIS":
-                    point["cutParams"]=[0.,1.,0.,+100000.]
-            else:
-                point["cutParams"]=[]
-    
-    if framework=="artemide":                
-        a=point.get("cutParams")
-        if not(isinstance(a,list)) or len(a)!=4 or not(all(isinstance(elem,float) for elem in a)):
-            print("FinalizePoint(framework=artemide): 'cutParams' is not [float,float,float,float]")
+    if(point["type"] in ["DY","SIDIS"]):
+        if not "includeCuts" in point:
+            print("FinalizePoint: 'includeCuts' is not present")
             return False
         
-        if point["type"]=="DY" and a[2]>a[3]:
-            print("FinalizePoint(framework=artemide): 'cutParams' in DY etaMin>etaMax")
+        if not isinstance(point.get("includeCuts"),bool):
+            print("FinalizePoint: 'includeCuts' is not a bool")
             return False
-        if point["type"]=="SIDIS" and a[2]>a[3]:
-            print("FinalizePoint(framework=artemide): 'cutParams' in SIDIS WMin>WMax")
-            return False
-        if point["type"]=="SIDIS" and a[0]>a[1]:
-            print("FinalizePoint(framework=artemide): 'cutParams' in SIDIS yMin>yMax")
-            return False
+        
+        #---- includeCuts -----
+        if not "cutParams" in point:
+            if point["includeCuts"]:
+                print("FinalizePoint(includeCuts=true): 'cutParams' are not present")
+                return False
+            else:
+                # if cuts are not needed fill with some generic stuff
+                if framework=="artemide":
+                    if point["type"]=="DY":
+                        point["cutParams"]=[0.,0.,-1000.,+1000.]
+                    elif point["type"]=="SIDIS":
+                        point["cutParams"]=[0.,1.,0.,+100000.]
+                else:
+                    point["cutParams"]=[]
+        
+        if framework=="artemide":                
+            a=point.get("cutParams")
+            if not(isinstance(a,list)) or len(a)!=4 or not(all(isinstance(elem,float) for elem in a)):
+                print("FinalizePoint(framework=artemide): 'cutParams' is not [float,float,float,float]")
+                return False
+            
+            if point["type"]=="DY" and a[2]>a[3]:
+                print("FinalizePoint(framework=artemide): 'cutParams' in DY etaMin>etaMax")
+                return False
+            if point["type"]=="SIDIS" and a[2]>a[3]:
+                print("FinalizePoint(framework=artemide): 'cutParams' in SIDIS WMin>WMax")
+                return False
+            if point["type"]=="SIDIS" and a[0]>a[1]:
+                print("FinalizePoint(framework=artemide): 'cutParams' in SIDIS yMin>yMax")
+                return False
             
     ######################################################################
     #Checking DY fields
@@ -258,6 +290,18 @@ def FinalizePoint(point, framework="artemide"):
     #---- M_product -----
         if not "M_product" in point:
             point["M_product"]=0.139
+            
+    ######################################################################
+    #Checking D2 fields
+    if point["type"]=="D2":
+    #----no specific variables
+        pass
+    
+    #Checking G2 fields
+    if point["type"]=="G2":
+    #----x ------------
+        if not(_TestBin(point,"x","<x>")):
+            return False
     
     return True
 

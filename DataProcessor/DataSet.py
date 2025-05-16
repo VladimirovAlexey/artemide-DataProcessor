@@ -676,13 +676,17 @@ class DataSet:
         for p in self.points:
             file.write(p["id"])
             file.write(",")
-            file.write(str(p["process"]).replace(","," /").replace("[","").replace("]",""))            
+            if(self.processType=="DY" or self.processType=="SIDIS"):
+                file.write(str(p["process"]).replace(","," /").replace("[","").replace("]",""))
+            else:
+                file.write(str(p["process"]))
             file.write(",")
             if includeWeightProc:
                 file.write(str(p["weightProcess"]).replace(","," -").replace("[","").replace("]",""))            
-                file.write(",")            
-            file.write(str(p["s"]))
-            file.write(",")
+                file.write(",")
+            if(self.processType=="DY" or self.processType=="SIDIS"):
+                file.write(str(p["s"]))
+                file.write(",")
             file.write(str(p["<Q>"]))
             file.write(",")
             file.write(str(p["Q"][0]))
@@ -719,6 +723,15 @@ class DataSet:
                 file.write(str(p["pT"][0]))
                 file.write(",")
                 file.write(str(p["pT"][1]))
+            elif self.processType=="G2":
+                file.write(str(p["<x>"]))
+                file.write(",")
+                file.write(str(p["x"][0]))
+                file.write(",")
+                file.write(str(p["x"][1]))
+                file.write(",")                
+            elif self.processType=="D2":
+                pass
             else:
                 raise Exception("Unknown type of process")  
                 
@@ -736,16 +749,17 @@ class DataSet:
                 file.write(",")
                 
             file.write(str(p["thFactor"]))
-            file.write(",")
-            file.write(str(p["includeCuts"]))
-            file.write(",")
-            file.write(str(p["cutParams"][0]))
-            file.write(",")
-            file.write(str(p["cutParams"][1]))
-            file.write(",")
-            file.write(str(p["cutParams"][2]))
-            file.write(",")
-            file.write(str(p["cutParams"][3]))            
+            if(self.processType=="DY" or self.processType=="SIDIS"):
+                file.write(",")
+                file.write(str(p["includeCuts"]))
+                file.write(",")
+                file.write(str(p["cutParams"][0]))
+                file.write(",")
+                file.write(str(p["cutParams"][1]))
+                file.write(",")
+                file.write(str(p["cutParams"][2]))
+                file.write(",")
+                file.write(str(p["cutParams"][3]))            
             
             if self.processType=="SIDIS":
                 file.write(",")
@@ -845,11 +859,19 @@ def LoadCSV(path):
             p=Point.CreateDYPoint(line[0])
         elif processType=="SIDIS":
             p=Point.CreateSIDISPoint(line[0])
+        elif processType=="D2":
+            p=Point.CreateD2Point(line[0])
+        elif processType=="G2":
+            p=Point.CreateG2Point(line[0])
         else:
             raise Exception("Unknown process")
         
         #print("-----",line[1], name)
-        p["process"]=[int(ll) for ll in line[1].split("/")]
+        if( processType=="DY" or processType=="SIDIS"):
+            p["process"]=[int(ll) for ll in line[1].split("/")]
+        else:
+            p["s"]=int(line[1])
+            
         if includeWeightProc:
             p["weightProcess"]=[int(ll) for ll in line[2].split("/")]
             k=2
@@ -876,6 +898,14 @@ def LoadCSV(path):
             p["pT"]=[float(line[k+8]),float(line[k+9])]
             k=k+9
             
+        elif processType=="G2":
+            p["<x>"]=float(line[k+1])
+            p["x"]=[float(line[k+2]),float(line[k+3])]
+            k=k+3
+            
+        elif processType=="D2":
+            pass
+            
         else:
             raise Exception("Unknown process")
         
@@ -890,9 +920,11 @@ def LoadCSV(path):
             k=k+1
         
         p["thFactor"]=float(line[k+1])
-        p["includeCuts"]=((line[k+2].replace("\n",""))=="True")
-        p["cutParams"]=[float(line[k+3]),float(line[k+4]),float(line[k+5]),float(line[k+6])]
-        k=k+6
+        
+        if( processType=="DY" or processType=="SIDIS"):
+            p["includeCuts"]=((line[k+2].replace("\n",""))=="True")
+            p["cutParams"]=[float(line[k+3]),float(line[k+4]),float(line[k+5]),float(line[k+6])]
+            k=k+6
         
         if processType=="SIDIS":
             p["M_target"]=float(line[k+1])
