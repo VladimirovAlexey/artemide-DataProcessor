@@ -54,7 +54,7 @@ class DataSet:
     def __init__(self,name,processType):
         """ name=short name
         """
-        if not(processType=="DY" or processType=="SIDIS"):
+        if not(processType in ["DY","SIDIS","D2","G2"]):
             raise Exception('processType must be DY or SIDIS. Received value : {}'.format(processType))
                 
         self.processType=processType
@@ -181,8 +181,11 @@ class DataSet:
         
 
         ### 3) Calculate some working variables
-        self._normExp=sum([(p["qT"][1]-p["qT"][0])*p["xSec"] for p in self.points])
-        #self._xSecString=[p.xSec for p in self.points]     
+        if(self.processType in ["DY","SIDIS"]):
+            self._normExp=sum([(p["qT"][1]-p["qT"][0])*p["xSec"] for p in self.points])
+            #self._xSecString=[p.xSec for p in self.points]     
+        else:
+            self._normExp=sum([p["xSec"] for p in self.points])
         
         if not silent:
             print('Set ',self.name,' finalized. (',self.numberOfPoints,' points)')
@@ -643,12 +646,16 @@ class DataSet:
         
         file.write("Point id,process id,")
         if includeWeightProc:
-            file.write("weightProcess,")
+            file.write("weightProcess,")        
         file.write("s[GeV^2],<Q>[GeV],Qmin[GeV],Qmax[GeV],")
         if self.processType=="DY":
             file.write("<y>,yMin,yMax,<qT>[GeV],qTMin[GeV],qTMax[GeV],")
         elif self.processType=="SIDIS":
             file.write("<x>,xMin,xMax,<z>,zMin,zMax,<pT>[GeV],pTMin[GeV],pTMax[GeV],")
+        elif self.processType=="G2":
+            file.write("<x>,xMin,xMax,")
+        elif self.processType=="D2":
+            pass
         else:
             raise Exception("Unknown type of process")
             
@@ -666,6 +673,10 @@ class DataSet:
             file.write("kCut1[GeV],kCut2[GeV],etaMin,etaMax")
         elif self.processType=="SIDIS":
             file.write("yMin,yMax,W2min[GeV^2],W2max[GeV^2],TargetMass[GeV],ProductMass[GeV]")
+        elif self.processType=="G2":
+            pass
+        elif self.processType=="D2":
+            pass
         else:
             raise Exception("Unknown type of process")
         
@@ -684,9 +695,9 @@ class DataSet:
             if includeWeightProc:
                 file.write(str(p["weightProcess"]).replace(","," -").replace("[","").replace("]",""))            
                 file.write(",")
-            if(self.processType=="DY" or self.processType=="SIDIS"):
-                file.write(str(p["s"]))
-                file.write(",")
+        
+            file.write(str(p["s"]))
+            file.write(",")
             file.write(str(p["<Q>"]))
             file.write(",")
             file.write(str(p["Q"][0]))
@@ -705,6 +716,7 @@ class DataSet:
                 file.write(str(p["qT"][0]))
                 file.write(",")
                 file.write(str(p["qT"][1]))
+                file.write(",")
             elif self.processType=="SIDIS":
                 file.write(str(p["<x>"]))
                 file.write(",")
@@ -723,6 +735,7 @@ class DataSet:
                 file.write(str(p["pT"][0]))
                 file.write(",")
                 file.write(str(p["pT"][1]))
+                file.write(",")
             elif self.processType=="G2":
                 file.write(str(p["<x>"]))
                 file.write(",")
@@ -733,9 +746,8 @@ class DataSet:
             elif self.processType=="D2":
                 pass
             else:
-                raise Exception("Unknown type of process")  
-                
-            file.write(",")
+                raise Exception("Unknown type of process")                  
+            
                         
             file.write(str(p["xSec"]))
             file.write(",")
@@ -870,7 +882,7 @@ def LoadCSV(path):
         if( processType=="DY" or processType=="SIDIS"):
             p["process"]=[int(ll) for ll in line[1].split("/")]
         else:
-            p["s"]=int(line[1])
+            p["process"]=int(line[1])
             
         if includeWeightProc:
             p["weightProcess"]=[int(ll) for ll in line[2].split("/")]

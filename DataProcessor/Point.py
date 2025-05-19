@@ -19,17 +19,17 @@ List of common keys (!=not self-filling):
     "thFactor": the factor by which the theory should be multiplied 
                     to compare with the data. The theory is expected to be
                     \int d\sigma dBIN (!)
-    "s":        Mandeshtam variable s (!)
+    "s":        Mandeshtam variable s (!) [for observables where it is absent represent general scale]
     "Q":        Bin limits for the photon virtuality [Qmin,Qmax] (!)
-    "<Q>":      Avarage Q (definition is not fixed)
-    "includeCuts":   Inclusion of the fiducial cuts (logical) (!)
-    "cutParams":    Parameters of the cut [a,b,c,d,...]  (! if include cuts=true)
-    "qT":       range of qT bin [qTmin,qTmax] (! for DY)
-    "<qT>":     Avarage qT (definition is not fixed)
+    "<Q>":      Avarage Q (definition is not fixed)    
 
 List of DY specific keys:
     "y":        range of rapidity bin [ymin,ymax] (!)
     "<y>":      Avarage y (definition is not fixed)
+    "includeCuts":   Inclusion of the fiducial cuts (logical) (!)
+    "cutParams":    Parameters of the cut [a,b,c,d,...]  (! if include cuts=true)
+    "qT":       range of qT bin [qTmin,qTmax]
+    "<qT>":     Avarage qT (definition is not fixed)
 
 List of SIDIS specific keys:
     "x":        range of x-bin [xmin,xmax] (!)
@@ -38,6 +38,10 @@ List of SIDIS specific keys:
     "<z>":      Avarage z (definition is not fixed)
     "pT":       range of pT bin [pTmin,pTmax] (!)
     "<pT>":     Avarage pT (definition is not fixed)
+    "qT":       range of qT bin [qTmin,qTmax] = pT/<z>
+    "<qT>":     Avarage qT (definition is not fixed)
+    "includeCuts":   Inclusion of the fiducial cuts (logical) (!)
+    "cutParams":    Parameters of the cut [a,b,c,d,...]  (! if include cuts=true)
     "M_target": Mass of target (if not set =proton)
     "M_product":Mass of produced hadron (if not set =pion)
 
@@ -87,7 +91,7 @@ def CreateG2Point(name):
     name: identifier for the point (string)
     """
     return {
-            "type":"D2",
+            "type":"G2",
             "id":name,
             "uncorrErr":[],
             "corrErr":[]
@@ -118,8 +122,8 @@ def FinalizePoint(point, framework="artemide"):
         print("FinalizePoint: point-dictionary must have key 'type'")
         return False
     
-    if not(point["type"] in ["DY","SIDIS","G2"]):        
-        print("FinalizePoint: point-dictionary must have 'type'= ['DY','SIDIS','G2']")
+    if not(point["type"] in ["DY","SIDIS","G2","D2"]):        
+        print("FinalizePoint: point-dictionary must have 'type'= ['DY','SIDIS','G2','D2']")
         return False
     
     ######################################################################
@@ -151,9 +155,9 @@ def FinalizePoint(point, framework="artemide"):
             if not all(isinstance(elem,int) for elem in a):
                 print("FinalizePoint(framework=artemide): 'process' is not a list of integers")
                 return False
-        if(point["type"] in ["D2","G2"]):
+        elif(point["type"] in ["D2","G2"]):
             if not isinstance(a,int):
-                print("FinalizePoint(framework=artemide): 'process' is not a list of integers")
+                print("FinalizePoint(framework=artemide): 'process' is not an integer")
                 return False
     
     #---- xSec -----
@@ -203,14 +207,13 @@ def FinalizePoint(point, framework="artemide"):
         return False
     
     #---- s -----
-    if(point["type"] in ["DY","SIDIS"]):
-        if not "s" in point:
-            print("FinalizePoint: 's' is not present")
-            return False
-        
-        if not isinstance(point.get("s"),float):
-            print("FinalizePoint: 's' is not a float")
-            return False
+    if not "s" in point:
+        print("FinalizePoint: 's' is not present")
+        return False
+    
+    if not isinstance(point.get("s"),float):
+        print("FinalizePoint: 's' is not a float")
+        return False
     
     #---- Q -----
     if not(_TestBin(point,"Q","<Q>")):

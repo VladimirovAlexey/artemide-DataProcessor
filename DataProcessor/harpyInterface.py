@@ -201,6 +201,8 @@ def _ComputeXSec_Point(p,method="default"):
             XX=XX1[0]*p["thFactor"]
         else:
             raise Exception('The dictionary is not a point.')
+    else:
+        raise ValueError("Method is unknown.")
     
        
     return XX

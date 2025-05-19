@@ -1,0 +1,14 @@
+Name,RQCD_d2_singlet
+Comment,Taken from table 4 for u-d and u+d quarks
+Reference,arXiv:2111.08306
+Process type,D2
+Number of points,2
+Number of uncorr.errors,2
+Number of corr.errors,0
+Number of norm.errors,0
+List of norm.errors (relative),
+Total cross-section nomalized,False
+List of points 
+Point id,process id,s[GeV^2],<Q>[GeV],Qmin[GeV],Qmax[GeV],xSec,Uncorr.Err.0,Uncorr.Err.1,Th.Factor,FiducialCuts,
+RQCD_d2_singlet.0,11,4.0,2.0,1.95,2.05,0.034,0.004,0.011,1.0
+RQCD_d2_singlet.1,12,4.0,2.0,1.95,2.05,0.018,0.005,0.022,1.0
