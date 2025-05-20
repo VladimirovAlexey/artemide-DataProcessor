@@ -71,9 +71,80 @@ print('Loaded ', setD2.numberOfSets, 'data sets with', sum([i.numberOfPoints for
 DataProcessor.snowInterface.PrintChi2Table(setD2,printDecomposedChi2=False)
 
 #%%
-dd=SnowFlake.G2List([0.1,0.2,0.3,0.4],[5.,5.,5.,5.],[100,100,100,100])
-print(dd)
+#######################################
+# Minimisation
+#######################################
+import time
+
+def chi2(x):
+    startT=time.time()
+    #harpy.setNPparameters_uTMDFF([x[0],x[1],x[2],x[3],x[4],x[5],x[6],x[7]])
+    SnowFlake.setNPparameters(x)
+    SnowFlake.UpdateTables(1.0, 8.0)
+    print('np set =',["{:8.3f}".format(i) for i in x])        
+            
+    YY=DataProcessor.snowInterface.ComputeXSec(setD2)
+    ccD2,cc3=setD2.chi2(YY)    
+    
+    endT=time.time()
+    print(':->',ccD2/setD2.numberOfPoints,"    time=",endT-startT)
+    return ccD2
 
 #%%
-dd=SnowFlake.D2List([5.,5.,5.,5.],[100,100,100,100])
-print(dd)
+#### Minimize SIDIS
+from iminuit import Minuit
+
+#---- PDFbias-like row (0.083931)
+initialValues=(1.0,1.0, 
+                0.1,0.,0.,
+                0.1,0.,0.,
+                -0.1,0.,0.,
+                -0.1,0.,0.,
+                0.,0.,
+                1.,0.)
+
+initialErrors=(0.1,0.1, 
+                0.1,0.1,0.1,
+                1.,0.1,0.1,
+                1.,0.1,0.1,
+                1.,0.1,0.1,
+                1.,0.1,1.,0.1)
+searchLimits=((1.,5.),(1.,5.),
+              (-50.,50.), (-50.,50.), (-50.,50.),
+              (-50.,50.), (-50.,50.), (-50.,50.),
+              (-50.,50.), (-50.,50.), (-50.,50.),
+              (-50.,50.), (-50.,50.), (-50.,50.),
+              (-50.,50.), (-50.,50.), 
+              (-50.,50.), (-50.,50.))
+              
+# True= FIX
+parametersToMinimize=(True, True,
+                      False, True, True,
+                      False, True, True,
+                      False, True, True,
+                      False, True, True,
+                      True, True, 
+                      False,True)
+
+#%%
+
+m = Minuit(chi2, initialValues)
+
+m.errors=initialErrors
+m.limits=searchLimits
+m.fixed=parametersToMinimize
+m.errordef=1
+
+print(m.params)
+#%%
+#m.tol=0.0001*(setSIDIS.numberOfPoints+setDY.numberOfPoints)*10000 ### the last 0.0001 is to compensate MINUIT def
+m.strategy=1
+m.migrad()
+
+print(m.params)
+
+chi2(list(m.values))
+
+DataProcessor.harpyInterface.PrintChi2Table(setD2,printDecomposedChi2=True)
+
+print([round(x,1 if x >100 else 4 if x>1 else 6) for x in list(m.values)])
