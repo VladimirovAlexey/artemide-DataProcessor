@@ -1,8 +1,8 @@
-Name,RQCD_d2_ud
-Comment,Taken from table 4 for u and d quarks
-Reference,arXiv:2111.08306
+Name,HERMES_d2
+Comment,Taken from text in the last page
+Reference,arxiv:1112.5584
 Process type,D2
-Number of points,2
+Number of points,1
 Number of uncorr.errors,2
 Number of corr.errors,0
 Number of norm.errors,0
@@ -10,5 +10,4 @@ List of norm.errors (relative),
 Total cross-section nomalized,False
 List of points 
 Point id,process id,s[GeV^2],<Q>[GeV],Qmin[GeV],Qmax[GeV],xSec,Uncorr.Err.0,Uncorr.Err.1,Th.Factor,FiducialCuts,
-RQCD_d2_ud.0,2,4.0,2.0,1.95,2.05,0.026,0.004,0.013,2.0
-RQCD_d2_ud.1,1,4.0,2.0,1.95,2.05,-0.0086,0.0026,0.0146,2.0
+HERMES_d2.0,100,52.657444,2.23606797749979,1.7360679774997898,2.73606797749979,0.0148,0.0096,0.0048,1.0

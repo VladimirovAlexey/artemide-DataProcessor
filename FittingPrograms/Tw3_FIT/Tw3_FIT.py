@@ -14,7 +14,6 @@ ROOT_DIR = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', '..'))
 
 SNOWFLAKE_DIR = "/data/WorkingFiles/Twist3/Snowflake/PySnowflake/"
 
-
 import sys
 import numpy
 sys.path.append(ROOT_DIR)
@@ -57,8 +56,10 @@ def cutFunc(p):
 #%%
 ### Loading the D2 data set
 theData=DataProcessor.DataMultiSet.DataMultiSet("D2set",loadThisDataD2([
-    "RQCD_d2_singlet", "RQCD_d2_ud",
-    "SANE18"]))
+    "E143_d2","E154_d2","E155-1999_d2","E155_d2",
+    "HallA-2016_d2","HERMES_d2","SANE_d2",
+    "RQCD_d2_ud"
+    ]))
 
 setD2=theData.CutData(cutFunc) 
 
@@ -145,6 +146,6 @@ print(m.params)
 
 chi2(list(m.values))
 
-DataProcessor.harpyInterface.PrintChi2Table(setD2,printDecomposedChi2=True)
+DataProcessor.snowInterface.PrintChi2Table(setD2,printDecomposedChi2=True)
 
 print([round(x,1 if x >100 else 4 if x>1 else 6) for x in list(m.values)])

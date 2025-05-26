@@ -1,4 +1,4 @@
-Name,SANE18
+Name,SANE_d2
 Comment,Taken from table 1 (they have factor -1 in definition, see eqn.(2); Q-range is guessed by us)
 Reference,arXiv:1805.08835
 Process type,D2
@@ -10,5 +10,5 @@ List of norm.errors (relative),
 Total cross-section nomalized,False
 List of points 
 Point id,process id,s[GeV^2],<Q>[GeV],Qmin[GeV],Qmax[GeV],xSec,Uncorr.Err.0,Uncorr.Err.1,Th.Factor,FiducialCuts,
-SANE18.0,100,9.697044,1.6733200530681511,1.4142135623730951,1.8708286933869707,-0.00414,0.00205,0.00256,-1.0
-SANE18.1,100,11.948244,2.073644135332772,1.8708286933869707,2.23606797749979,-0.00149,0.00156,0.00368,-1.0
+SANE_d2.0,100,9.697044,1.6733200530681511,1.4142135623730951,1.8708286933869707,-0.00414,0.00205,0.00256,-1.0
+SANE_d2.1,100,11.948244,2.073644135332772,1.8708286933869707,2.23606797749979,-0.00149,0.00156,0.00368,-1.0

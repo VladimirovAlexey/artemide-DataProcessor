@@ -10,5 +10,5 @@ List of norm.errors (relative),
 Total cross-section nomalized,False
 List of points 
 Point id,process id,s[GeV^2],<Q>[GeV],Qmin[GeV],Qmax[GeV],xSec,Uncorr.Err.0,Uncorr.Err.1,Th.Factor,FiducialCuts,
-RQCD_d2_singlet.0,11,4.0,2.0,1.95,2.05,0.034,0.004,0.011,1.0
-RQCD_d2_singlet.1,12,4.0,2.0,1.95,2.05,0.018,0.005,0.022,1.0
+RQCD_d2_singlet.0,11,4.0,2.0,1.95,2.05,0.034,0.004,0.011,2.0
+RQCD_d2_singlet.1,12,4.0,2.0,1.95,2.05,0.018,0.005,0.022,2.0

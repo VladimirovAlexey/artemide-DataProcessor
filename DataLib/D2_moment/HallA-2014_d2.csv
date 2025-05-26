@@ -1,6 +1,6 @@
-Name,RQCD_d2_ud
-Comment,Taken from table 4 for u and d quarks
-Reference,arXiv:2111.08306
+Name,HallA-2014_d2
+Comment,Taken from table I
+Reference,arxiv:1404.4003
 Process type,D2
 Number of points,2
 Number of uncorr.errors,2
@@ -10,5 +10,5 @@ List of norm.errors (relative),
 Total cross-section nomalized,False
 List of points 
 Point id,process id,s[GeV^2],<Q>[GeV],Qmin[GeV],Qmax[GeV],xSec,Uncorr.Err.0,Uncorr.Err.1,Th.Factor,FiducialCuts,
-RQCD_d2_ud.0,2,4.0,2.0,1.95,2.05,0.026,0.004,0.013,2.0
-RQCD_d2_ud.1,1,4.0,2.0,1.95,2.05,-0.0086,0.0026,0.0146,2.0
+HallA-2014_d2.0,101,11.629324,1.7916472867168918,1.2916472867168918,2.2916472867168918,-0.00421,0.00079,0.00082,1.0
+HallA-2014_d2.1,101,11.629324,2.078460969082653,1.578460969082653,2.578460969082653,-0.00035,0.00083,0.00069,1.0

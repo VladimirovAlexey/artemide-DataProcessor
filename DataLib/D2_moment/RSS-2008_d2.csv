@@ -1,0 +1,15 @@
+Name,RSS-2008_d2
+Comment,Taken from table II
+Reference,arxiv:0812:0031
+Process type,D2
+Number of points,3
+Number of uncorr.errors,2
+Number of corr.errors,0
+Number of norm.errors,0
+List of norm.errors (relative),
+Total cross-section nomalized,False
+List of points 
+Point id,process id,s[GeV^2],<Q>[GeV],Qmin[GeV],Qmax[GeV],xSec,Uncorr.Err.0,Uncorr.Err.1,Th.Factor,FiducialCuts,
+RSS-2008_d2.0,100,11.666844,1.131370849898476,0.631370849898476,1.631370849898476,0.0104,0.0004,0.0013,1.0
+RSS-2008_d2.1,102,11.666844,1.131370849898476,0.631370849898476,1.631370849898476,0.0027,0.0008,0.0017,1.0
+RSS-2008_d2.2,101,11.666844,1.131370849898476,0.631370849898476,1.631370849898476,-0.0075,0.0021,0.0,1.0

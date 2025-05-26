@@ -1,0 +1,15 @@
+Name,E143_d2
+Comment,Taken from table XXXIII
+Reference,hep-ph/9802357
+Process type,D2
+Number of points,3
+Number of uncorr.errors,1
+Number of corr.errors,0
+Number of norm.errors,0
+List of norm.errors (relative),
+Total cross-section nomalized,False
+List of points 
+Point id,process id,s[GeV^2],<Q>[GeV],Qmin[GeV],Qmax[GeV],xSec,Uncorr.Err.0,Th.Factor,FiducialCuts,
+E143_d2.0,100,55.283843999999995,2.23606797749979,1.7360679774997898,2.73606797749979,0.0058,0.005,1.0
+E143_d2.1,102,55.283843999999995,2.23606797749979,1.7360679774997898,2.73606797749979,0.0051,0.0092,1.0
+E143_d2.2,101,55.283843999999995,2.23606797749979,1.7360679774997898,2.73606797749979,0.005,0.021,1.0

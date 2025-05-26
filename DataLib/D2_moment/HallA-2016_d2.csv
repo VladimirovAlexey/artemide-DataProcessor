@@ -1,0 +1,14 @@
+Name,HallA-2016_d2
+Comment,Taken from table X
+Reference,arxiv:1603.03612
+Process type,D2
+Number of points,2
+Number of uncorr.errors,3
+Number of corr.errors,0
+Number of norm.errors,0
+List of norm.errors (relative),
+Total cross-section nomalized,False
+List of points 
+Point id,process id,s[GeV^2],<Q>[GeV],Qmin[GeV],Qmax[GeV],xSec,Uncorr.Err.0,Uncorr.Err.1,Uncorr.Err.2,Th.Factor,FiducialCuts,
+HallA-2016_d2.0,101,11.629324,1.7916472867168918,1.2916472867168918,2.2916472867168918,-0.00421,0.00079,0.00082,8e-05,1.0
+HallA-2016_d2.1,101,11.629324,2.078460969082653,1.578460969082653,2.578460969082653,-0.00035,0.00083,0.00069,7e-05,1.0
