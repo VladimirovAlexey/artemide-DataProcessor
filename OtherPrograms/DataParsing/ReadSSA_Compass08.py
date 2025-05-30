@@ -6,15 +6,15 @@ This program collect all the data on the SIDIS and save in  "SIDISdata_uncut.pkl
 @author: vla18041
 """
 import sys
-sys.path.append("/home/vla18041/LinkData2/arTeMiDe_Repository/DataProcessor/")
+sys.path.append("/data/arTeMiDe_Repository/DataProcessor/")
 import DataProcessor.Point
 import DataProcessor.DataSet
 import numpy
 
 ########### Alexey desktop
-path_to_data="/home/vla18041/LinkData2/arTeMiDe_Repository/data"
+path_to_data="/data/arTeMiDe_Repository/data"
 path_to_COMPASS="/COMPASS/0802.2160/"
-path_to_save="/home/vla18041/LinkData2/arTeMiDe_Repository/DataProcessor/DataLib/Sivers/"
+path_to_save="/data/arTeMiDe_Repository/DataProcessor/DataLib/Sivers/"
 
 ########## Marcin laptop
 #path_to_data="/home/m/Dropbox/Sivers/Data"
@@ -83,8 +83,8 @@ DataCurrentCol.comment="COMPASS SSA-Collins pi+ (differential in x)"
 DataCurrentCol.reference="0802.2160"
 
 
-proc_current=[1,1,12011]
-proc_denominator=[1,1,2011]
+proc_current=[1,1,1,12002]
+proc_denominator=[1,1,1,2002]
 s_current=2.*160.*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.9,25.,10000.] #y, W^2 cuts
@@ -161,8 +161,8 @@ DataCurrentCol.comment="COMPASS SSA-Collins pi+ (differential in pt)"
 DataCurrentCol.reference="0802.2160"
 
 
-proc_current=[1,1,12011]
-proc_denominator=[1,1,2011]
+proc_current=[1,1,1,12002]
+proc_denominator=[1,1,1,2002]
 s_current=2.*160.*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.9,25.,10000.] #y, W^2 cuts
@@ -237,8 +237,8 @@ DataCurrentCol.comment="COMPASS SSA-Collins pi+ (differential in z)"
 DataCurrentCol.reference="0802.2160"
 
 
-proc_current=[1,1,12011]
-proc_denominator=[1,1,2011]
+proc_current=[1,1,1,12002]
+proc_denominator=[1,1,1,2002]
 s_current=2.*160.*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.9,25.,10000.] #y, W^2 cuts
@@ -315,8 +315,8 @@ DataCurrentCol.comment="COMPASS SSA-Collins pi- (differential in x)"
 DataCurrentCol.reference="0802.2160"
 
 
-proc_current=[1,1,12031]
-proc_denominator=[1,1,2031]
+proc_current=[1,1,-1,12002]
+proc_denominator=[1,1,-1,2002]
 s_current=2.*160.*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.9,25.,10000.] #y, W^2 cuts
@@ -391,8 +391,8 @@ DataCurrentCol.comment="COMPASS SSA-Collins pi- (differential in pt)"
 DataCurrentCol.reference="0802.2160"
 
 
-proc_current=[1,1,12031]
-proc_denominator=[1,1,2031]
+proc_current=[1,1,-1,12002]
+proc_denominator=[1,1,-1,2002]
 s_current=2.*160.*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.9,25.,10000.] #y, W^2 cuts
@@ -467,8 +467,8 @@ DataCurrentCol.comment="COMPASS SSA-Collins pi- (differential in z)"
 DataCurrentCol.reference="0802.2160"
 
 
-proc_current=[1,1,12031]
-proc_denominator=[1,1,2031]
+proc_current=[1,1,-1,12002]
+proc_denominator=[1,1,-1,2002]
 s_current=2.*160.*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.9,25.,10000.] #y, W^2 cuts
@@ -548,8 +548,8 @@ DataCurrentCol.comment="COMPASS SSA-Collins k+ (differential in x)"
 DataCurrentCol.reference="0802.2160"
 
 
-proc_current=[1,1,12012]
-proc_denominator=[1,1,2012]
+proc_current=[1,1,2,12002]
+proc_denominator=[1,1,2,2002]
 s_current=2.*160.*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.9,25.,10000.] #y, W^2 cuts
@@ -624,8 +624,8 @@ DataCurrentCol.comment="COMPASS SSA-Collins k+ (differential in pt)"
 DataCurrentCol.reference="0802.2160"
 
 
-proc_current=[1,1,12012]
-proc_denominator=[1,1,2012]
+proc_current=[1,1,2,12002]
+proc_denominator=[1,1,2,2002]
 s_current=2.*160.*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.9,25.,10000.] #y, W^2 cuts
@@ -700,8 +700,8 @@ DataCurrentCol.comment="COMPASS SSA-Collins k+ (differential in z)"
 DataCurrentCol.reference="0802.2160"
 
 
-proc_current=[1,1,12012]
-proc_denominator=[1,1,2012]
+proc_current=[1,1,2,12002]
+proc_denominator=[1,1,2,2002]
 s_current=2.*160.*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.9,25.,10000.] #y, W^2 cuts
@@ -782,8 +782,8 @@ DataCurrentCol.comment="COMPASS SSA-Collins k- (differential in x)"
 DataCurrentCol.reference="0802.2160"
 
 
-proc_current=[1,1,12032]
-proc_denominator=[1,1,2032]
+proc_current=[1,1,-2,12002]
+proc_denominator=[1,1,-2,2002]
 s_current=2.*160.*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.9,25.,10000.] #y, W^2 cuts
@@ -858,8 +858,8 @@ DataCurrentCol.comment="COMPASS SSA-Collins k- (differential in pt)"
 DataCurrentCol.reference="0802.2160"
 
 
-proc_current=[1,1,12032]
-proc_denominator=[1,1,2032]
+proc_current=[1,1,-2,12002]
+proc_denominator=[1,1,-2,2002]
 s_current=2.*160.*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.9,25.,10000.] #y, W^2 cuts
@@ -934,8 +934,8 @@ DataCurrentCol.comment="COMPASS SSA-Collins k- (differential in z)"
 DataCurrentCol.reference="0802.2160"
 
 
-proc_current=[1,1,12032]
-proc_denominator=[1,1,2032]
+proc_current=[1,1,-2,12002]
+proc_denominator=[1,1,-2,2002]
 s_current=2.*160.*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.9,25.,10000.] #y, W^2 cuts
@@ -1011,8 +1011,8 @@ DataCurrentCol.comment="COMPASS SSA-Collins k0 (differential in x)"
 DataCurrentCol.reference="0802.2160"
 
 
-proc_current=[1,1,12013]
-proc_denominator=[1,1,2013]
+proc_current=[1,1,3,12002]
+proc_denominator=[1,1,3,2002]
 s_current=2.*160.*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.9,25.,10000.] #y, W^2 cuts
@@ -1087,8 +1087,8 @@ DataCurrentCol.comment="COMPASS SSA-Collins k0 (differential in pt)"
 DataCurrentCol.reference="0802.2160"
 
 
-proc_current=[1,1,12013]
-proc_denominator=[1,1,2013]
+proc_current=[1,1,3,12002]
+proc_denominator=[1,1,3,2002]
 s_current=2.*160.*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.9,25.,10000.] #y, W^2 cuts
@@ -1163,8 +1163,8 @@ DataCurrentCol.comment="COMPASS SSA-Collins k0 (differential in z)"
 DataCurrentCol.reference="0802.2160"
 
 
-proc_current=[1,1,12013]
-proc_denominator=[1,1,2013]
+proc_current=[1,1,3,12002]
+proc_denominator=[1,1,3,2002]
 s_current=2.*160.*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.9,25.,10000.] #y, W^2 cuts
@@ -1221,6 +1221,7 @@ print("Done.  ")
 DataCurrentSiv.SaveToCSV(path_to_save+DataCurrentSiv.name+".csv")
 #DataCurrentCol.SaveToCSV(path_to_save+DataCurrentCol.name+".csv")
 
+sys.exit()
 #
 ##
 ####

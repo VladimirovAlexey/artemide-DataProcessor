@@ -6,21 +6,16 @@ This program collect all the data on the SIDIS and save in  "SIDISdata_uncut.pkl
 @author: vla18041
 """
 import sys
-sys.path.append("/home/vla18041/LinkData2/arTeMiDe_Repository/DataProcessor/")
+sys.path.append("/data/arTeMiDe_Repository/DataProcessor/")
 #sys.path.append("/home/m/Github/artemide-DataProcessor/")
 import DataProcessor.Point
 import DataProcessor.DataSet
 import numpy
 
 ########### Alexey desktop
-path_to_data="/home/vla18041/LinkData2/arTeMiDe_Repository/data"
+path_to_data="/data/arTeMiDe_Repository/data"
 path_to_COMPASS="/COMPASS/1609.07374/"
-path_to_save="/home/vla18041/LinkData2/arTeMiDe_Repository/DataProcessor/DataLib/Sivers/"
-
-########## Marcin laptop
-#path_to_data="/home/m/Dropbox/Sivers/Data"
-#path_to_COMPASS="/COMPASS16/"
-#path_to_save="/home/m/Github/artemide-DataProcessor/DataLib/Sivers/"
+path_to_save="/data/arTeMiDe_Repository/DataProcessor/DataLib/Sivers/"
 
 totalData=[]
 
@@ -93,8 +88,8 @@ DataCurrentSiv.comment="COMPASS16 SSA-Sivers h-, 0.1<z<0.2 (differential in pt)"
 DataCurrentSiv.reference="1609.07374"
 
 
-proc_current=[1,1,12111]
-proc_denominator=[1,1,2111]
+proc_current=[1,1,-1,12101]
+proc_denominator=[1,1,-1,2101]
 s_current=2*160*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.9,10.,10000.] #y, W^2 cuts
@@ -294,8 +289,8 @@ DataCurrentSiv.comment="COMPASS16 SSA-Sivers h-, 0.1<z<0.2 (differential in x)"
 DataCurrentSiv.reference="1609.07374"
 
 
-proc_current=[1,1,12111]
-proc_denominator=[1,1,2111]
+proc_current=[1,1,-1,12101]
+proc_denominator=[1,1,-1,2101]
 s_current=2*160*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.9,10.,10000.] #y, W^2 cuts
@@ -497,8 +492,8 @@ DataCurrentSiv.comment="COMPASS16 SSA-Sivers h-, 0.1<z<0.2 (differential in z)"
 DataCurrentSiv.reference="1609.07374"
 
 
-proc_current=[1,1,12111]
-proc_denominator=[1,1,2111]
+proc_current=[1,1,-1,12101]
+proc_denominator=[1,1,-1,2101]
 s_current=2*160*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.9,10.,10000.] #y, W^2 cuts
@@ -699,8 +694,8 @@ DataCurrentSiv.comment="COMPASS16 SSA-Sivers h-, z>0.1 (differential in pt)"
 DataCurrentSiv.reference="1609.07374"
 
 
-proc_current=[1,1,12111]
-proc_denominator=[1,1,2111]
+proc_current=[1,1,-1,12101]
+proc_denominator=[1,1,-1,2101]
 s_current=2*160*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.9,10.,10000.] #y, W^2 cuts
@@ -900,8 +895,8 @@ DataCurrentSiv.comment="COMPASS16 SSA-Sivers h-, z>0.1 (differential in x)"
 DataCurrentSiv.reference="1609.07374"
 
 
-proc_current=[1,1,12111]
-proc_denominator=[1,1,2111]
+proc_current=[1,1,-1,12101]
+proc_denominator=[1,1,-1,2101]
 s_current=2*160*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.9,10.,10000.] #y, W^2 cuts
@@ -1103,8 +1098,8 @@ DataCurrentSiv.comment="COMPASS16 SSA-Sivers h-, z>0.1 (differential in z)"
 DataCurrentSiv.reference="1609.07374"
 
 
-proc_current=[1,1,12111]
-proc_denominator=[1,1,2111]
+proc_current=[1,1,-1,12101]
+proc_denominator=[1,1,-1,2101]
 s_current=2*160*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.9,10.,10000.] #y, W^2 cuts
@@ -1305,8 +1300,8 @@ DataCurrentSiv.comment="COMPASS16 SSA-Sivers h-, z>0.2 (differential in pt)"
 DataCurrentSiv.reference="1609.07374"
 
 
-proc_current=[1,1,12111]
-proc_denominator=[1,1,2111]
+proc_current=[1,1,-1,12101]
+proc_denominator=[1,1,-1,2101]
 s_current=2*160*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.9,10.,10000.] #y, W^2 cuts
@@ -1506,8 +1501,8 @@ DataCurrentSiv.comment="COMPASS16 SSA-Sivers h-, z>0.2 (differential in x)"
 DataCurrentSiv.reference="1609.07374"
 
 
-proc_current=[1,1,12111]
-proc_denominator=[1,1,2111]
+proc_current=[1,1,-1,12101]
+proc_denominator=[1,1,-1,2101]
 s_current=2*160*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.9,10.,10000.] #y, W^2 cuts
@@ -1709,8 +1704,8 @@ DataCurrentSiv.comment="COMPASS16 SSA-Sivers h-, z>0.2 (differential in z)"
 DataCurrentSiv.reference="1609.07374"
 
 
-proc_current=[1,1,12111]
-proc_denominator=[1,1,2111]
+proc_current=[1,1,-1,12101]
+proc_denominator=[1,1,-1,2101]
 s_current=2*160*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.9,10.,10000.] #y, W^2 cuts
@@ -1911,8 +1906,8 @@ DataCurrentSiv.comment="COMPASS16 SSA-Sivers h+, 0.1<z<0.2 (differential in pt)"
 DataCurrentSiv.reference="1609.07374"
 
 
-proc_current=[1,1,12101]
-proc_denominator=[1,1,2101]
+proc_current=[1,1,1,12101]
+proc_denominator=[1,1,1,2101]
 s_current=2*160*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.9,10.,10000.] #y, W^2 cuts
@@ -2112,8 +2107,8 @@ DataCurrentSiv.comment="COMPASS16 SSA-Sivers h+, 0.1<z<0.2 (differential in x)"
 DataCurrentSiv.reference="1609.07374"
 
 
-proc_current=[1,1,12101]
-proc_denominator=[1,1,2101]
+proc_current=[1,1,1,12101]
+proc_denominator=[1,1,1,2101]
 s_current=2*160*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.9,10.,10000.] #y, W^2 cuts
@@ -2315,8 +2310,8 @@ DataCurrentSiv.comment="COMPASS16 SSA-Sivers h+, 0.1<z<0.2 (differential in z)"
 DataCurrentSiv.reference="1609.07374"
 
 
-proc_current=[1,1,12101]
-proc_denominator=[1,1,2101]
+proc_current=[1,1,1,12101]
+proc_denominator=[1,1,1,2101]
 s_current=2*160*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.9,10.,10000.] #y, W^2 cuts
@@ -2517,8 +2512,8 @@ DataCurrentSiv.comment="COMPASS16 SSA-Sivers h+, z>0.1 (differential in pt)"
 DataCurrentSiv.reference="1609.07374"
 
 
-proc_current=[1,1,12101]
-proc_denominator=[1,1,2101]
+proc_current=[1,1,1,12101]
+proc_denominator=[1,1,1,2101]
 s_current=2*160*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.9,10.,10000.] #y, W^2 cuts
@@ -2718,8 +2713,8 @@ DataCurrentSiv.comment="COMPASS16 SSA-Sivers h+, z>0.1 (differential in x)"
 DataCurrentSiv.reference="1609.07374"
 
 
-proc_current=[1,1,12101]
-proc_denominator=[1,1,2101]
+proc_current=[1,1,1,12101]
+proc_denominator=[1,1,1,2101]
 s_current=2*160*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.9,10.,10000.] #y, W^2 cuts
@@ -2920,8 +2915,8 @@ DataCurrentSiv.comment="COMPASS16 SSA-Sivers h+, z>0.1 (differential in z)"
 DataCurrentSiv.reference="1609.07374"
 
 
-proc_current=[1,1,12101]
-proc_denominator=[1,1,2101]
+proc_current=[1,1,1,12101]
+proc_denominator=[1,1,1,2101]
 s_current=2*160*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.9,10.,10000.] #y, W^2 cuts
@@ -3122,8 +3117,8 @@ DataCurrentSiv.comment="COMPASS16 SSA-Sivers h+, z>0.2 (differential in pt)"
 DataCurrentSiv.reference="1609.07374"
 
 
-proc_current=[1,1,12101]
-proc_denominator=[1,1,2101]
+proc_current=[1,1,1,12101]
+proc_denominator=[1,1,1,2101]
 s_current=2*160*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.9,10.,10000.] #y, W^2 cuts
@@ -3323,8 +3318,8 @@ DataCurrentSiv.comment="COMPASS16 SSA-Sivers h+, z>0.2 (differential in x)"
 DataCurrentSiv.reference="1609.07374"
 
 
-proc_current=[1,1,12101]
-proc_denominator=[1,1,2101]
+proc_current=[1,1,1,12101]
+proc_denominator=[1,1,1,2101]
 s_current=2*160*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.9,10.,10000.] #y, W^2 cuts
@@ -3525,8 +3520,8 @@ DataCurrentSiv.comment="COMPASS16 SSA-Sivers h+, z>0.2 (differential in z)"
 DataCurrentSiv.reference="1609.07374"
 
 
-proc_current=[1,1,12101]
-proc_denominator=[1,1,2101]
+proc_current=[1,1,1,12101]
+proc_denominator=[1,1,1,2101]
 s_current=2*160*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.9,10.,10000.] #y, W^2 cuts

@@ -6,16 +6,16 @@ This program collect all the data on the SIDIS and save in  "SIDISdata_uncut.pkl
 @author: vla18041
 """
 import sys
-sys.path.append("/home/vla18041/LinkData2/arTeMiDe_Repository/DataProcessor/")
+sys.path.append("/data/arTeMiDe_Repository/DataProcessor/")
 #sys.path.append("/home/m/Github/artemide-DataProcessor/")
 import DataProcessor.Point
 import DataProcessor.DataSet
 import numpy
 
 ########### Alexey desktop
-path_to_data="/home/vla18041/LinkData2/arTeMiDe_Repository/data"
+path_to_data="/data/arTeMiDe_Repository/data"
 path_to_JLab="/JLab-Sivers/"
-path_to_save="/home/vla18041/LinkData2/arTeMiDe_Repository/DataProcessor/DataLib/Sivers/"
+path_to_save="/data/arTeMiDe_Repository/DataProcessor/DataLib/Sivers/"
 
 ########## Marcin laptop
 #path_to_data="/home/m/Dropbox/Sivers/Data"
@@ -71,8 +71,8 @@ DataCurrent=DataProcessor.DataSet.DataSet('jlab.sivers.pi+',"SIDIS")
 DataCurrent.comment="JLab SSA-Sivers pi+. The data MUST be evaluated at a point"
 DataCurrent.reference="1106.0363"
 
-proc_current=[1,1,12041]#neutraon target
-proc_denominator=[1,1,2041]
+proc_current=[1,1,1,12003]#neutron target
+proc_denominator=[1,1,1,2003]
 s_current=2*5.9*0.938+(0.938)**2
 includeCuts=False
 cutParameters=[0.1,0.95,2.3,10000.] #y, W^2 cuts
@@ -135,8 +135,8 @@ DataCurrent=DataProcessor.DataSet.DataSet('jlab.sivers.pi-',"SIDIS")
 DataCurrent.comment="JLab SSA-Sivers pi-. The data MUST be evaluated at a point"
 DataCurrent.reference="1106.0363"
 
-proc_current=[1,1,12051]#neutraon target
-proc_denominator=[1,1,2051]
+proc_current=[1,1,-1,12003]#neutraon target
+proc_denominator=[1,1,-1,2003]
 s_current=2*5.9*0.938+(0.938)**2
 includeCuts=False
 cutParameters=[0.1,0.95,2.3,10000.] #y, W^2 cuts
@@ -200,8 +200,8 @@ DataCurrent=DataProcessor.DataSet.DataSet('jlab.sivers.k+',"SIDIS")
 DataCurrent.comment="JLab SSA-Sivers k+. The data MUST be evaluated at a point"
 DataCurrent.reference="1404.7204"
 
-proc_current=[1,1,12042]#neutron target
-proc_denominator=[1,1,2042]
+proc_current=[1,1,2,12003]#neutron target
+proc_denominator=[1,1,2,2003]
 s_current=2*5.9*0.938+(0.938)**2
 includeCuts=False
 cutParameters=[0.1,0.95,2.3,10000.] #y, W^2 cuts
@@ -264,8 +264,8 @@ DataCurrent=DataProcessor.DataSet.DataSet('jlab.sivers.k-',"SIDIS")
 DataCurrent.comment="JLab SSA-Sivers k-. The data MUST be evaluated at a point"
 DataCurrent.reference="1404.7204"
 
-proc_current=[1,1,12052]#neutron target
-proc_denominator=[1,1,2052]
+proc_current=[1,1,-2,12003]#neutron target
+proc_denominator=[1,1,-2,2003]
 s_current=2*5.9*0.938+(0.938)**2
 includeCuts=False
 cutParameters=[0.1,0.95,2.3,10000.] #y, W^2 cuts

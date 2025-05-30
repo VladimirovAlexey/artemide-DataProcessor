@@ -693,7 +693,7 @@ class DataSet:
                 file.write(str(p["process"]))
             file.write(",")
             if includeWeightProc:
-                file.write(str(p["weightProcess"]).replace(","," -").replace("[","").replace("]",""))            
+                file.write(str(p["weightProcess"]).replace(","," /").replace("[","").replace("]",""))            
                 file.write(",")
         
             file.write(str(p["s"]))

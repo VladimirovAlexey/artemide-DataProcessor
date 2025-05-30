@@ -1,0 +1,19 @@
+Name,hermes.sivers.pi+.Q<2.dpt
+Comment,HERMESS SSA-Sivers pi+ (Q<2, differential in pt). The data MUST be evaluated at a point
+Reference,0906.3918
+Process type,SIDIS
+Number of points,7
+Number of uncorr.errors,2
+Number of corr.errors,0
+Number of norm.errors,1
+List of norm.errors (relative),0.073
+Total cross-section nomalized,False
+List of points 
+Point id,process id,weightProcess,s[GeV^2],<Q>[GeV],Qmin[GeV],Qmax[GeV],<x>,xMin,xMax,<z>,zMin,zMax,<pT>[GeV],pTMin[GeV],pTMax[GeV],xSec,Uncorr.Err.0,Uncorr.Err.1,Th.Factor,FiducialCuts,yMin,yMax,W2min[GeV^2],W2max[GeV^2],TargetMass[GeV],ProductMass[GeV]
+hermes.sivers.pi+.Q<2.dpt.1,1 / 1 / 1 / 12001,1 / 1 / 1 / 2001,52.657444,1.417391971192161,1.0,2.0,0.091,0.023,0.4,0.343,0.2,0.7,0.11,1e-05,0.17,0.0056,0.0079,0.0015,1.0,True,0.1,0.95,10.0,10000.0,0.938,0.139
+hermes.sivers.pi+.Q<2.dpt.1,1 / 1 / 1 / 12001,1 / 1 / 1 / 2001,52.657444,1.413859964777276,1.0,2.0,0.087,0.023,0.4,0.352,0.2,0.7,0.211,0.17,0.25,0.0165,0.0086,0.0039,1.0,True,0.1,0.95,10.0,10000.0,0.938,0.139
+hermes.sivers.pi+.Q<2.dpt.1,1 / 1 / 1 / 12001,1 / 1 / 1 / 2001,52.657444,1.4053469322555197,1.0,2.0,0.082,0.023,0.4,0.356,0.2,0.7,0.29,0.25,0.33,0.0316,0.0086,0.0058,1.0,True,0.1,0.95,10.0,10000.0,0.938,0.139
+hermes.sivers.pi+.Q<2.dpt.1,1 / 1 / 1 / 12001,1 / 1 / 1 / 2001,52.657444,1.39427400463467,1.0,2.0,0.076,0.023,0.4,0.354,0.2,0.7,0.37,0.33,0.41,0.0541,0.0084,0.0078,1.0,True,0.1,0.95,10.0,10000.0,0.938,0.139
+hermes.sivers.pi+.Q<2.dpt.1,1 / 1 / 1 / 12001,1 / 1 / 1 / 2001,52.657444,1.3863621460498696,1.0,2.0,0.071,0.023,0.4,0.358,0.2,0.7,0.488,0.41,0.58,0.0628,0.0064,0.0107,1.0,True,0.1,0.95,10.0,10000.0,0.938,0.139
+hermes.sivers.pi+.Q<2.dpt.1,1 / 1 / 1 / 12001,1 / 1 / 1 / 2001,52.657444,1.3813037319865606,1.0,2.0,0.066,0.023,0.4,0.387,0.2,0.7,0.669,0.58,0.8,0.0553,0.0081,0.0151,1.0,True,0.1,0.95,10.0,10000.0,0.938,0.139
+hermes.sivers.pi+.Q<2.dpt.1,1 / 1 / 1 / 12001,1 / 1 / 1 / 2001,52.657444,1.3798550648528272,1.0,2.0,0.06,0.023,0.4,0.452,0.2,0.7,0.955,0.8,2.0,0.06,0.0129,0.0215,1.0,True,0.1,0.95,10.0,10000.0,0.938,0.139

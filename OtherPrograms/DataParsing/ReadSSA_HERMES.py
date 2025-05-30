@@ -6,21 +6,17 @@ This program collect all the data on the SIDIS and save in  "SIDISdata_uncut.pkl
 @author: vla18041
 """
 import sys
-sys.path.append("/home/vla18041/LinkData2/arTeMiDe_Repository/DataProcessor/")
+sys.path.append("/data/arTeMiDe_Repository/DataProcessor/")
 #sys.path.append("/home/m/Github/artemide-DataProcessor/")
 import DataProcessor.Point
 import DataProcessor.DataSet
 import numpy
 
 ########### Alexey desktop
-path_to_data="/home/vla18041/LinkData2/arTeMiDe_Repository/data"
+path_to_data="/data/arTeMiDe_Repository/data"
 path_to_HERMES="/HERMES-SSA/"
-path_to_save="/home/vla18041/LinkData2/arTeMiDe_Repository/DataProcessor/DataLib/Sivers/"
+path_to_save="/data/arTeMiDe_Repository/DataProcessor/DataLib/Sivers/"
 
-########## Marcin laptop
-#path_to_data="/home/m/Dropbox/Sivers/Data"
-#path_to_HERMES="/HERMES09/"
-#path_to_save="/home/m/Github/artemide-DataProcessor/DataLib/Sivers/"
 
 totalData=[]
 
@@ -86,8 +82,8 @@ DataCurrent=DataProcessor.DataSet.DataSet('hermes.sivers.pi+.Qint.dz',"SIDIS")
 DataCurrent.comment="HERMESS SSA-Sivers pi+ (integrated in Q, differential in z). The data MUST be evaluated at a point"
 DataCurrent.reference="0906.3918"
 
-proc_current=[1,1,12001]
-proc_denominator=[1,1,2001]
+proc_current=[1,1,1,12001]
+proc_denominator=[1,1,1,2001]
 s_current=2*27.6*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.95,10.,10000.] #y, W^2 cuts
@@ -141,8 +137,8 @@ DataCurrent.comment="HERMESS SSA-Sivers pi+ (integrated in Q, differential in x)
 DataCurrent.reference="0906.3918"
 
 
-proc_current=[1,1,12001]
-proc_denominator=[1,1,2001]
+proc_current=[1,1,1,12001]
+proc_denominator=[1,1,1,2001]
 s_current=2*27.6*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.95,10.,10000.] #y, W^2 cuts
@@ -196,8 +192,8 @@ DataCurrent.comment="HERMESS SSA-Sivers pi+ (integrated in Q, differential in pt
 DataCurrent.reference="0906.3918"
 
 
-proc_current=[1,1,12001]
-proc_denominator=[1,1,2001]
+proc_current=[1,1,1,12001]
+proc_denominator=[1,1,1,2001]
 s_current=2*27.6*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.95,10.,10000.] #y, W^2 cuts
@@ -250,8 +246,8 @@ DataCurrent.comment="HERMESS SSA-Sivers pi0 (integrated in Q, differential in z)
 DataCurrent.reference="0906.3918"
 
 
-proc_current=[1,1,12001]
-proc_denominator=[1,1,2001]
+proc_current=[1,1,3,12001]
+proc_denominator=[1,1,3,2001]
 s_current=2*27.6*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.95,10.,10000.] #y, W^2 cuts
@@ -305,8 +301,8 @@ DataCurrent.comment="HERMESS SSA-Sivers pi0 (integrated in Q, differential in x)
 DataCurrent.reference="0906.3918"
 
 
-proc_current=[1,1,12001]
-proc_denominator=[1,1,2001]
+proc_current=[1,1,3,12001]
+proc_denominator=[1,1,3,2001]
 s_current=2*27.6*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.95,10.,10000.] #y, W^2 cuts
@@ -361,8 +357,8 @@ DataCurrent.comment="HERMESS SSA-Sivers pi0 (integrated in Q, differential in pt
 DataCurrent.reference="0906.3918"
 
 
-proc_current=[1,1,12001]
-proc_denominator=[1,1,2001]
+proc_current=[1,1,3,12001]
+proc_denominator=[1,1,3,2001]
 s_current=2*27.6*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.95,10.,10000.] #y, W^2 cuts
@@ -416,8 +412,8 @@ DataCurrent.comment="HERMESS SSA-Sivers pi- (integrated in Q, differential in z)
 DataCurrent.reference="0906.3918"
 
 
-proc_current=[1,1,12021]
-proc_denominator=[1,1,2021]
+proc_current=[1,1,-1,12001]
+proc_denominator=[1,1,-1,2001]
 s_current=2*27.6*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.95,10.,10000.] #y, W^2 cuts
@@ -471,8 +467,8 @@ DataCurrent.comment="HERMESS SSA-Sivers pi- (integrated in Q, differential in x)
 DataCurrent.reference="0906.3918"
 
 
-proc_current=[1,1,12021]
-proc_denominator=[1,1,2021]
+proc_current=[1,1,-1,12001]
+proc_denominator=[1,1,-1,2001]
 s_current=2*27.6*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.95,10.,10000.] #y, W^2 cuts
@@ -526,8 +522,8 @@ DataCurrent.comment="HERMESS SSA-Sivers pi- (integrated in Q, differential in pt
 DataCurrent.reference="0906.3918"
 
 
-proc_current=[1,1,12021]
-proc_denominator=[1,1,2021]
+proc_current=[1,1,-1,12001]
+proc_denominator=[1,1,-1,2001]
 s_current=2*27.6*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.95,10.,10000.] #y, W^2 cuts
@@ -580,8 +576,8 @@ DataCurrent.comment="HERMESS SSA-Sivers k+ (integrated in Q, differential in z).
 DataCurrent.reference="0906.3918"
 
 
-proc_current=[1,1,12002]
-proc_denominator=[1,1,2002]
+proc_current=[1,1,2,12001]
+proc_denominator=[1,1,2,2001]
 s_current=2*27.6*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.95,10.,10000.] #y, W^2 cuts
@@ -635,8 +631,8 @@ DataCurrent.comment="HERMESS SSA-Sivers k+ (integrated in Q, differential in x).
 DataCurrent.reference="0906.3918"
 
 
-proc_current=[1,1,12002]
-proc_denominator=[1,1,2002]
+proc_current=[1,1,2,12001]
+proc_denominator=[1,1,2,2001]
 s_current=2*27.6*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.95,10.,10000.] #y, W^2 cuts
@@ -690,8 +686,8 @@ DataCurrent.comment="HERMESS SSA-Sivers k+ (integrated in Q, differential in pt)
 DataCurrent.reference="0906.3918"
 
 
-proc_current=[1,1,12002]
-proc_denominator=[1,1,2002]
+proc_current=[1,1,2,12001]
+proc_denominator=[1,1,2,2001]
 s_current=2*27.6*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.95,10.,10000.] #y, W^2 cuts
@@ -744,8 +740,8 @@ DataCurrent.comment="HERMESS SSA-Sivers k- (integrated in Q, differential in z).
 DataCurrent.reference="0906.3918"
 
 
-proc_current=[1,1,12022]
-proc_denominator=[1,1,2022]
+proc_current=[1,1,-2,12001]
+proc_denominator=[1,1,-2,2001]
 s_current=2*27.6*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.95,10.,10000.] #y, W^2 cuts
@@ -799,8 +795,8 @@ DataCurrent.comment="HERMESS SSA-Sivers k- (integrated in Q, differential in x).
 DataCurrent.reference="0906.3918"
 
 
-proc_current=[1,1,12022]
-proc_denominator=[1,1,2022]
+proc_current=[1,1,-2,12001]
+proc_denominator=[1,1,-2,2001]
 s_current=2*27.6*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.95,10.,10000.] #y, W^2 cuts
@@ -854,8 +850,8 @@ DataCurrent.comment="HERMESS SSA-Sivers k- (integrated in Q, differential in pt)
 DataCurrent.reference="0906.3918"
 
 
-proc_current=[1,1,12022]
-proc_denominator=[1,1,2022]
+proc_current=[1,1,-2,12001]
+proc_denominator=[1,1,-2,2001]
 s_current=2*27.6*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.95,10.,10000.] #y, W^2 cuts
@@ -925,8 +921,8 @@ DataCurrent.comment="HERMESS SSA-Sivers pi+ (Q<2, differential in z). The data M
 DataCurrent.reference="0906.3918"
 
 
-proc_current=[1,1,12001]
-proc_denominator=[1,1,2001]
+proc_current=[1,1,1,12001]
+proc_denominator=[1,1,1,2001]
 s_current=2*27.6*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.95,10.,10000.] #y, W^2 cuts
@@ -980,8 +976,8 @@ DataCurrent.comment="HERMESS SSA-Sivers pi+ (Q<2, differential in pt). The data 
 DataCurrent.reference="0906.3918"
 
 
-proc_current=[1,1,12001]
-proc_denominator=[1,1,2001]
+proc_current=[1,1,1,12001]
+proc_denominator=[1,1,1,2001]
 s_current=2*27.6*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.95,10.,10000.] #y, W^2 cuts
@@ -1036,8 +1032,8 @@ DataCurrent.comment="HERMESS SSA-Sivers pi+ (Q>2, differential in z). The data M
 DataCurrent.reference="0906.3918"
 
 
-proc_current=[1,1,12001]
-proc_denominator=[1,1,2001]
+proc_current=[1,1,1,12001]
+proc_denominator=[1,1,1,2001]
 s_current=2*27.6*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.95,10.,10000.] #y, W^2 cuts
@@ -1091,8 +1087,8 @@ DataCurrent.comment="HERMESS SSA-Sivers pi+ (Q>2, differential in pt). The data 
 DataCurrent.reference="0906.3918"
 
 
-proc_current=[1,1,12001]
-proc_denominator=[1,1,2001]
+proc_current=[1,1,1,12001]
+proc_denominator=[1,1,1,2001]
 s_current=2*27.6*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.95,10.,10000.] #y, W^2 cuts
@@ -1146,8 +1142,8 @@ DataCurrent.comment="HERMESS SSA-Sivers k+ (Q<2, differential in z). The data MU
 DataCurrent.reference="0906.3918"
 
 
-proc_current=[1,1,12002]
-proc_denominator=[1,1,2002]
+proc_current=[1,1,2,12001]
+proc_denominator=[1,1,2,2001]
 s_current=2*27.6*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.95,10.,10000.] #y, W^2 cuts
@@ -1201,8 +1197,8 @@ DataCurrent.comment="HERMESS SSA-Sivers k+ (Q<2, differential in pt). The data M
 DataCurrent.reference="0906.3918"
 
 
-proc_current=[1,1,12002]
-proc_denominator=[1,1,2002]
+proc_current=[1,1,2,12001]
+proc_denominator=[1,1,2,2001]
 s_current=2*27.6*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.95,10.,10000.] #y, W^2 cuts
@@ -1257,8 +1253,8 @@ DataCurrent.comment="HERMESS SSA-Sivers k+ (Q>2, differential in z). The data MU
 DataCurrent.reference="0906.3918"
 
 
-proc_current=[1,1,12002]
-proc_denominator=[1,1,2002]
+proc_current=[1,1,2,12001]
+proc_denominator=[1,1,2,2001]
 s_current=2*27.6*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.95,10.,10000.] #y, W^2 cuts
@@ -1312,8 +1308,8 @@ DataCurrent.comment="HERMESS SSA-Sivers k+ (Q>2, differential in pt). The data M
 DataCurrent.reference="0906.3918"
 
 
-proc_current=[1,1,12002]
-proc_denominator=[1,1,2002]
+proc_current=[1,1,2,12001]
+proc_denominator=[1,1,2,2001]
 s_current=2*27.6*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.95,10.,10000.] #y, W^2 cuts
@@ -1381,8 +1377,8 @@ DataCurrent.comment="HERMESS SSA-Sivers pi+ (3d-data). The data MUST be evaluate
 DataCurrent.reference="2007.07755"
 
 
-proc_current=[1,1,12001]
-proc_denominator=[1,1,2001]
+proc_current=[1,1,1,12001]
+proc_denominator=[1,1,1,2001]
 s_current=2*27.6*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.95,10.,10000.] #y, W^2 cuts
@@ -1450,8 +1446,8 @@ DataCurrent.comment="HERMESS SSA-Sivers pi- (3d-data). The data MUST be evaluate
 DataCurrent.reference="2007.07755"
 
 
-proc_current=[1,1,12021]
-proc_denominator=[1,1,2021]
+proc_current=[1,1,-1,12001]
+proc_denominator=[1,1,-1,2001]
 s_current=2*27.6*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.95,10.,10000.] #y, W^2 cuts
@@ -1519,8 +1515,8 @@ DataCurrent.comment="HERMESS SSA-Sivers k+ (3d-data). The data MUST be evaluated
 DataCurrent.reference="2007.07755"
 
 
-proc_current=[1,1,12002]
-proc_denominator=[1,1,2002]
+proc_current=[1,1,2,12001]
+proc_denominator=[1,1,2,2001]
 s_current=2*27.6*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.95,10.,10000.] #y, W^2 cuts
@@ -1587,8 +1583,8 @@ DataCurrent.comment="HERMESS SSA-Sivers k- (3d-data). The data MUST be evaluated
 DataCurrent.reference="2007.07755"
 
 
-proc_current=[1,1,12022]
-proc_denominator=[1,1,2022]
+proc_current=[1,1,-2,12001]
+proc_denominator=[1,1,-2,2001]
 s_current=2*27.6*0.938+(0.938)**2
 includeCuts=True
 cutParameters=[0.1,0.95,10.,10000.] #y, W^2 cuts

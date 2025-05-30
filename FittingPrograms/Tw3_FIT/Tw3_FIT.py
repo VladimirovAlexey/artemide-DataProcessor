@@ -48,8 +48,26 @@ def loadThisDataD2(listOfNames):
     return dataCollection
 
 #%%
+### read the list of files and return the list of DataSets
+def loadThisDataG2(listOfNames):    
+    import DataProcessor.DataSet
+    
+    path_to_data=ROOT_DIR+"DataLib/G2/"
+    
+    
+    dataCollection=[]
+    for name in listOfNames:
+        loadedData=DataProcessor.DataSet.LoadCSV(path_to_data+name+".csv")
+        dataCollection.append(loadedData)   
+        
+    return dataCollection
+
+#%%
 ##################Cut function
 def cutFunc(p):
+    if p["type"]=="G2":
+        if p["<Q>"]<numpy.sqrt(2.):
+            return False, p
     
     return True, p
 
@@ -68,8 +86,32 @@ setD2=theData.CutData(cutFunc)
 print('Loaded ', setD2.numberOfSets, 'data sets with', sum([i.numberOfPoints for i in setD2.sets]), 'points.') 
 
 #%%
+### Loading the D2 data set
+theData=DataProcessor.DataMultiSet.DataMultiSet("G2set",loadThisDataG2([
+    #"E142.n", "E143.p", "E143.d","E143.n", 
+    "E154.n",
+    "E155-29.p","E155-32.p","E155-38.p",
+    #"E155-29.d","E155-32.d","E155-38.d",
+    #"SMC.p",
+    #"HERMES",
+    "HallA-2004.n","HallA-2016-4.He3","HallA-2016-5.He3",
+    ]))
 
+setG2=theData.CutData(cutFunc) 
+
+#print('Loaded experiments are', [i.name for i in setDY.sets])
+
+print('Loaded ', setG2.numberOfSets, 'data sets with', sum([i.numberOfPoints for i in setG2.sets]), 'points.') 
+
+#%%
+SnowFlake.setNPparameters([5.0,1.0, 
+                0.05,0.,0.0,0.,-0.06,0.,0.0,0.,0.0,0.,
+                0.0,0.,0.0,0.,0.0,0.])
+SnowFlake.UpdateTables(1.0, 8.0)
+
+#%%
 DataProcessor.snowInterface.PrintChi2Table(setD2,printDecomposedChi2=False)
+DataProcessor.snowInterface.PrintChi2Table(setG2,printDecomposedChi2=False)
 
 #%%
 #######################################
@@ -87,30 +129,36 @@ def chi2(x):
     YY=DataProcessor.snowInterface.ComputeXSec(setD2)
     ccD2,cc3=setD2.chi2(YY)    
     
+    YY=DataProcessor.snowInterface.ComputeXSec(setG2)
+    ccG2,cc3=setD2.chi2(YY)    
+    
+    chiTOTAL=(ccD2/setD2.numberOfPoints+ccG2/setG2.numberOfPoints)*(setD2.numberOfPoints+setG2.numberOfPoints)
+    
     endT=time.time()
-    print(':->',ccD2/setD2.numberOfPoints,"    time=",endT-startT)
-    return ccD2
+    print(':->',ccD2/setD2.numberOfPoints," ",ccG2/setG2.numberOfPoints,"    time=",endT-startT)
+    return chiTOTAL
 
 #%%
-#### Minimize SIDIS
 from iminuit import Minuit
 
 #---- PDFbias-like row (0.083931)
 initialValues=(1.0,1.0, 
-                0.1,0.,0.,
-                0.1,0.,0.,
-                -0.1,0.,0.,
-                -0.1,0.,0.,
-                0.,0.,
-                1.,0.)
+                0.1,0.,
+                0.0,0.,
+                0.1,0.,
+                0.0,0.,
+                0.0,0.,
+                0.0,0.,0.0,0.,
+                0.0,0.)
 
 initialErrors=(0.1,0.1, 
-                0.1,0.1,0.1,
-                1.,0.1,0.1,
-                1.,0.1,0.1,
-                1.,0.1,0.1,
-                1.,0.1,1.,0.1)
-searchLimits=((1.,5.),(1.,5.),
+                0.1,0.1,
+                0.1,0.1,
+                0.1,0.1,
+                0.1,0.1,
+                0.1,0.1,
+                0.1,0.1,0.1,0.1,0.1,0.1)
+searchLimits=((1.,10.),(1.,10.),
               (-50.,50.), (-50.,50.), (-50.,50.),
               (-50.,50.), (-50.,50.), (-50.,50.),
               (-50.,50.), (-50.,50.), (-50.,50.),
@@ -119,13 +167,14 @@ searchLimits=((1.,5.),(1.,5.),
               (-50.,50.), (-50.,50.))
               
 # True= FIX
-parametersToMinimize=(True, True,
-                      False, True, True,
-                      False, True, True,
-                      False, True, True,
-                      False, True, True,
-                      True, True, 
-                      False,True)
+parametersToMinimize=(False, True,
+                      False, True,
+                      True,True,
+                      False, True,
+                      True,True,
+                      True,True,
+                      True,True,True,True,
+                      True,True)
 
 #%%
 
@@ -147,5 +196,6 @@ print(m.params)
 chi2(list(m.values))
 
 DataProcessor.snowInterface.PrintChi2Table(setD2,printDecomposedChi2=True)
+DataProcessor.snowInterface.PrintChi2Table(setG2,printDecomposedChi2=True)
 
 print([round(x,1 if x >100 else 4 if x>1 else 6) for x in list(m.values)])

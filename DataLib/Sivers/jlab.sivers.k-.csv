@@ -1,0 +1,13 @@
+Name,jlab.sivers.k-
+Comment,JLab SSA-Sivers k-. The data MUST be evaluated at a point
+Reference,1404.7204
+Process type,SIDIS
+Number of points,1
+Number of uncorr.errors,2
+Number of corr.errors,0
+Number of norm.errors,0
+List of norm.errors (relative),
+Total cross-section nomalized,False
+List of points 
+Point id,process id,weightProcess,s[GeV^2],<Q>[GeV],Qmin[GeV],Qmax[GeV],<x>,xMin,xMax,<z>,zMin,zMax,<pT>[GeV],pTMin[GeV],pTMax[GeV],xSec,Uncorr.Err.0,Uncorr.Err.1,Th.Factor,FiducialCuts,yMin,yMax,W2min[GeV^2],W2max[GeV^2],TargetMass[GeV],ProductMass[GeV]
+jlab.sivers.k-.5,1 / 1 / -2 / 12003,1 / 1 / -2 / 2003,11.948244,1.3527749258468684,1.0,1.7,0.21,0.1,0.4,0.51,0.45,0.6,0.38,0.1,0.6,-0.25,0.1,0.039,1.0,False,0.1,0.95,2.3,10000.0,0.938,0.139
