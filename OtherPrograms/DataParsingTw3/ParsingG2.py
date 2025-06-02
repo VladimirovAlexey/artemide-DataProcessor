@@ -3203,7 +3203,7 @@ for i in range(len(data_current1)):
     ## THE UNCERTAINTY IS ORDERED AS: STAT(G2),SYST(G2),STAT(WW)
     #p["corrErr"]=[(data_current1[i][5]-data_current1[i][6])/(2*data_current1[i][4]),(data_current1[i][7]-data_current1[i][8])/(2*data_current1[i][4])]
     p["uncorrErr"]=[
-        (data_current1[i][5]-data_current1[i][6])/2,(data_current1[i][7]-data_current1[i][8])/2,data_current1[i][4]*WW_data1[i][1]]
+        (data_current1[i][7]-data_current1[i][8])/2,(data_current1[i][9]-data_current1[i][10])/2,data_current1[i][4]*WW_data1[i][1]]
     p["thFactor"]=data_current1[i][4]
     #
     DataCurrent.AddPoint(p)
@@ -3237,7 +3237,7 @@ for i in range(len(data_current2)):
     p["xSec"]=data_current2[i][6]-data_current2[i][4]*WW_data2[i][0]
     #p["corrErr"]=[(data_current2[i][5]-data_current2[i][6])/(2*data_current2[i][4]),(data_current2[i][7]-data_current2[i][8])/(2*data_current2[i][4])]
     p["uncorrErr"]=[
-        (data_current2[i][5]-data_current2[i][6])/2,(data_current2[i][7]-data_current2[i][8])/2,data_current2[i][4]*WW_data2[i][1]]
+        (data_current2[i][7]-data_current2[i][8])/2,(data_current2[i][9]-data_current2[i][10])/2,data_current2[i][4]*WW_data2[i][1]]
     p["thFactor"]=data_current2[i][4]   
     
     DataCurrent.AddPoint(p)

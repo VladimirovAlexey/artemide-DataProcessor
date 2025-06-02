@@ -12,7 +12,7 @@ Created on Fri May 16 13:54:42 2025
 import os
 ROOT_DIR = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', '..'))+"/"
 
-SNOWFLAKE_DIR = "/data/arTeMiDe_Repository/artemide_showflake/harpy/"
+SNOWFLAKE_DIR = "/data/arTeMiDe_Repository/artemide_snowflake/harpy/"
 
 import sys
 import numpy
@@ -177,7 +177,7 @@ theData=DataProcessor.DataMultiSet.DataMultiSet("G2set",loadThisDataG2([
     "E155-29.p","E155-32.p","E155-38.p",
     #"E155-29.d","E155-32.d","E155-38.d",
     #"SMC.p",
-    #"HERMES",
+    "HERMES",
     "HallA-2004.n","HallA-2016-4.He3","HallA-2016-5.He3",
     ]))
 
@@ -207,14 +207,32 @@ print('Loaded (SIDIS)', setSivers.numberOfSets, 'data sets with', sum([i.numberO
 
 
 #%%
-harpy.setNPparameters_tw3([1.8207, 1.0, 
-                           -0.004614, 0.213014, 0.0, 0.0, 
-                           -0.001321, -0.231287, 0.0, 0.0, 
-                           0.0, 0.0, 0.0, 0.0, 
-                           0.0, 0.0, 0.0, 0.0])
+# harpy.setNPparameters_tw3([1.8207, 1.0, 
+#                            -0.004614, 0.213014, 0.0, 0.0, 
+#                            -0.001321, -0.231287, 0.0, 0.0, 
+#                            0.0, 0.0, 0.0, 0.0, 
+#                            0.0, 0.0, 0.0, 0.0])
+
+# harpy.setNPparameters_SiversTMDPDF([0.5,0.0,0.0,0.0,0.0])
+
+# harpy.UpdateTables(1.0, 105.0)
+#%%
+harpy.setNPparameters_tw3([2.392, 1.0, 
+                           0.023151, 0.198417, -0.678277, -0.557989, 
+                           -0.029809, -0.219044, 2.7968, 2.7323, 
+                           0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+
 harpy.UpdateTables(1.0, 105.0)
 
-harpy.setNPparameters_SiversTMDPDF([0.5,0.0,0.0,0.0,0.0])
+harpy.setNPparameters_SiversTMDPDF([0.003785,0.0,0.0,0.0,0.0])
+
+# #%%
+# #### PLOT d2
+# Qplot=1*numpy.array(range(40))+1
+# dataP=harpy.D2List(Qplot, Qplot*0+11)
+# dataN=harpy.D2List(Qplot, Qplot*0+2)
+# dataD=harpy.D2List(Qplot, Qplot*0+3)
+
 #%%
 DataProcessor.snowInterface_N2.PrintChi2Table(setD2,printDecomposedChi2=False)
 DataProcessor.snowInterface_N2.PrintChi2Table(setG2,printDecomposedChi2=False)
@@ -277,10 +295,11 @@ searchLimits=((1.,5.),(1.,10.),
 # True= FIX
 parametersToMinimize=(False, True,
                       False, False,False,False,
-                      False, False,False,False,
+                      True, True,
+                      False,False,
                       True,True,True,True,
-                      True,True,True,True,
-                      False)
+                      True,False,False,True,
+                      True)
 
 #%%
 rSet.SetReplica(0)
