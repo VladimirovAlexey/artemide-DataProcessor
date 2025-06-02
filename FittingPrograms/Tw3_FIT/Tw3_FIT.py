@@ -110,6 +110,15 @@ SnowFlake.setNPparameters([5.0,1.0,
 SnowFlake.UpdateTables(1.0, 8.0)
 
 #%%
+SnowFlake.setNPparameters([1.8207, 1.0, 
+                           -0.004614, 0.213014, 0.0, 0.0, 
+                           -0.001321, -0.231287, 0.0, 0.0, 
+                           0.0, 0.0, 0.0, 0.0, 
+                           0.0, 0.0, 0.0, 0.0])
+SnowFlake.UpdateTables(1.0, 8.0)
+
+
+#%%
 DataProcessor.snowInterface.PrintChi2Table(setD2,printDecomposedChi2=False)
 DataProcessor.snowInterface.PrintChi2Table(setG2,printDecomposedChi2=False)
 
@@ -130,7 +139,7 @@ def chi2(x):
     ccD2,cc3=setD2.chi2(YY)    
     
     YY=DataProcessor.snowInterface.ComputeXSec(setG2)
-    ccG2,cc3=setD2.chi2(YY)    
+    ccG2,cc3=setG2.chi2(YY)    
     
     chiTOTAL=(ccD2/setD2.numberOfPoints+ccG2/setG2.numberOfPoints)*(setD2.numberOfPoints+setG2.numberOfPoints)
     
@@ -142,10 +151,10 @@ def chi2(x):
 from iminuit import Minuit
 
 #---- PDFbias-like row (0.083931)
-initialValues=(1.0,1.0, 
-                0.1,0.,
+initialValues=(3.0,1.0, 
+                0.05,0.,
                 0.0,0.,
-                0.1,0.,
+                -0.06,0.,
                 0.0,0.,
                 0.0,0.,
                 0.0,0.,0.0,0.,
@@ -158,7 +167,7 @@ initialErrors=(0.1,0.1,
                 0.1,0.1,
                 0.1,0.1,
                 0.1,0.1,0.1,0.1,0.1,0.1)
-searchLimits=((1.,10.),(1.,10.),
+searchLimits=((1.,5.),(1.,10.),
               (-50.,50.), (-50.,50.), (-50.,50.),
               (-50.,50.), (-50.,50.), (-50.,50.),
               (-50.,50.), (-50.,50.), (-50.,50.),
@@ -168,9 +177,9 @@ searchLimits=((1.,10.),(1.,10.),
               
 # True= FIX
 parametersToMinimize=(False, True,
-                      False, True,
+                      False, False,
                       True,True,
-                      False, True,
+                      False, False,
                       True,True,
                       True,True,
                       True,True,True,True,

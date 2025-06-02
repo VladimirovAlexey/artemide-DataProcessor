@@ -1008,7 +1008,7 @@ for i in range(len(data_current1)):
     p["x"]=[data_current1[i][1],data_current1[i][2]]
     p["xSec"]=data_current1[i][5]-data_current2[i][5]
     ## THE UNCERTAINTY IS ORDERED AS: STAT(G2),SYST(G2),STAT(WW)
-    p["uncorrErr"]=[(data_current1[i][6]-data_current1[i][7])/2,0.0,(data_current2[i][6]-data_current2[i][7])/2]
+    p["uncorrErr"]=[(data_current1[i][6]-data_current1[i][7])/2,(data_current2[i][6]-data_current2[i][7])/2]
     p["thFactor"]=1.        
     #
     DataCurrent.AddPoint(p)
@@ -1117,7 +1117,7 @@ for i in range(len(data_current1)):
     p["x"]=[xbin1[i][0],xbin1[i][1]]
     p["xSec"]=data_current1[i][1]-WW_data1[i][0]
     ## THE UNCERTAINTY IS ORDERED AS: STAT(G2),SYST(G2),STAT(WW)
-    p["uncorrErr"]=[data_current1[i][2],0.0,WW_data1[i][1]]
+    p["uncorrErr"]=[data_current1[i][2],WW_data1[i][1]]
     p["thFactor"]=1.        
     #
     DataCurrent.AddPoint(p)
@@ -1406,10 +1406,10 @@ for i in range(len(data_current)):
     p["Q"]=[Qbin_tot[i][0],Qbin_tot[i][1]]
     p["<x>"]=data_current[i][0]  
     p["x"]=[xbin_tot[i][0],xbin_tot[i][1]]  
-    p["xSec"]=data_current[i][2]-WW_data[i][0]
+    p["xSec"]=data_current[i][2]-data_current[i][0]*WW_data[i][0]
     ## THE UNCERTAINTY IS ORDERED AS: STAT(G2),SYST(G2),STAT(WW)
-    p["uncorrErr"]=[(data_current[i][3]-data_current[i][4])/(2*data_current[i][0]),syst_p(data_current[i][0]),WW_data[i][1]]
-    p["thFactor"]=1.        
+    p["uncorrErr"]=[(data_current[i][3]-data_current[i][4])/2,syst_p(data_current[i][0]),data_current[i][0]*WW_data[i][1]]
+    p["thFactor"]=data_current[i][0]
     #
     DataCurrent.AddPoint(p)
 
@@ -1696,10 +1696,10 @@ for i in range(len(data_current)):
     p["Q"]=[Qbin_tot[i][0],Qbin_tot[i][1]]
     p["<x>"]=data_current[i][0]  
     p["x"]=[xbin_tot[i][0],xbin_tot[i][1]]  
-    p["xSec"]=data_current[i][2]-WW_data[i][0]
+    p["xSec"]=data_current[i][2]-data_current[i][0]*WW_data[i][0]
     ## THE UNCERTAINTY IS ORDERED AS: STAT(G2),SYST(G2),STAT(WW)
-    p["uncorrErr"]=[(data_current[i][3]-data_current[i][4])/(2*data_current[i][0]),syst_d(data_current[i][0]),WW_data[i][1]]
-    p["thFactor"]=1.        
+    p["uncorrErr"]=[(data_current[i][3]-data_current[i][4])/2,syst_d(data_current[i][0]),data_current[i][0]*WW_data[i][1]]
+    p["thFactor"]=data_current[i][0]        
     #
     DataCurrent.AddPoint(p)
 
@@ -1986,10 +1986,10 @@ for i in range(len(data_current)):
     p["Q"]=[Qbin_tot[i][0],Qbin_tot[i][1]]
     p["<x>"]=data_current[i][0]  
     p["x"]=[xbin_tot[i][0],xbin_tot[i][1]]  
-    p["xSec"]=data_current[i][2]-WW_data[i][0]
+    p["xSec"]=data_current[i][2]-data_current[i][0]*WW_data[i][0]
     ## THE UNCERTAINTY IS ORDERED AS: STAT(G2),SYST(G2),STAT(WW)
-    p["uncorrErr"]=[(data_current[i][3]-data_current[i][4])/(2*data_current[i][0]),syst_p(data_current[i][0]),WW_data[i][1]]
-    p["thFactor"]=1.        
+    p["uncorrErr"]=[(data_current[i][3]-data_current[i][4])/2,syst_p(data_current[i][0]),data_current[i][0]*WW_data[i][1]]
+    p["thFactor"]=data_current[i][0]      
     #
     DataCurrent.AddPoint(p)
 
@@ -2278,9 +2278,9 @@ for i in range(len(data_current)):
     p["Q"]=[Qbin_tot[i][0],Qbin_tot[i][1]]
     p["<x>"]=data_current[i][0]  
     p["x"]=[xbin_tot[i][0],xbin_tot[i][1]]  
-    p["xSec"]=data_current[i][2]-WW_data[i][0]
+    p["xSec"]=data_current[i][2]-data_current[i][0]*WW_data[i][0]
     ## THE UNCERTAINTY IS ORDERED AS: STAT(G2),SYST(G2),STAT(WW)
-    p["uncorrErr"]=[(data_current[i][3]-data_current[i][4])/(2*data_current[i][0]),syst_d(data_current[i][0]),WW_data[i][1]]
+    p["uncorrErr"]=[(data_current[i][3]-data_current[i][4])/2,syst_d(data_current[i][0]),data_current[i][0]*WW_data[i][1]]
     p["thFactor"]=1.        
     #
     DataCurrent.AddPoint(p)
@@ -2567,10 +2567,10 @@ for i in range(len(data_current)):
     p["Q"]=[Qbin_tot[i][0],Qbin_tot[i][1]]
     p["<x>"]=data_current[i][0]  
     p["x"]=[xbin_tot[i][0],xbin_tot[i][1]]  
-    p["xSec"]=data_current[i][2]-WW_data[i][0]
+    p["xSec"]=data_current[i][2]-data_current[i][0]*WW_data[i][0]
     ## THE UNCERTAINTY IS ORDERED AS: STAT(G2),SYST(G2),STAT(WW)
-    p["uncorrErr"]=[(data_current[i][3]-data_current[i][4])/(2*data_current[i][0]),0.0,WW_data[i][1]]
-    p["thFactor"]=1.        
+    p["uncorrErr"]=[(data_current[i][3]-data_current[i][4])/2,data_current[i][0]*WW_data[i][1]]
+    p["thFactor"]=data_current[i][0]        
     #
     DataCurrent.AddPoint(p)
 
@@ -2855,10 +2855,10 @@ for i in range(len(data_current)):
     p["Q"]=[Qbin_tot[i][0],Qbin_tot[i][1]]
     p["<x>"]=data_current[i][0]  
     p["x"]=[xbin_tot[i][0],xbin_tot[i][1]]  
-    p["xSec"]=data_current[i][2]-WW_data[i][0]
+    p["xSec"]=data_current[i][2]-data_current[i][0]*WW_data[i][0]
     ## THE UNCERTAINTY IS ORDERED AS: STAT(G2),SYST(G2),STAT(WW)
-    p["uncorrErr"]=[(data_current[i][3]-data_current[i][4])/(2*data_current[i][0]),0.0,WW_data[i][1]]
-    p["thFactor"]=1.        
+    p["uncorrErr"]=[(data_current[i][3]-data_current[i][4])/2,data_current[i][0]*WW_data[i][1]]
+    p["thFactor"]=data_current[i][0]
     #
     DataCurrent.AddPoint(p)
 
@@ -3199,12 +3199,12 @@ for i in range(len(data_current1)):
     #print(p["<Q>"],p["Q"])
     p["<x>"]=data_current1[i][4]  
     p["x"]=[data_current1[i][2],data_current1[i][3]]
-    p["xSec"]=(data_current1[i][6])/(data_current1[i][4])-WW_data1[i][0]
+    p["xSec"]=data_current1[i][6]-data_current1[i][4]*WW_data1[i][0]
     ## THE UNCERTAINTY IS ORDERED AS: STAT(G2),SYST(G2),STAT(WW)
     #p["corrErr"]=[(data_current1[i][5]-data_current1[i][6])/(2*data_current1[i][4]),(data_current1[i][7]-data_current1[i][8])/(2*data_current1[i][4])]
     p["uncorrErr"]=[
-        (data_current1[i][5]-data_current1[i][6])/2,(data_current1[i][7]-data_current1[i][8])/2,WW_data1[i][1]]
-    p["thFactor"]=1.        
+        (data_current1[i][5]-data_current1[i][6])/2,(data_current1[i][7]-data_current1[i][8])/2,data_current1[i][4]*WW_data1[i][1]]
+    p["thFactor"]=data_current1[i][4]
     #
     DataCurrent.AddPoint(p)
 
@@ -3234,11 +3234,11 @@ for i in range(len(data_current2)):
     p["Q"]=[numpy.sqrt(0.18),numpy.sqrt(20.)]
     p["<x>"]=data_current2[i][4]  
     p["x"]=[data_current2[i][2],data_current2[i][3]]
-    p["xSec"]=(data_current2[i][6])/(data_current2[i][4])-WW_data2[i][0]
+    p["xSec"]=data_current2[i][6]-data_current2[i][4]*WW_data2[i][0]
     #p["corrErr"]=[(data_current2[i][5]-data_current2[i][6])/(2*data_current2[i][4]),(data_current2[i][7]-data_current2[i][8])/(2*data_current2[i][4])]
     p["uncorrErr"]=[
-        (data_current2[i][5]-data_current2[i][6])/2,(data_current2[i][7]-data_current2[i][8])/2,WW_data2[i][1]]
-    p["thFactor"]=1. 
+        (data_current2[i][5]-data_current2[i][6])/2,(data_current2[i][7]-data_current2[i][8])/2,data_current2[i][4]*WW_data2[i][1]]
+    p["thFactor"]=data_current2[i][4]   
     
     DataCurrent.AddPoint(p)
 
