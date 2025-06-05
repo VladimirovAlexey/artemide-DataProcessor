@@ -6,16 +6,15 @@ This program collect all the data on the SIDIS and save in  "SIDISdata_uncut.pkl
 @author: vla18041
 """
 import sys
-sys.path.append("/home/vla18041/LinkData2/arTeMiDe_Repository/DataProcessor/")
-#sys.path.append("/home/m/Github/artemide-DataProcessor/")
+sys.path.append("/data/arTeMiDe_Repository/DataProcessor/")
 import DataProcessor.Point
 import DataProcessor.DataSet
 import numpy
 
-########### Alexey desktop
-path_to_data="/home/vla18041/LinkData2/arTeMiDe_Repository/data"
+path_to_data="/data/arTeMiDe_Repository/data"
+path_to_save="/data/arTeMiDe_Repository/DataProcessor/DataLib/wgt/"
+
 path_to_COMPASS="/COMPASS/1609.07374/ALT_cosHmS/"
-path_to_save="/home/vla18041/LinkData2/arTeMiDe_Repository/DataProcessor/DataLib/wgt/"
 
 totalData=[]
 
@@ -98,13 +97,13 @@ for ff in listOfFiles:
         
     #### fixing process
     if('h^+' in lineM):
-        currentProcess=[1,1,13101]
-        currentWeight=[1,1,2101]
+        currentProcess=[1,1,1,13101]
+        currentWeight=[1,1,1,2101]
         currentLabel2='h+'
         currentD2=' h+ from p'
     elif('h^-' in lineM):
-        currentProcess=[1,1,13111]
-        currentWeight=[1,1,2111]
+        currentProcess=[1,1,-1,13101]
+        currentWeight=[1,1,-1,2101]
         currentLabel2='h-'
         currentD2=' h- from p'
     else:

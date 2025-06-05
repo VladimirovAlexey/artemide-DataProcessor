@@ -6,15 +6,14 @@ This program collect all the data on the SIDIS and save in  "SIDISdata_uncut.pkl
 @author: vla18041
 """
 import sys
-sys.path.append("/home/vla18041/LinkData2/arTeMiDe_Repository/DataProcessor/")
-#sys.path.append("/home/m/Github/artemide-DataProcessor/")
+sys.path.append("/data/arTeMiDe_Repository/DataProcessor/")
 import DataProcessor.Point
 import DataProcessor.DataSet
 import numpy
 
-########### Alexey desktop
-path_to_data="/home/vla18041/LinkData2/arTeMiDe_Repository/data"
-path_to_save="/home/vla18041/LinkData2/arTeMiDe_Repository/DataProcessor/DataLib/wgt/"
+
+path_to_data="/data/arTeMiDe_Repository/data"
+path_to_save="/data/arTeMiDe_Repository/DataProcessor/DataLib/wgt/"
 
 totalData=[]
 
@@ -56,8 +55,8 @@ for line in table:
     p=DataProcessor.Point.CreateSIDISPoint(DataCurrent.name+'.'+str(num))
     num+=1
     #print DataCurrent.name+'.'+str(i)
-    p["process"]=[1,1,13041]
-    p["weightProcess"]=[1,1,2041]
+    p["process"]=[1,1,1,13003]
+    p["weightProcess"]=[1,1,1,2003]
     p["s"]=s_current
     ### taken from the text
     p["Q"]=[numpy.sqrt(1.4),numpy.sqrt(2.7)]   
@@ -106,8 +105,8 @@ for line in table:
     p=DataProcessor.Point.CreateSIDISPoint(DataCurrent.name+'.'+str(num))
     num+=1
     #print DataCurrent.name+'.'+str(i)
-    p["process"]=[1,1,13051]
-    p["weightProcess"]=[1,1,2051]
+    p["process"]=[1,1,-1,13003]
+    p["weightProcess"]=[1,1,-1,2003]
     p["s"]=s_current
     ### taken from the text
     p["Q"]=[numpy.sqrt(1.4),numpy.sqrt(2.7)]   

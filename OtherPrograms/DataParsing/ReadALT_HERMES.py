@@ -6,16 +6,16 @@ This program collect all the data on the SIDIS and save in  "SIDISdata_uncut.pkl
 @author: vla18041
 """
 import sys
-sys.path.append("/home/vla18041/LinkData2/arTeMiDe_Repository/DataProcessor/")
-#sys.path.append("/home/m/Github/artemide-DataProcessor/")
+sys.path.append("/data/arTeMiDe_Repository/DataProcessor/")
 import DataProcessor.Point
 import DataProcessor.DataSet
 import numpy
 
-########### Alexey desktop
-path_to_data="/home/vla18041/LinkData2/arTeMiDe_Repository/data"
+path_to_data="/data/arTeMiDe_Repository/data"
+path_to_save="/data/arTeMiDe_Repository/DataProcessor/DataLib/wgt/"
+
+
 path_to_HERMES="/HERMES-SSA/SFA/"
-path_to_save="/home/vla18041/LinkData2/arTeMiDe_Repository/DataProcessor/DataLib/wgt/"
 
 totalData=[]
 
@@ -75,23 +75,23 @@ for ff in listOfFiles:
     
     #### fixing process
     if('pip' in ff):
-        currentProcess=[1,1,13001]
-        currentWeight=[1,1,2001]
+        currentProcess=[1,1,1,13001]
+        currentWeight=[1,1,1,2001]
         currentLabel2='pi+'
         currentD2=' pi+ from p'
     elif('pim' in ff):
-        currentProcess=[1,1,13021]
-        currentWeight=[1,1,2021]
+        currentProcess=[1,1,-1,13001]
+        currentWeight=[1,1,-1,2001]
         currentLabel2='pi-'
         currentD2=' pi- from p'
     elif('kp' in ff):
-        currentProcess=[1,1,13002]
-        currentWeight=[1,1,2002]
+        currentProcess=[1,1,2,13001]
+        currentWeight=[1,1,2,2001]
         currentLabel2='k+'
         currentD2=' k+ from p'
     elif('km' in ff):
-        currentProcess=[1,1,13022]
-        currentWeight=[1,1,2022]
+        currentProcess=[1,1,-1,13001]
+        currentWeight=[1,1,-1,2001]
         currentLabel2='k-'
         currentD2=' k- from p'
     else:

@@ -12,7 +12,7 @@ Created on Fri May 16 13:54:42 2025
 import os
 ROOT_DIR = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', '..'))+"/"
 
-SNOWFLAKE_DIR = "/data/arTeMiDe_Repository/artemide_snowflake/harpy/"
+SNOWFLAKE_DIR = "/data/arTeMiDe_Repository/artemide/harpy/"
 
 import sys
 import numpy
@@ -44,7 +44,7 @@ harpy.UpdateTables(1.0, 105.0)
 
 import DataProcessor.ArtemideReplicaSet
 
-path_to_constants=ROOT_DIR+"FittingPrograms/Tw3_FIT/INI/ART25_sivers.atmde"
+path_to_constants=ROOT_DIR+"FittingPrograms/Tw3_FIT/INI/TMD+tw3.atmde"
 
 
 harpy.initialize(path_to_constants)
@@ -69,7 +69,7 @@ def loadThisDataD2(listOfNames):
         
     return dataCollection
 
-#%%
+
 ### read the list of files and return the list of DataSets
 def loadThisDataG2(listOfNames):    
     import DataProcessor.DataSet
@@ -84,12 +84,11 @@ def loadThisDataG2(listOfNames):
         
     return dataCollection
 
-#%%
+
 ### read the list of files and return the list of DataSets
 def loadThisDataSivers(listOfNames):    
     import DataProcessor.DataSet
     
-    #path_to_data="/home/m/Github/artemide-DataProcessor/DataLib/Sivers/"
     path_to_data="/data/arTeMiDe_Repository/DataProcessor/DataLib/Sivers/"
     
     
@@ -100,6 +99,19 @@ def loadThisDataSivers(listOfNames):
 
     return dataCollection
 
+
+def loadThisDataWGT(listOfNames):    
+    import DataProcessor.DataSet
+    
+    path_to_data="/data/arTeMiDe_Repository/DataProcessor/DataLib/wgt/"
+    
+    
+    dataCollection=[]
+    for name in listOfNames:
+        loadedData=DataProcessor.DataSet.LoadCSV(path_to_data+name+".csv")
+        dataCollection.append(loadedData)   
+
+    return dataCollection
 #%%
 ##################Cut function
 def cutFunc(p):
@@ -109,7 +121,7 @@ def cutFunc(p):
     
     return True, p
 
-#%%
+
 #### If true fSIDIS=+fDY, (wrong)
 #### if false fSIDIS=-fDY (correct)
 useWrongSign=False
@@ -154,6 +166,31 @@ def cutFunc_Sivers(p):
         
 #    return delta<0.5 and p.qT_avarage<80
     return delta<deltaTEST, p
+
+
+##################Cut function for WGT data
+def cutFuncWGT(p):
+    import copy 
+    
+    if p["type"]=="SIDIS":   
+        deltaTEST=0.35
+        delta=p["<pT>"]/p["<z>"]/p["<Q>"]        
+    
+    
+    if delta<deltaTEST:
+        pNew=copy.deepcopy(p)    
+        pNew["process"]=pNew["weightProcess"]
+        if p["type"]=="SIDIS":
+            normX=DataProcessor.harpyInterface.ComputeXSec(pNew,method="central")        
+        elif p["type"]=="DY":
+            normX=DataProcessor.harpyInterface.ComputeXSec(pNew)        
+        else:
+            print("Are you crazy?")
+        p["thFactor"]=p["thFactor"]/normX        
+    
+        
+#    return delta<0.5 and p.qT_avarage<80
+    return delta<deltaTEST and p["<Q>"]>1.41, p
 
 #%%
 ### Loading the D2 data set
@@ -205,6 +242,20 @@ setSivers=theData.CutData(cutFunc_Sivers)
 print('Loaded (SIDIS)', setSivers.numberOfSets, 'data sets with', sum([i.numberOfPoints for i in setSivers.sets]), 'points.')
 #print('Loaded SIDIS experiments are', [i.name for i in setSivers.sets])
 
+#%%
+### Loading the WGT data set
+theData=DataProcessor.DataMultiSet.DataMultiSet("ALTset",loadThisDataWGT([
+                      'hermes3D.ALT.pi+','hermes3D.ALT.pi-',
+                      'hermes3D.ALT.k+','hermes3D.ALT.k-',
+                      'compass16.ALT.h+.2<z.dpt','compass16.ALT.h-.2<z.dpt',
+                      'compass16.ALT.h+.2<z.dz','compass16.ALT.h-.2<z.dz',
+                      'compass16.ALT.h+.2<z.dx','compass16.ALT.h-.2<z.dx'#,
+                      #'JLab6.ALT.pi+','JLab6.ALT.pi-'
+                      ]))
+
+setALT=theData.CutData(cutFuncWGT) 
+
+print('Loaded ', setALT.numberOfSets, 'data sets with', sum([i.numberOfPoints for i in setALT.sets]), 'points.')
 
 #%%
 # harpy.setNPparameters_tw3([3.0,0.0, 
@@ -217,14 +268,15 @@ print('Loaded (SIDIS)', setSivers.numberOfSets, 'data sets with', sum([i.numberO
 
 # harpy.setNPparameters_SiversTMDPDF([0.5,0.0,0.0,0.0,0.0])
 #%%
-# harpy.setNPparameters_tw3([2.392, 0.0, 
-#                            0.023151, 0.198417, -0.678277, -0.557989, 
-#                            -0.029809, -0.219044, 2.7968, 2.7323, 
-#                            0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+# harpy.setNPparameters_tw3([2.392, 0.50, 
+#                             0.023151, 0.198417, -0.678277, -0.557989, 
+#                             -0.029809, -0.219044, 2.7968, 2.7323, 
+#                             0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
 
 # harpy.UpdateTables(1.0, 105.0)
 
-# harpy.setNPparameters_SiversTMDPDF([0.003785,0.0,0.0,0.0,0.0])
+# harpy.setNPparameters_SiversTMDPDF([0.3785,0.0])
+# harpy.setNPparameters_wgtTMDPDF([0.3785,0.0])
 
 
 # 5.0, -0.332416, 
@@ -245,6 +297,8 @@ DataProcessor.snowInterface_N2.PrintChi2Table(setD2,printDecomposedChi2=False)
 DataProcessor.snowInterface_N2.PrintChi2Table(setG2,printDecomposedChi2=False)
 
 DataProcessor.harpyInterface.PrintChi2Table(setSivers,method="central",printSysShift=False)
+DataProcessor.harpyInterface.PrintChi2Table(setALT,method="central",printSysShift=False)
+
 #%%
 #######################################
 # Minimisation
@@ -255,7 +309,8 @@ def chi2(x):
     startT=time.time()
     harpy.setNPparameters_tw3(x[0:18])
     harpy.UpdateTables(1.0, 105.0)
-    harpy.setNPparameters_SiversTMDPDF([x[18],0.0,0.0,0.0,0.0])
+    harpy.setNPparameters_SiversTMDPDF([x[18],0.0])
+    harpy.setNPparameters_wgtTMDPDF([x[18],0.0])
     print('np set =',["{:8.3f}".format(i) for i in x])        
             
     YY=DataProcessor.snowInterface_N2.ComputeXSec(setD2)
@@ -267,11 +322,21 @@ def chi2(x):
     YY=DataProcessor.harpyInterface.ComputeXSec(setSivers,method="central")
     ccSivers,cc3=setSivers.chi2(YY)    
     
-    chiTOTAL=(0*ccD2/setD2.numberOfPoints+ccG2/setG2.numberOfPoints+ccSivers/setSivers.numberOfPoints)*(
-        setD2.numberOfPoints+setG2.numberOfPoints+setSivers.numberOfPoints)
+    YY=DataProcessor.harpyInterface.ComputeXSec(setALT,method="central")
+    ccWGT,cc3=setALT.chi2(YY)    
+    
+    chiTOTAL=(0*ccD2/setD2.numberOfPoints+
+              ccG2/setG2.numberOfPoints+
+              ccSivers/setSivers.numberOfPoints+
+              ccWGT/setALT.numberOfPoints)*(
+        setD2.numberOfPoints+setG2.numberOfPoints+setSivers.numberOfPoints+setALT.numberOfPoints)
     
     endT=time.time()
-    print(':->',ccD2/setD2.numberOfPoints," ",ccG2/setG2.numberOfPoints," ",ccSivers/setSivers.numberOfPoints,"    time=",endT-startT)
+    print(':->',ccD2/setD2.numberOfPoints,
+          " ",ccG2/setG2.numberOfPoints,
+          " ",ccSivers/setSivers.numberOfPoints,
+          " ",ccWGT/setALT.numberOfPoints,
+          "    time=",endT-startT)
     return chiTOTAL
 
 #%%
@@ -279,8 +344,8 @@ from iminuit import Minuit
 
 #---- PDFbias-like row (0.083931)
 initialValues=(3.0,0.123, 
-                0.118,0.,0.0,0.,
-                -0.09,0.,0.0,0.,
+                .3,0.,0.0,0.,
+                -0.3,0.,0.0,0.,
                 0.0,0.,0.0,0.,
                 0.0,0.,0.0,0.,
                 0.5)
@@ -330,5 +395,6 @@ chi2(list(m.values))
 DataProcessor.snowInterface_N2.PrintChi2Table(setD2,printDecomposedChi2=True)
 DataProcessor.snowInterface_N2.PrintChi2Table(setG2,printDecomposedChi2=True)
 DataProcessor.harpyInterface.PrintChi2Table(setSivers,method="central",printSysShift=False)
+DataProcessor.harpyInterface.PrintChi2Table(setALT,method="central",printSysShift=False)
 
 print([round(x,1 if x >100 else 4 if x>1 else 6) for x in list(m.values)])

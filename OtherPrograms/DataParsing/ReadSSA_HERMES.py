@@ -7,7 +7,6 @@ This program collect all the data on the SIDIS and save in  "SIDISdata_uncut.pkl
 """
 import sys
 sys.path.append("/data/arTeMiDe_Repository/DataProcessor/")
-#sys.path.append("/home/m/Github/artemide-DataProcessor/")
 import DataProcessor.Point
 import DataProcessor.DataSet
 import numpy
