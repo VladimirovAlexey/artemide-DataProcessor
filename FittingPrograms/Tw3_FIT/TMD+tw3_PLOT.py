@@ -13,7 +13,6 @@ import os
 ROOT_DIR = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', '..'))+"/"
 
 SNOWFLAKE_DIR = "/data/arTeMiDe_Repository/artemide/harpy/"
-MODEL_DIR = "/data/arTeMiDe_Repository/artemide/Models/ART25/Replica-files/"
 
 import sys
 import numpy
@@ -50,7 +49,8 @@ path_to_constants=ROOT_DIR+"FittingPrograms/Tw3_FIT/INI/TMD+tw3.atmde"
 
 harpy.initialize(path_to_constants)
 
-rSet=DataProcessor.ArtemideReplicaSet.ReadRepFile(MODEL_DIR+"ART25_main.rep")
+rSet=DataProcessor.ArtemideReplicaSet.ReadRepFile(\
+                        "/data/WorkingFiles/TMD/Fit_Notes/ART25/REPLICAS/ART25_run1.rep")
     
 rSet.SetReplica(0)
 
@@ -258,39 +258,15 @@ setALT=theData.CutData(cutFuncWGT)
 print('Loaded ', setALT.numberOfSets, 'data sets with', sum([i.numberOfPoints for i in setALT.sets]), 'points.')
 
 #%%
-harpy.setNPparameters_tw3([3.0,0.0, 
-                0.05,0.,0.0,0.,
-                -0.06,0.,0.0,0.,
-                0.0,0.,0.0,0.,
-                0.0,0.,0.0,0.])
+harpy.setNPparameters_tw3([3.112, -0.157, 
+                            0.128, 1.57, 0.127, 0.794, 
+                            -0.180, -1.594, -5.019, -5.872, 
+                            0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
 
 harpy.UpdateTables(1.0, 105.0)
 
 harpy.setNPparameters_SiversTMDPDF([0.5,0.0])
-#%%
-# harpy.setNPparameters_tw3([2.392, 0.50, 
-#                             0.023151, 0.198417, -0.678277, -0.557989, 
-#                             -0.029809, -0.219044, 2.7968, 2.7323, 
-#                             0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
-
-# harpy.UpdateTables(1.0, 105.0)
-
-# harpy.setNPparameters_SiversTMDPDF([0.3785,0.0])
-# harpy.setNPparameters_wgtTMDPDF([0.3785,0.0])
-
-
-# 5.0, -0.332416, 
-# 0.276952, 3.5437, -8.981449, -8.548019, 
-# -0.374116, -3.390503, 18.3544, 18.0123, 
-# 0.0, 0.0, 0.0, 0.0, 
-# 0.0, 0.0, 0.0, 0.0, 
-# 0.5
- #%%
-# #### PLOT d2
-# Qplot=0.1*numpy.array(range(40))+1
-# dataP=harpy.D2List(Qplot, Qplot*0+100)
-# dataN=harpy.D2List(Qplot, Qplot*0+101)
-# dataD=harpy.D2List(Qplot, Qplot*0+102)
+harpy.setNPparameters_wgtTMDPDF([0.5,0.0])
 
 #%%
 DataProcessor.snowInterface_N2.PrintChi2Table(setD2,printDecomposedChi2=False)
@@ -299,102 +275,107 @@ DataProcessor.snowInterface_N2.PrintChi2Table(setG2,printDecomposedChi2=False)
 DataProcessor.harpyInterface.PrintChi2Table(setSivers,method="central",printSysShift=False)
 DataProcessor.harpyInterface.PrintChi2Table(setALT,method="central",printSysShift=False)
 
-#%%
-#######################################
-# Minimisation
-#######################################
-import time
-
-def chi2(x):
-    startT=time.time()
-    harpy.setNPparameters_tw3(x[0:18])
-    harpy.UpdateTables(1.0, 105.0)
-    harpy.setNPparameters_SiversTMDPDF([x[18],0.0])
-    harpy.setNPparameters_wgtTMDPDF([x[18],0.0])
-    print('np set =',["{:8.3f}".format(i) for i in x])        
-            
-    YY=DataProcessor.snowInterface_N2.ComputeXSec(setD2)
-    ccD2,cc3=setD2.chi2(YY)    
-    
-    YY=DataProcessor.snowInterface_N2.ComputeXSec(setG2)
-    ccG2,cc3=setG2.chi2(YY)    
-    
-    YY=DataProcessor.harpyInterface.ComputeXSec(setSivers,method="central")
-    ccSivers,cc3=setSivers.chi2(YY)    
-    
-    YY=DataProcessor.harpyInterface.ComputeXSec(setALT,method="central")
-    ccWGT,cc3=setALT.chi2(YY)    
-    
-    chiTOTAL=(0*ccD2/setD2.numberOfPoints+
-              ccG2/setG2.numberOfPoints+
-              ccSivers/setSivers.numberOfPoints+
-              ccWGT/setALT.numberOfPoints)*(
-        setD2.numberOfPoints+setG2.numberOfPoints+setSivers.numberOfPoints+setALT.numberOfPoints)
-    
-    endT=time.time()
-    print(':->',ccD2/setD2.numberOfPoints,
-          " ",ccG2/setG2.numberOfPoints,
-          " ",ccSivers/setSivers.numberOfPoints,
-          " ",ccWGT/setALT.numberOfPoints,
-          "    time=",endT-startT)
-    return chiTOTAL
 
 #%%
-from iminuit import Minuit
-
-#---- PDFbias-like row (0.083931)
-initialValues=(3.112, -0.157, 
-                0.128, 1.57, 0.127, 0.794, 
-                -0.180, -1.594, -5.019, -5.872, 
-                0.0, 0.0, 0.0, 0.0, 
-                0.0, 0.0, 0.0, 0.0,
-                0.5)
-
-initialErrors=(0.1,0.1, 
-                0.1,0.1,0.1,0.1,
-                0.1,0.1,0.1,0.1,
-                0.1,0.1,0.1,0.1,
-                0.1,0.1,0.1,0.1,
-                0.1)
-searchLimits=((1.,5.),(-10.,0.95),
-              (-50.,50.), (-50.,50.), (-50.,50.),
-              (-50.,50.), (-50.,50.), (-50.,50.),
-              (-50.,50.), (-50.,50.), (-50.,50.),
-              (-50.,50.), (-50.,50.), (-50.,50.),
-              (-50.,50.), (-50.,50.), (-50.,50.), (-50.,50.),
-              (0.001,5.))
-              
-# True= FIX
-parametersToMinimize=(False, False,
-                      False, False,False,False,
-                      False, False, False,False,
-                      False,False,True,True,
-                      False, False, False,False,
-                      True)
+# #### PLOT d2
+# Qplot=0.1*numpy.array(range(40))+1
+# dataP=harpy.D2List(Qplot, Qplot*0+100)
+# dataN=harpy.D2List(Qplot, Qplot*0+101)
+# dataD=harpy.D2List(Qplot, Qplot*0+102)
 
 #%%
-rSet.SetReplica(0)
+def X1X2(r,phi):
+    if(0<=phi<1):
+        return r*(1-phi),r*phi
+    elif(1<=phi<2):
+        return r*(1-phi),r
+    elif(2<=phi<3):
+        return -r,r*(3-phi)
+    elif(3<=phi<4):
+        return r*(phi-4),r*(3-phi)
+    elif(4<=phi<5):
+        return r*(phi-4),-r
+    elif(5<=phi<6):
+        return r,r*(phi-6)
+    else:
+        raise("ERRROR")
 
-m = Minuit(chi2, initialValues)
-
-m.errors=initialErrors
-m.limits=searchLimits
-m.fixed=parametersToMinimize
-m.errordef=1
-
-print(m.params)
 #%%
-#m.tol=0.0001*(setSIDIS.numberOfPoints+setDY.numberOfPoints)*10000 ### the last 0.0001 is to compensate MINUIT def
-m.strategy=1
-m.migrad()
+path_to_save="/data/WorkingFiles/TMD/Fit_Notes/Twist3_25/data/Tw3PDF/"
+rList=[0.01*i+0.01 for i in range(9)]+[0.05*i+0.1 for i in range(19)]
+phiList=[i/8 for i in range(48)]
+toSave=[]
 
-print(m.params)
+# u-quark
 
-chi2(list(m.values))
+for r in rList:       
+    for phi in phiList:
+        x1,x2=X1X2(r,phi)
+        if(numpy.abs(x1)<0.01 and numpy.abs(x2)<0.01): continue
+        if(numpy.abs(x1)>1. or numpy.abs(x2)>1. or numpy.abs(x1+x2)>1.): continue
+    
+        toSave+=[[x1,x2,-x1-x2,harpy.get_PDF_tw3(x1, x2, 2., 2)]]
 
-DataProcessor.snowInterface_N2.PrintChi2Table(setD2,printDecomposedChi2=True)
-DataProcessor.snowInterface_N2.PrintChi2Table(setG2,printDecomposedChi2=True)
-DataProcessor.harpyInterface.PrintChi2Table(setSivers,method="central",printSysShift=False)
-DataProcessor.harpyInterface.PrintChi2Table(setALT,method="central",printSysShift=False)
+with open(path_to_save+"T_u", 'w') as file:
+    for s in toSave:
+        file.write(', '.join("{:.8f}".format(item) for item in s)+'\n')
 
-print([round(x,1 if x >100 else 4 if x>1 else 6) for x in list(m.values)])
+# d-quark
+        
+toSave=[]
+
+for r in rList:       
+    for phi in phiList:
+        x1,x2=X1X2(r,phi)
+        if(numpy.abs(x1)<0.01 and numpy.abs(x2)<0.01): continue
+        if(numpy.abs(x1)>1. or numpy.abs(x2)>1. or numpy.abs(x1+x2)>1.): continue
+    
+        toSave+=[[x1,x2,-x1-x2,harpy.get_PDF_tw3(x1, x2, 2., 1)]]
+
+with open(path_to_save+"T_d", 'w') as file:
+    for s in toSave:
+        file.write(', '.join("{:.8f}".format(item) for item in s)+'\n')
+
+# s-quark
+toSave=[]
+
+for r in rList:       
+    for phi in phiList:
+        x1,x2=X1X2(r,phi)
+        if(numpy.abs(x1)<0.01 and numpy.abs(x2)<0.01): continue
+        if(numpy.abs(x1)>1. or numpy.abs(x2)>1. or numpy.abs(x1+x2)>1.): continue
+    
+        toSave+=[[x1,x2,-x1-x2,harpy.get_PDF_tw3(x1, x2, 2., 3)]]
+
+with open(path_to_save+"T_s", 'w') as file:
+    for s in toSave:
+        file.write(', '.join("{:.8f}".format(item) for item in s)+'\n')
+
+# g-quark
+toSave=[]
+
+for r in rList:       
+    for phi in phiList:
+        x1,x2=X1X2(r,phi)
+        if(numpy.abs(x1)<0.01 and numpy.abs(x2)<0.01): continue
+        if(numpy.abs(x1)>1. or numpy.abs(x2)>1. or numpy.abs(x1+x2)>1.): continue
+    
+        toSave+=[[x1,x2,-x1-x2,harpy.get_PDF_tw3(x1, x2, 2., 0)]]
+
+with open(path_to_save+"T_g+", 'w') as file:
+    for s in toSave:
+        file.write(', '.join("{:.8f}".format(item) for item in s)+'\n')
+        
+toSave=[]
+
+for r in rList:       
+    for phi in phiList:
+        x1,x2=X1X2(r,phi)
+        if(numpy.abs(x1)<0.01 and numpy.abs(x2)<0.01): continue
+        if(numpy.abs(x1)>1. or numpy.abs(x2)>1. or numpy.abs(x1+x2)>1.): continue
+    
+        toSave+=[[x1,x2,-x1-x2,harpy.get_PDF_tw3(x1, x2, 2., -10)]]
+
+with open(path_to_save+"T_g-", 'w') as file:
+    for s in toSave:
+        file.write(', '.join("{:.8f}".format(item) for item in s)+'\n')
