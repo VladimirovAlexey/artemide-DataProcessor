@@ -28,7 +28,8 @@ import DataProcessor.DataSet
 
 path_to_data="/data/arTeMiDe_Repository/data/g2Tables/"
 
-path_to_g2WW_data="/data/arTeMiDe_Repository/data/g2Tables/WW_Guillermo/"
+#path_to_g2WW_data="/data/arTeMiDe_Repository/data/g2Tables/WW_Guillermo/"
+path_to_g2WW_data="/data/arTeMiDe_Repository/data/g2Tables/WW_MAPPDFpol/"
 
 path_to_save=ROOT_DIR+"/DataProcessor/DataLib/G2/"
 
@@ -3341,14 +3342,14 @@ def xbounds2(i):
 print("Reading the Wandzura-Wilczek data files ...")
 
 ## Table 1:
-f1 = open(path_to_g2WW_data+"Hall_A_2004_He3.csv")
-WW_data1=[]
-for line in f1:    
-    WW_data1.append(line.rstrip('\n'))
-f1.close()
-for i in range(len(WW_data1)):    
-    WW_data1[i]=WW_data1[i].split(",")    
-    WW_data1[i]=[float(j) for j in WW_data1[i]]  
+# f1 = open(path_to_g2WW_data+"Hall_A_2004_He3.csv")
+# WW_data1=[]
+# for line in f1:    
+#     WW_data1.append(line.rstrip('\n'))
+# f1.close()
+# for i in range(len(WW_data1)):    
+#     WW_data1[i]=WW_data1[i].split(",")    
+#     WW_data1[i]=[float(j) for j in WW_data1[i]]  
 
 ## Table 2:
 f2 = open(path_to_g2WW_data+"Hall_A_2004_neutron.csv")
