@@ -10,18 +10,20 @@ Created on Fri May 16 13:54:42 2025
 # importing libraries
 #######################################
 import os
-ROOT_DIR = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', '..'))+"/"
+ROOT_DIR = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', '..','..'))+"/"
+DATAP_DIR = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', '..'))+"/"
 
-SNOWFLAKE_DIR = "/data/arTeMiDe_Repository/artemide/harpy/"
-MODEL_DIR = "/data/arTeMiDe_Repository/artemide/Models/ART25/Replica-files/"
+SNOWFLAKE_DIR = ROOT_DIR+"artemide/harpy/"
+MODEL_DIR = ROOT_DIR+"artemide/Models/ART25/Replica-files/"
 
-logFile=ROOT_DIR+"FittingPrograms/Tw3_FIT/log.log"
-repFile=ROOT_DIR+"FittingPrograms/Tw3_FIT/replicas_1.dat"
+logFile=DATAP_DIR+"FittingPrograms/Tw3_FIT/log3.log"
+repFile=DATAP_DIR+"FittingPrograms/Tw3_FIT/replicas_3.dat"
 
 import sys
 import numpy
-sys.path.remove('/data/arTeMiDe_Repository/artemide/harpy')
-sys.path.append(ROOT_DIR)
+if('/data/arTeMiDe_Repository/artemide/harpy' in sys.path):
+    sys.path.remove('/data/arTeMiDe_Repository/artemide/harpy')
+sys.path.append(DATAP_DIR)
 sys.path.append(SNOWFLAKE_DIR)
 
 
@@ -35,9 +37,9 @@ import harpy
 #######################################
 #Initialize snowflake
 #######################################
-path_to_INI=ROOT_DIR+"FittingPrograms/Tw3_FIT/INI/snowflake_forRep.ini"
-#path_to_INI=ROOT_DIR+"FittingPrograms/Tw3_FIT/INI/TEST.ini"
-#path_to_INI=ROOT_DIR+"FittingPrograms/Tw3_FIT/INI/TEST_16x8.ini"
+path_to_INI=DATAP_DIR+"FittingPrograms/Tw3_FIT/INI/snowflake_forRep.ini"
+#path_to_INI=DATAP_DIR+"FittingPrograms/Tw3_FIT/INI/TEST.ini"
+#path_to_INI=DATAP_DIR+"FittingPrograms/Tw3_FIT/INI/TEST_16x8.ini"
 harpy.initialize_snowflake(path_to_INI)
 
 NP_par=numpy.zeros(18)+0.2
@@ -51,7 +53,7 @@ harpy.UpdateTables(1.0, 105.0)
 
 import DataProcessor.ArtemideReplicaSet
 
-path_to_constants=ROOT_DIR+"FittingPrograms/Tw3_FIT/INI/TMD+tw3.atmde"
+path_to_constants=DATAP_DIR+"FittingPrograms/Tw3_FIT/INI/TMD+tw3.atmde"
 
 
 harpy.initialize(path_to_constants)
@@ -65,7 +67,7 @@ rSet.SetReplica(0)
 def loadThisDataD2(listOfNames):    
     import DataProcessor.DataSet
     
-    path_to_data=ROOT_DIR+"DataLib/D2_moment/"
+    path_to_data=DATAP_DIR+"DataLib/D2_moment/"
     
     
     dataCollection=[]
@@ -80,7 +82,7 @@ def loadThisDataD2(listOfNames):
 def loadThisDataG2(listOfNames):    
     import DataProcessor.DataSet
     
-    path_to_data=ROOT_DIR+"DataLib/G2/"
+    path_to_data=DATAP_DIR+"DataLib/G2/"
     
     
     dataCollection=[]
@@ -95,7 +97,7 @@ def loadThisDataG2(listOfNames):
 def loadThisDataSivers(listOfNames):    
     import DataProcessor.DataSet
     
-    path_to_data="/data/arTeMiDe_Repository/DataProcessor/DataLib/Sivers/"
+    path_to_data=DATAP_DIR+"DataLib/Sivers/"
     
     
     dataCollection=[]
@@ -109,7 +111,7 @@ def loadThisDataSivers(listOfNames):
 def loadThisDataWGT(listOfNames):    
     import DataProcessor.DataSet
     
-    path_to_data="/data/arTeMiDe_Repository/DataProcessor/DataLib/wgt/"
+    path_to_data=DATAP_DIR+"DataLib/wgt/"
     
     
     dataCollection=[]
@@ -321,32 +323,32 @@ def chi2(x):
 from iminuit import Minuit
 
 #---- PDFbias-like row (0.083931)
-initialValues=(3.112, -0.157, 
+initialValues=(3.112,3.112, -0.157, 
                 0.128, 1.57, 0.127, 0.794, 
                 -0.180, -1.594, -5.019, -5.872, 
                 0.0, 0.0, 0.0, 0.0, 
-                0.0, 0.0, 0.0, 0.0,
+                0.0, 0.0, 0.0,
                 0.5)
 
-initialErrors=(0.1,0.1, 
-                0.1,0.1,0.1,0.1,
-                0.1,0.1,0.1,0.1,
-                0.1,0.1,0.1,0.1,
-                0.1,0.1,0.1,0.1,
+initialErrors=(0.5,0.5,0.1,
+                0.1,0.5,0.1,0.2,
+                0.1,0.1,0.5,0.5,
+                0.1,0.5,0.5,0.1,
+                0.6,0.1,0.1,
                 0.1)
-searchLimits=((1.,10.),(-10.,0.95),
+searchLimits=((1.,10.),(1.,10.),(-10.,0.95),
               (-50.,50.), (-50.,50.), (-50.,50.),
               (-50.,50.), (-50.,50.), (-50.,50.),
               (-50.,50.), (-50.,50.), (-50.,50.),
               (-50.,50.), (-50.,50.), (-50.,50.),
-              (-50.,50.), (-50.,50.), (-50.,50.), (-50.,50.),
+              (-50.,50.), (-50.,50.), (-50.,50.),
               (0.01,0.8))
               
 # True= FIX
-parametersToMinimize=(False, False,
+parametersToMinimize=(False, False,False,
                       False, False,False,False,
                       False, False, False,False,
-                      False, False,True,True,
+                      False, False,False,
                       False, False, True,True,
                       True)
 
@@ -468,7 +470,7 @@ setALT0=theDataW.CutData(cutFunc_TMD)
 # Save to log.
 #######################################
 
-NumberOfReplicas=25
+NumberOfReplicas=5
 
 ART25replica=0
 rSet.SetReplica(0)
