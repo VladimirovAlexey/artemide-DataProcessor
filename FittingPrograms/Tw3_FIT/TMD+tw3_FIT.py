@@ -321,32 +321,32 @@ def chi2(x):
 from iminuit import Minuit
 
 #---- PDFbias-like row (0.083931)
-initialValues=(3.112, -0.157, 
+initialValues=(3.112,3.112, -0.157, 
                 0.128, 1.57, 0.127, 0.794, 
                 -0.180, -1.594, -5.019, -5.872, 
                 0.0, 0.0, 0.0, 0.0, 
-                0.0, 0.0, 0.0, 0.0,
+                0.0, 0.0, 0.0,
                 0.5)
 
-initialErrors=(0.1,0.1, 
-                0.1,0.1,0.1,0.1,
-                0.1,0.1,0.1,0.1,
-                0.1,0.1,0.1,0.1,
-                0.1,0.1,0.1,0.1,
+initialErrors=(0.5,0.5,0.1,
+                0.1,0.5,0.1,0.2,
+                0.1,0.1,0.5,0.5,
+                0.1,0.5,0.5,0.1,
+                0.6,0.1,0.1,
                 0.1)
-searchLimits=((1.,10.),(-10.,0.95),
+searchLimits=((1.,10.),(1.,10.),(-10.,0.95),
               (-50.,50.), (-50.,50.), (-50.,50.),
               (-50.,50.), (-50.,50.), (-50.,50.),
               (-50.,50.), (-50.,50.), (-50.,50.),
               (-50.,50.), (-50.,50.), (-50.,50.),
-              (-50.,50.), (-50.,50.), (-50.,50.), (-50.,50.),
+              (-50.,50.), (-50.,50.), (-50.,50.),
               (0.01,0.8))
               
 # True= FIX
-parametersToMinimize=(False, False,
+parametersToMinimize=(False, False,False,
                       False, False,False,False,
                       False, False, False,False,
-                      False, False,True,True,
+                      False, False,False,
                       False, False, True,True,
                       True)
 
@@ -388,6 +388,8 @@ DataProcessor.harpyInterface.PrintChi2Table(setSivers,method="central",printSysS
 DataProcessor.harpyInterface.PrintChi2Table(setALT,method="central",printSysShift=False)
 
 print([round(x,1 if x >100 else 4 if x>1 else 6) for x in list(m.values)])
+
+sys.exit()
 
 #%%
 m.minos()

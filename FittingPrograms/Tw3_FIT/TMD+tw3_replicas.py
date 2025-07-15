@@ -16,8 +16,8 @@ DATAP_DIR = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', '..')
 SNOWFLAKE_DIR = ROOT_DIR+"artemide/harpy/"
 MODEL_DIR = ROOT_DIR+"artemide/Models/ART25/Replica-files/"
 
-logFile=DATAP_DIR+"FittingPrograms/Tw3_FIT/log3.log"
-repFile=DATAP_DIR+"FittingPrograms/Tw3_FIT/replicas_3.dat"
+logFile=DATAP_DIR+"FittingPrograms/Tw3_FIT/log4.log"
+repFile=DATAP_DIR+"FittingPrograms/Tw3_FIT/replicas_4.dat"
 
 import sys
 import numpy
@@ -323,18 +323,18 @@ def chi2(x):
 from iminuit import Minuit
 
 #---- PDFbias-like row (0.083931)
-initialValues=(3.112,3.112, -0.157, 
-                0.128, 1.57, 0.127, 0.794, 
-                -0.180, -1.594, -5.019, -5.872, 
-                0.0, 0.0, 0.0, 0.0, 
-                0.0, 0.0, 0.0,
+initialValues=(5.4 ,1.2, -1.2, 
+                0.79, 4.5, -0.127, 2.8, 
+                -0.34, -0.94, -5.519, -11., 
+                -0.8, -1.,-1.2, 
+                -1.0, -1.2, 0.6, 0.0, 
                 0.5)
 
-initialErrors=(0.5,0.5,0.1,
-                0.1,0.5,0.1,0.2,
-                0.1,0.1,0.5,0.5,
-                0.1,0.5,0.5,0.1,
-                0.6,0.1,0.1,
+initialErrors=(0.5, 0.1, 0.5,
+                0.5, 3.5, 1.0, 2.,
+                0.1, 2.0, 3.5, 9.,
+                0.5, 5.0, 2.0, 
+                2.0, 2.0, 2.0, 0.1, 
                 0.1)
 searchLimits=((1.,10.),(1.,10.),(-10.,0.95),
               (-50.,50.), (-50.,50.), (-50.,50.),
