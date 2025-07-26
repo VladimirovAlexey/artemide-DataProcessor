@@ -16,8 +16,8 @@ DATAP_DIR = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', '..')
 SNOWFLAKE_DIR = ROOT_DIR+"artemide/harpy/"
 MODEL_DIR = ROOT_DIR+"artemide/Models/ART25/Replica-files/"
 
-logFile=DATAP_DIR+"FittingPrograms/Tw3_FIT/log4.log"
-repFile=DATAP_DIR+"FittingPrograms/Tw3_FIT/replicas_4.dat"
+logFile=DATAP_DIR+"FittingPrograms/Tw3_FIT/log5.log"
+repFile=DATAP_DIR+"FittingPrograms/Tw3_FIT/replicas_5.dat"
 
 import sys
 import numpy
@@ -254,16 +254,14 @@ print('Loaded ', setALT.numberOfSets, 'data sets with', sum([i.numberOfPoints fo
 # harpy.setNPparameters_SiversTMDPDF([0.5,0.0])
 # harpy.setNPparameters_wgtTMDPDF([0.5,0.0])
 #%%
-# harpy.setNPparameters_tw3([2.6837, -0.152838, 
-#     0.177977, 1.1756, -0.325375, 0.35967, 
-#     -0.14009, -1.165004, -3.6542, -4.823218, 
-#     -0.054349, -0.557813, 0.0, 0.0, 
-#     0.131916, 11.6412, 0.0, 0.0])
+harpy.setNPparameters_tw3([5.7019, 1.10442, -1.34357, 1.03315, 7.16511, -0.351023, 3.50304, \
+-0.412292, -1.81263, -8.88206, -16.5434, -1.19804, -6.93412, \
+-5.04158, -2.37763, 0.832746, 0.330435, 0.])
 
-# harpy.UpdateTables(1.0, 105.0)
+harpy.UpdateTables(1.0, 105.0)
 
-# harpy.setNPparameters_SiversTMDPDF([0.85,0.0])
-# harpy.setNPparameters_wgtTMDPDF([0.85,0.0])
+harpy.setNPparameters_SiversTMDPDF([0.5,0.0])
+harpy.setNPparameters_wgtTMDPDF([0.5,0.0])
 
 #%%
 DataProcessor.snowInterface_N2.PrintChi2Table(setD2,printDecomposedChi2=False)
@@ -281,7 +279,7 @@ import time
 totN=setD2.numberOfPoints+setG2.numberOfPoints+setSivers.numberOfPoints+setALT.numberOfPoints
 
 def deformation(c):
-    v=0.3
+    #v=0.3
     #return numpy.exp(v*(c**(1./v)-1))
     return c
 
@@ -326,8 +324,8 @@ from iminuit import Minuit
 initialValues=(5.4 ,1.2, -1.2, 
                 0.79, 4.5, -0.127, 2.8, 
                 -0.34, -0.94, -5.519, -11., 
-                -0.8, -1.,-1.2, 
-                -1.0, -1.2, 0.6, 0.0, 
+                -0.8, -1.,3.0, -1.5,
+                -1.0, -1.2, 0.0, 
                 0.5)
 
 initialErrors=(0.5, 0.1, 0.5,
@@ -348,8 +346,8 @@ searchLimits=((1.,10.),(1.,10.),(-10.,0.95),
 parametersToMinimize=(False, False,False,
                       False, False,False,False,
                       False, False, False,False,
-                      False, False,False,
-                      False, False, True,True,
+                      False, False,False, False,
+                      False, False,True,
                       True)
 
 #Default: None. If set to None, Minuit assumes the cost function is computed in double precision. 
