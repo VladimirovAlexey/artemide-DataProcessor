@@ -16,8 +16,8 @@ DATAP_DIR = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', '..')
 SNOWFLAKE_DIR = ROOT_DIR+"artemide/harpy/"
 MODEL_DIR = ROOT_DIR+"artemide/Models/ART25/Replica-files/"
 
-logFile=DATAP_DIR+"FittingPrograms/Tw3_FIT/log5.log"
-repFile=DATAP_DIR+"FittingPrograms/Tw3_FIT/replicas_5.dat"
+logFile=DATAP_DIR+"FittingPrograms/Tw3_FIT/log6.log"
+repFile=DATAP_DIR+"FittingPrograms/Tw3_FIT/replicas_6.dat"
 
 import sys
 import numpy
