@@ -86,7 +86,7 @@ def X1X2(r,phi):
 #%%
 repLIST=[]
 #with open("/data/WorkingFiles/TMD/Fit_Notes/Twist3_25/rreps4.csv","r") as file:
-with open("/data/WorkingFiles/TMD/Fit_Notes/Twist3_25/rreps5.csv","r") as file:
+with open("/data/WorkingFiles/TMD/Fit_Notes/Twist3_25/rreps6.csv","r") as file:
     lines=file.readlines()
     for line in lines:
         repLIST.append([float(p) for p in line.split(",")])       
@@ -94,7 +94,7 @@ with open("/data/WorkingFiles/TMD/Fit_Notes/Twist3_25/rreps5.csv","r") as file:
 
 #%%
 #path_to_save="/data/WorkingFiles/TMD/Fit_Notes/Twist3_25/data/Tw3PDF_4GeV_n4/"
-path_to_save="/data/WorkingFiles/TMD/Fit_Notes/Twist3_25/data/Tw3PDF_4GeV_n5/"
+path_to_save="/data/WorkingFiles/TMD/Fit_Notes/Twist3_25/data/Tw3PDF_4GeV_n6/"
 rList=[0.01*i+0.01 for i in range(9)]+[0.05*i+0.1 for i in range(19)]
 phiList=[i/8 for i in range(48)]
 toSave=[]
@@ -197,6 +197,36 @@ for n in range(len(repLIST)):
     with open(path_to_save+"deltaT_s."+str(n).zfill(4), 'w') as file:
         for s in toSave:
             file.write(', '.join("{:.8f}".format(item) for item in s)+'\n')
+            
+    # c-quark
+    toSave=[]
+    
+    for r in rList:       
+        for phi in phiList:
+            x1,x2=X1X2(r,phi)
+            if(numpy.abs(x1)<0.01 and numpy.abs(x2)<0.01): continue
+            if(numpy.abs(x1)>1. or numpy.abs(x2)>1. or numpy.abs(x1+x2)>1.): continue
+        
+            toSave+=[[x1,x2,-x1-x2,harpy.get_PDF_tw3(x1, x2, Q, 4)]]
+    
+    with open(path_to_save+"T_c."+str(n).zfill(4), 'w') as file:
+        for s in toSave:
+            file.write(', '.join("{:.8f}".format(item) for item in s)+'\n')
+            
+    # c-quark Delta
+    toSave=[]
+    
+    for r in rList:       
+        for phi in phiList:
+            x1,x2=X1X2(r,phi)
+            if(numpy.abs(x1)<0.01 and numpy.abs(x2)<0.01): continue
+            if(numpy.abs(x1)>1. or numpy.abs(x2)>1. or numpy.abs(x1+x2)>1.): continue
+        
+            toSave+=[[x1,x2,-x1-x2,harpy.get_PDF_tw3(x1, x2, Q, -4)]]
+    
+    with open(path_to_save+"deltaT_c."+str(n).zfill(4), 'w') as file:
+        for s in toSave:
+            file.write(', '.join("{:.8f}".format(item) for item in s)+'\n')
     
     # g-quark
     toSave=[]
@@ -227,7 +257,337 @@ for n in range(len(repLIST)):
         for s in toSave:
             file.write(', '.join("{:.8f}".format(item) for item in s)+'\n')
 
-# #%%
+#%%
+#path_to_save="/data/WorkingFiles/TMD/Fit_Notes/Twist3_25/data/Tw3PDF_4GeV_n4/"
+path_to_save="/data/WorkingFiles/TMD/Fit_Notes/Twist3_25/data/Tw3PDF_10GeV_n6/"
+rList=[0.01*i+0.01 for i in range(9)]+[0.05*i+0.1 for i in range(19)]
+phiList=[i/8 for i in range(48)]
+toSave=[]
+Q=10.
+
+for n in range(len(repLIST)):
+    print("---->",n)
+    harpy.setNPparameters_tw3(repLIST[n])
+    harpy.UpdateTables(1.0, 10.0)
+
+    # u-quark
+    
+    toSave=[]
+    
+    for r in rList:       
+        for phi in phiList:
+            x1,x2=X1X2(r,phi)
+            if(numpy.abs(x1)<0.01 and numpy.abs(x2)<0.01): continue
+            if(numpy.abs(x1)>1. or numpy.abs(x2)>1. or numpy.abs(x1+x2)>1.): continue
+        
+            toSave+=[[x1,x2,-x1-x2,harpy.get_PDF_tw3(x1, x2, Q, 2)]]
+    
+    with open(path_to_save+"T_u."+str(n).zfill(4), 'w') as file:
+        for s in toSave:
+            file.write(', '.join("{:.8f}".format(item) for item in s)+'\n')
+    # u-quark Delta
+    
+    toSave=[]
+    
+    for r in rList:       
+        for phi in phiList:
+            x1,x2=X1X2(r,phi)
+            if(numpy.abs(x1)<0.01 and numpy.abs(x2)<0.01): continue
+            if(numpy.abs(x1)>1. or numpy.abs(x2)>1. or numpy.abs(x1+x2)>1.): continue
+        
+            toSave+=[[x1,x2,-x1-x2,harpy.get_PDF_tw3(x1, x2, Q, -2)]]
+    
+    with open(path_to_save+"deltaT_u."+str(n).zfill(4), 'w') as file:
+        for s in toSave:
+            file.write(', '.join("{:.8f}".format(item) for item in s)+'\n')
+    
+    # d-quark
+            
+    toSave=[]
+    
+    for r in rList:       
+        for phi in phiList:
+            x1,x2=X1X2(r,phi)
+            if(numpy.abs(x1)<0.01 and numpy.abs(x2)<0.01): continue
+            if(numpy.abs(x1)>1. or numpy.abs(x2)>1. or numpy.abs(x1+x2)>1.): continue
+        
+            toSave+=[[x1,x2,-x1-x2,harpy.get_PDF_tw3(x1, x2, Q, 1)]]
+    
+    with open(path_to_save+"T_d."+str(n).zfill(4), 'w') as file:
+        for s in toSave:
+            file.write(', '.join("{:.8f}".format(item) for item in s)+'\n')
+            
+    # d-quark De;ta
+            
+    toSave=[]
+    
+    for r in rList:       
+        for phi in phiList:
+            x1,x2=X1X2(r,phi)
+            if(numpy.abs(x1)<0.01 and numpy.abs(x2)<0.01): continue
+            if(numpy.abs(x1)>1. or numpy.abs(x2)>1. or numpy.abs(x1+x2)>1.): continue
+        
+            toSave+=[[x1,x2,-x1-x2,harpy.get_PDF_tw3(x1, x2, Q, -1)]]
+    
+    with open(path_to_save+"deltaT_d."+str(n).zfill(4), 'w') as file:
+        for s in toSave:
+            file.write(', '.join("{:.8f}".format(item) for item in s)+'\n')
+    
+    # s-quark
+    toSave=[]
+    
+    for r in rList:       
+        for phi in phiList:
+            x1,x2=X1X2(r,phi)
+            if(numpy.abs(x1)<0.01 and numpy.abs(x2)<0.01): continue
+            if(numpy.abs(x1)>1. or numpy.abs(x2)>1. or numpy.abs(x1+x2)>1.): continue
+        
+            toSave+=[[x1,x2,-x1-x2,harpy.get_PDF_tw3(x1, x2, Q, 3)]]
+    
+    with open(path_to_save+"T_s."+str(n).zfill(4), 'w') as file:
+        for s in toSave:
+            file.write(', '.join("{:.8f}".format(item) for item in s)+'\n')
+            
+    # s-quark Delta
+    toSave=[]
+    
+    for r in rList:       
+        for phi in phiList:
+            x1,x2=X1X2(r,phi)
+            if(numpy.abs(x1)<0.01 and numpy.abs(x2)<0.01): continue
+            if(numpy.abs(x1)>1. or numpy.abs(x2)>1. or numpy.abs(x1+x2)>1.): continue
+        
+            toSave+=[[x1,x2,-x1-x2,harpy.get_PDF_tw3(x1, x2, Q, -3)]]
+    
+    with open(path_to_save+"deltaT_s."+str(n).zfill(4), 'w') as file:
+        for s in toSave:
+            file.write(', '.join("{:.8f}".format(item) for item in s)+'\n')
+            
+    # c-quark
+    toSave=[]
+    
+    for r in rList:       
+        for phi in phiList:
+            x1,x2=X1X2(r,phi)
+            if(numpy.abs(x1)<0.01 and numpy.abs(x2)<0.01): continue
+            if(numpy.abs(x1)>1. or numpy.abs(x2)>1. or numpy.abs(x1+x2)>1.): continue
+        
+            toSave+=[[x1,x2,-x1-x2,harpy.get_PDF_tw3(x1, x2, Q, 4)]]
+    
+    with open(path_to_save+"T_c."+str(n).zfill(4), 'w') as file:
+        for s in toSave:
+            file.write(', '.join("{:.8f}".format(item) for item in s)+'\n')
+            
+    # c-quark Delta
+    toSave=[]
+    
+    for r in rList:       
+        for phi in phiList:
+            x1,x2=X1X2(r,phi)
+            if(numpy.abs(x1)<0.01 and numpy.abs(x2)<0.01): continue
+            if(numpy.abs(x1)>1. or numpy.abs(x2)>1. or numpy.abs(x1+x2)>1.): continue
+        
+            toSave+=[[x1,x2,-x1-x2,harpy.get_PDF_tw3(x1, x2, Q, -4)]]
+    
+    with open(path_to_save+"deltaT_c."+str(n).zfill(4), 'w') as file:
+        for s in toSave:
+            file.write(', '.join("{:.8f}".format(item) for item in s)+'\n')
+    
+    # g-quark
+    toSave=[]
+    
+    for r in rList:       
+        for phi in phiList:
+            x1,x2=X1X2(r,phi)
+            if(numpy.abs(x1)<0.01 and numpy.abs(x2)<0.01): continue
+            if(numpy.abs(x1)>1. or numpy.abs(x2)>1. or numpy.abs(x1+x2)>1.): continue
+        
+            toSave+=[[x1,x2,-x1-x2,harpy.get_PDF_tw3(x1, x2, Q, 0)]]
+    
+    with open(path_to_save+"T_g+."+str(n).zfill(4), 'w') as file:
+        for s in toSave:
+            file.write(', '.join("{:.8f}".format(item) for item in s)+'\n')
+            
+    toSave=[]
+    
+    for r in rList:       
+        for phi in phiList:
+            x1,x2=X1X2(r,phi)
+            if(numpy.abs(x1)<0.01 and numpy.abs(x2)<0.01): continue
+            if(numpy.abs(x1)>1. or numpy.abs(x2)>1. or numpy.abs(x1+x2)>1.): continue
+        
+            toSave+=[[x1,x2,-x1-x2,harpy.get_PDF_tw3(x1, x2, Q, -10)]]
+    
+    with open(path_to_save+"T_g-."+str(n).zfill(4), 'w') as file:
+        for s in toSave:
+            file.write(', '.join("{:.8f}".format(item) for item in s)+'\n')
+
+#%%
+#path_to_save="/data/WorkingFiles/TMD/Fit_Notes/Twist3_25/data/Tw3PDF_4GeV_n4/"
+path_to_save="/data/WorkingFiles/TMD/Fit_Notes/Twist3_25/data/Tw3PDF_100GeV_n6/"
+rList=[0.01*i+0.01 for i in range(9)]+[0.05*i+0.1 for i in range(19)]
+phiList=[i/8 for i in range(48)]
+toSave=[]
+Q=100.
+
+for n in range(len(repLIST)):
+    print("---->",n)
+    harpy.setNPparameters_tw3(repLIST[n])
+    harpy.UpdateTables(1.0, 100.0)
+
+    # u-quark
+    
+    toSave=[]
+    
+    for r in rList:       
+        for phi in phiList:
+            x1,x2=X1X2(r,phi)
+            if(numpy.abs(x1)<0.01 and numpy.abs(x2)<0.01): continue
+            if(numpy.abs(x1)>1. or numpy.abs(x2)>1. or numpy.abs(x1+x2)>1.): continue
+        
+            toSave+=[[x1,x2,-x1-x2,harpy.get_PDF_tw3(x1, x2, Q, 2)]]
+    
+    with open(path_to_save+"T_u."+str(n).zfill(4), 'w') as file:
+        for s in toSave:
+            file.write(', '.join("{:.8f}".format(item) for item in s)+'\n')
+    # u-quark Delta
+    
+    toSave=[]
+    
+    for r in rList:       
+        for phi in phiList:
+            x1,x2=X1X2(r,phi)
+            if(numpy.abs(x1)<0.01 and numpy.abs(x2)<0.01): continue
+            if(numpy.abs(x1)>1. or numpy.abs(x2)>1. or numpy.abs(x1+x2)>1.): continue
+        
+            toSave+=[[x1,x2,-x1-x2,harpy.get_PDF_tw3(x1, x2, Q, -2)]]
+    
+    with open(path_to_save+"deltaT_u."+str(n).zfill(4), 'w') as file:
+        for s in toSave:
+            file.write(', '.join("{:.8f}".format(item) for item in s)+'\n')
+    
+    # d-quark
+            
+    toSave=[]
+    
+    for r in rList:       
+        for phi in phiList:
+            x1,x2=X1X2(r,phi)
+            if(numpy.abs(x1)<0.01 and numpy.abs(x2)<0.01): continue
+            if(numpy.abs(x1)>1. or numpy.abs(x2)>1. or numpy.abs(x1+x2)>1.): continue
+        
+            toSave+=[[x1,x2,-x1-x2,harpy.get_PDF_tw3(x1, x2, Q, 1)]]
+    
+    with open(path_to_save+"T_d."+str(n).zfill(4), 'w') as file:
+        for s in toSave:
+            file.write(', '.join("{:.8f}".format(item) for item in s)+'\n')
+            
+    # d-quark De;ta
+            
+    toSave=[]
+    
+    for r in rList:       
+        for phi in phiList:
+            x1,x2=X1X2(r,phi)
+            if(numpy.abs(x1)<0.01 and numpy.abs(x2)<0.01): continue
+            if(numpy.abs(x1)>1. or numpy.abs(x2)>1. or numpy.abs(x1+x2)>1.): continue
+        
+            toSave+=[[x1,x2,-x1-x2,harpy.get_PDF_tw3(x1, x2, Q, -1)]]
+    
+    with open(path_to_save+"deltaT_d."+str(n).zfill(4), 'w') as file:
+        for s in toSave:
+            file.write(', '.join("{:.8f}".format(item) for item in s)+'\n')
+    
+    # s-quark
+    toSave=[]
+    
+    for r in rList:       
+        for phi in phiList:
+            x1,x2=X1X2(r,phi)
+            if(numpy.abs(x1)<0.01 and numpy.abs(x2)<0.01): continue
+            if(numpy.abs(x1)>1. or numpy.abs(x2)>1. or numpy.abs(x1+x2)>1.): continue
+        
+            toSave+=[[x1,x2,-x1-x2,harpy.get_PDF_tw3(x1, x2, Q, 3)]]
+    
+    with open(path_to_save+"T_s."+str(n).zfill(4), 'w') as file:
+        for s in toSave:
+            file.write(', '.join("{:.8f}".format(item) for item in s)+'\n')
+            
+    # s-quark Delta
+    toSave=[]
+    
+    for r in rList:       
+        for phi in phiList:
+            x1,x2=X1X2(r,phi)
+            if(numpy.abs(x1)<0.01 and numpy.abs(x2)<0.01): continue
+            if(numpy.abs(x1)>1. or numpy.abs(x2)>1. or numpy.abs(x1+x2)>1.): continue
+        
+            toSave+=[[x1,x2,-x1-x2,harpy.get_PDF_tw3(x1, x2, Q, -3)]]
+    
+    with open(path_to_save+"deltaT_s."+str(n).zfill(4), 'w') as file:
+        for s in toSave:
+            file.write(', '.join("{:.8f}".format(item) for item in s)+'\n')
+            
+    # c-quark
+    toSave=[]
+    
+    for r in rList:       
+        for phi in phiList:
+            x1,x2=X1X2(r,phi)
+            if(numpy.abs(x1)<0.01 and numpy.abs(x2)<0.01): continue
+            if(numpy.abs(x1)>1. or numpy.abs(x2)>1. or numpy.abs(x1+x2)>1.): continue
+        
+            toSave+=[[x1,x2,-x1-x2,harpy.get_PDF_tw3(x1, x2, Q, 4)]]
+    
+    with open(path_to_save+"T_c."+str(n).zfill(4), 'w') as file:
+        for s in toSave:
+            file.write(', '.join("{:.8f}".format(item) for item in s)+'\n')
+            
+    # c-quark Delta
+    toSave=[]
+    
+    for r in rList:       
+        for phi in phiList:
+            x1,x2=X1X2(r,phi)
+            if(numpy.abs(x1)<0.01 and numpy.abs(x2)<0.01): continue
+            if(numpy.abs(x1)>1. or numpy.abs(x2)>1. or numpy.abs(x1+x2)>1.): continue
+        
+            toSave+=[[x1,x2,-x1-x2,harpy.get_PDF_tw3(x1, x2, Q, -4)]]
+    
+    with open(path_to_save+"deltaT_c."+str(n).zfill(4), 'w') as file:
+        for s in toSave:
+            file.write(', '.join("{:.8f}".format(item) for item in s)+'\n')
+    
+    # g-quark
+    toSave=[]
+    
+    for r in rList:       
+        for phi in phiList:
+            x1,x2=X1X2(r,phi)
+            if(numpy.abs(x1)<0.01 and numpy.abs(x2)<0.01): continue
+            if(numpy.abs(x1)>1. or numpy.abs(x2)>1. or numpy.abs(x1+x2)>1.): continue
+        
+            toSave+=[[x1,x2,-x1-x2,harpy.get_PDF_tw3(x1, x2, Q, 0)]]
+    
+    with open(path_to_save+"T_g+."+str(n).zfill(4), 'w') as file:
+        for s in toSave:
+            file.write(', '.join("{:.8f}".format(item) for item in s)+'\n')
+            
+    toSave=[]
+    
+    for r in rList:       
+        for phi in phiList:
+            x1,x2=X1X2(r,phi)
+            if(numpy.abs(x1)<0.01 and numpy.abs(x2)<0.01): continue
+            if(numpy.abs(x1)>1. or numpy.abs(x2)>1. or numpy.abs(x1+x2)>1.): continue
+        
+            toSave+=[[x1,x2,-x1-x2,harpy.get_PDF_tw3(x1, x2, Q, -10)]]
+    
+    with open(path_to_save+"T_g-."+str(n).zfill(4), 'w') as file:
+        for s in toSave:
+            file.write(', '.join("{:.8f}".format(item) for item in s)+'\n')
+
+#%%
 # path_to_save="/data/WorkingFiles/TMD/Fit_Notes/Twist3_25/data/Tw3PDF_4GeV/"
 # rList=[0.01*i+0.01 for i in range(9)]+[0.05*i+0.1 for i in range(19)]
 # phiList=[i/8 for i in range(48)]

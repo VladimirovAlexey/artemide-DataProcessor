@@ -335,10 +335,18 @@ def chi2SIDIS(x):
 from iminuit import Minuit
 
 #---- PDFbias-like row (0.083931)
+# initialValues=([1.5, 0.038969, 0.030641, 0.0, 
+#                        0.51638, 0.002073, 0.478567, 0.373111, 
+#                        2.407, 22.1996, 3.7876, 0.00128, 
+#                        0.403343, 5e-05, 1.0, 1.0, 
+#                        0.69769, 0.712969, -0.133895, -0.841651, 0.846846,
+#                        0.774759, 1.5565, 1.1863, 0.692877, -0.569062, 
+#                        0.0, 0.0])
+
 initialValues=([1.5, 0.038969, 0.030641, 0.0, 
-                       0.51638, 0.002073, 0.478567, 0.373111, 
-                       2.407, 22.1996, 3.7876, 0.00128, 
-                       0.403343, 5e-05, 1.0, 1.0, 
+                       0.51638, 0.2073, 0.478567, 0.373111, 
+                       2.407, 0.221996, 3.7876, 0.128, 
+                       0.403343, 0.5, 1.0, 1.0, 
                        0.69769, 0.712969, -0.133895, -0.841651, 0.846846,
                        0.774759, 1.5565, 1.1863, 0.692877, -0.569062, 
                        0.0, 0.0])
@@ -363,13 +371,16 @@ parametersToMinimize=(True, False,False,True,
                       False, False, False,False,
                       False, False, False, False,
                       False, False, True,True,
-                      False, False, False,False,
-                      False, False, False,False,
-                      False, False, True,True)
+                      True,True,True,True,
+                      True,True,True,True,
+                      True,True,True,True)
+                      #False, False, False,False,
+                      #False, False, False,False,
+                      #False, False, True,True)
 
 #%%
 
-m = Minuit(chi2, initialValues)
+m = Minuit(chi2DY, initialValues)
 
 m.errors=initialErrors
 m.limits=searchLimits

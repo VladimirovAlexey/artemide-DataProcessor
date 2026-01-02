@@ -233,9 +233,19 @@ setALT=theDataW.CutData(cutFunc_TMD)
 print('Loaded ', setALT.numberOfSets, 'data sets with', sum([i.numberOfPoints for i in setALT.sets]), 'points.')
 
 #%%
-harpy.setNPparameters_tw3([5.96232, 1.07002, -1.47505, 1.12059, 8.70425, 0.403322, 3.4056, \
--0.539385, -2.18672, -10.4606, -22.2453, -1.2878, -8.20021, 4.78427, \
-1.2689, -3.53346, 1.70584, 0.])
+harpy.setNPparameters_tw3([5.99638, 1.06829, -1.4856, 1.23622, 8.45311, 0.598878, 2.87409, \
+-0.538388, -1.06027, -10.0777, -23.1941, -1.33449, -9.25645, 4.15302, \
+1.27243, -2.73189, 2.08447, 0.])
+
+harpy.UpdateTables(1.0, 105.0)
+
+harpy.setNPparameters_SiversTMDPDF([0.5,0.0])
+harpy.setNPparameters_wgtTMDPDF([0.5,0.0])
+
+#%%
+harpy.setNPparameters_tw3([6.0782, 1.09694, -1.49508, 0., 0., 0., 0., \
+0., 0., -0., -0., -0., -0., \
+0., 0., 0., 0., 0.])
 
 harpy.UpdateTables(1.0, 105.0)
 
@@ -252,7 +262,7 @@ DataProcessor.harpyInterface.PrintChi2Table(setALT,method="central",printSysShif
 #%%
 repLIST=[]
 #with open("/data/WorkingFiles/TMD/Fit_Notes/Twist3_25/rreps4.csv","r") as file:
-with open("/data/WorkingFiles/TMD/Fit_Notes/Twist3_25/rreps5.csv","r") as file:
+with open("/data/WorkingFiles/TMD/Fit_Notes/Twist3_25/rreps6.csv","r") as file:
     lines=file.readlines()
     for line in lines:
         repLIST.append([float(p) for p in line.split(",")])       
@@ -266,49 +276,76 @@ path_to_save="/data/WorkingFiles/TMD/Fit_Notes/Twist3_25/data_for_plots/"
 for n in range(len(repLIST)):
     print("---->",n)
     harpy.setNPparameters_tw3(repLIST[n])
-    harpy.UpdateTables(1.0, 8.0)
+    harpy.UpdateTables(1.0, 25.0)
+    
+    # D2 vs Q
+    f=100    
+    Qlist=numpy.arange(1.2,25.,0.2)    
+    flist=[f for i in range(len(Qlist))]
+    D2list=harpy.D2List(Qlist,flist)
+    
+    with open(path_to_save+"D2/d2_P."+str(n).zfill(4), 'w') as file:
+        file.write(', '.join("{:.10f}".format(item) for item in D2list)+'\n')
+        
+    # D2 for n
+    f=101  
+    Qlist=numpy.arange(1.2,25.,0.2)    
+    flist=[f for i in range(len(Qlist))]
+    D2list=harpy.D2List(Qlist,flist)
+    
+    with open(path_to_save+"D2/d2_N."+str(n).zfill(4), 'w') as file:
+        file.write(', '.join("{:.10f}".format(item) for item in D2list)+'\n')
+        
+    # D2 for d
+    f=102    
+    Qlist=numpy.arange(1.2,25.,0.2)    
+    flist=[f for i in range(len(Qlist))]
+    D2list=harpy.D2List(Qlist,flist)
+    
+    with open(path_to_save+"D2/d2_D."+str(n).zfill(4), 'w') as file:
+        file.write(', '.join("{:.10f}".format(item) for item in D2list)+'\n')
     
     # X=0.5 vs Q
     X=0.5
     f=100
-    Qlist=numpy.arange(1.2,8.2,0.2)
+    Qlist=numpy.arange(1.2,25.,0.2)
     Xlist=[X for i in range(len(Qlist))]
     flist=[f for i in range(len(Qlist))]
         
     G2list=harpy.G2List(Xlist,Qlist,flist)
 
     
-    with open(path_to_save+"G2_vsQ/X05."+str(n).zfill(4), 'w') as file:
+    with open(path_to_save+"G2/G2_p_X05."+str(n).zfill(4), 'w') as file:
         file.write(', '.join("{:.10f}".format(item) for item in G2list)+'\n')
 
     # X=0.3 vs Q
     X=0.3
     f=100
-    Qlist=numpy.arange(1.2,8.2,0.2)
+    Qlist=numpy.arange(1.2,25.,0.2)
     Xlist=[X for i in range(len(Qlist))]
     flist=[f for i in range(len(Qlist))]
         
     G2list=harpy.G2List(Xlist,Qlist,flist)
 
     
-    with open(path_to_save+"G2_vsQ/X03."+str(n).zfill(4), 'w') as file:
+    with open(path_to_save+"G2/G2_p_X03."+str(n).zfill(4), 'w') as file:
         file.write(', '.join("{:.10f}".format(item) for item in G2list)+'\n')
         
     # X=0.05 vs Q
     X=0.05
     f=100
-    Qlist=numpy.arange(1.2,8.2,0.2)
+    Qlist=numpy.arange(1.2,25.,0.2)
     Xlist=[X for i in range(len(Qlist))]
     flist=[f for i in range(len(Qlist))]
         
     G2list=harpy.G2List(Xlist,Qlist,flist)
 
     
-    with open(path_to_save+"G2_vsQ/X005."+str(n).zfill(4), 'w') as file:
+    with open(path_to_save+"G2/G2_p_X005."+str(n).zfill(4), 'w') as file:
         file.write(', '.join("{:.10f}".format(item) for item in G2list)+'\n')
     
-    # Q=2.5 vs x
-    Q=2.5
+    # Q=2 vs x
+    Q=2.
     f=100
     Xlist=numpy.arange(0.01,1,0.01 )
     Qlist=[Q for i in range(len(Xlist))]
@@ -317,7 +354,111 @@ for n in range(len(repLIST)):
     G2list=harpy.G2List(Xlist,Qlist,flist)
 
     
-    with open(path_to_save+"G2_vsX/Q25."+str(n).zfill(4), 'w') as file:
+    with open(path_to_save+"G2/G2_p_Q02."+str(n).zfill(4), 'w') as file:
+        file.write(', '.join("{:.10f}".format(item) for item in G2list)+'\n')
+        
+    # Q=3 vs x
+    Q=3.
+    f=100
+    Xlist=numpy.arange(0.01,1,0.01 )
+    Qlist=[Q for i in range(len(Xlist))]
+    flist=[f for i in range(len(Qlist))]
+        
+    G2list=harpy.G2List(Xlist,Qlist,flist)
+
+    
+    with open(path_to_save+"G2/G2_p_Q03."+str(n).zfill(4), 'w') as file:
+        file.write(', '.join("{:.10f}".format(item) for item in G2list)+'\n')
+        
+    # Q=4 vs x
+    Q=4.
+    f=100
+    Xlist=numpy.arange(0.01,1,0.01 )
+    Qlist=[Q for i in range(len(Xlist))]
+    flist=[f for i in range(len(Qlist))]
+        
+    G2list=harpy.G2List(Xlist,Qlist,flist)
+
+    
+    with open(path_to_save+"G2/G2_p_Q04."+str(n).zfill(4), 'w') as file:
+        file.write(', '.join("{:.10f}".format(item) for item in G2list)+'\n')
+        
+    # Q=2. vs x
+    Q=2.
+    f=102
+    Xlist=numpy.arange(0.01,1,0.01 )
+    Qlist=[Q for i in range(len(Xlist))]
+    flist=[f for i in range(len(Qlist))]
+        
+    G2list=harpy.G2List(Xlist,Qlist,flist)
+
+    
+    with open(path_to_save+"G2/G2_d_Q02."+str(n).zfill(4), 'w') as file:
+        file.write(', '.join("{:.10f}".format(item) for item in G2list)+'\n')
+        
+    # Q=3. vs x
+    Q=3.
+    f=102
+    Xlist=numpy.arange(0.01,1,0.01 )
+    Qlist=[Q for i in range(len(Xlist))]
+    flist=[f for i in range(len(Qlist))]
+        
+    G2list=harpy.G2List(Xlist,Qlist,flist)
+
+    
+    with open(path_to_save+"G2/G2_d_Q03."+str(n).zfill(4), 'w') as file:
+        file.write(', '.join("{:.10f}".format(item) for item in G2list)+'\n')
+        
+    # Q=3. vs x
+    Q=4.
+    f=102
+    Xlist=numpy.arange(0.01,1,0.01 )
+    Qlist=[Q for i in range(len(Xlist))]
+    flist=[f for i in range(len(Qlist))]
+        
+    G2list=harpy.G2List(Xlist,Qlist,flist)
+    
+    
+    with open(path_to_save+"G2/G2_d_Q04."+str(n).zfill(4), 'w') as file:
+        file.write(', '.join("{:.10f}".format(item) for item in G2list)+'\n')
+        
+    # Q=2. vs x
+    Q=2.
+    f=101
+    Xlist=numpy.arange(0.01,1,0.01 )
+    Qlist=[Q for i in range(len(Xlist))]
+    flist=[f for i in range(len(Qlist))]
+        
+    G2list=harpy.G2List(Xlist,Qlist,flist)
+
+    
+    with open(path_to_save+"G2/G2_n_Q02."+str(n).zfill(4), 'w') as file:
+        file.write(', '.join("{:.10f}".format(item) for item in G2list)+'\n')
+        
+    # Q=3. vs x
+    Q=3.
+    f=101
+    Xlist=numpy.arange(0.01,1,0.01 )
+    Qlist=[Q for i in range(len(Xlist))]
+    flist=[f for i in range(len(Qlist))]
+        
+    G2list=harpy.G2List(Xlist,Qlist,flist)
+
+    
+    with open(path_to_save+"G2/G2_n_Q03."+str(n).zfill(4), 'w') as file:
+        file.write(', '.join("{:.10f}".format(item) for item in G2list)+'\n')
+        
+    # Q=3. vs x
+    Q=4.
+    f=101
+    Xlist=numpy.arange(0.01,1,0.01 )
+    Qlist=[Q for i in range(len(Xlist))]
+    flist=[f for i in range(len(Qlist))]
+        
+    G2list=harpy.G2List(Xlist,Qlist,flist)
+
+    
+    with open(path_to_save+"G2/G2_n_Q04."+str(n).zfill(4), 'w') as file:
         file.write(', '.join("{:.10f}".format(item) for item in G2list)+'\n')
         
     # Q=8. vs x
@@ -330,24 +471,269 @@ for n in range(len(repLIST)):
     G2list=harpy.G2List(Xlist,Qlist,flist)
 
     
-    with open(path_to_save+"G2_vsX/Q80."+str(n).zfill(4), 'w') as file:
+    with open(path_to_save+"G2/G2_p_Q080."+str(n).zfill(4), 'w') as file:
         file.write(', '.join("{:.10f}".format(item) for item in G2list)+'\n')
+        
+    # Q=25. vs x
+    Q=25.
+    f=100
+    Xlist=numpy.arange(0.01,1,0.01 )
+    Qlist=[Q for i in range(len(Xlist))]
+    flist=[f for i in range(len(Qlist))]
+        
+    G2list=harpy.G2List(Xlist,Qlist,flist)
+
+    
+    with open(path_to_save+"G2/G2_p_Q250."+str(n).zfill(4), 'w') as file:
+        file.write(', '.join("{:.10f}".format(item) for item in G2list)+'\n')
+        
 #%%
-#### Plot G2 vs. Q
-X=0.3
-f=100
-Qlist=numpy.arange(1.4,8.,0.2)
-Xlist=[X for i in range(len(Qlist))]
-flist=[f for i in range(len(Qlist))]
+####### Saving D2 for quarks
+#path_to_save="/data/WorkingFiles/TMD/Fit_Notes/Twist3_25/data/Tw3PDF_4GeV_n4/"
+path_to_save="/data/WorkingFiles/TMD/Fit_Notes/Twist3_25/data_for_plots/"
 
-G2list=harpy.G2List(Xlist,Qlist,flist)
+
+for n in range(len(repLIST)):
+    print("---->",n)
+    harpy.setNPparameters_tw3(repLIST[n])
+    harpy.UpdateTables(1.0, 25.0)
+    
+    # D2 vs u
+    f=1    
+    Qlist=numpy.arange(1.2,25.,0.2)    
+    flist=[f for i in range(len(Qlist))]
+    D2list=harpy.D2List(Qlist,flist)
+    
+    with open(path_to_save+"D2/d2_u."+str(n).zfill(4), 'w') as file:
+        file.write(', '.join("{:.10f}".format(item) for item in D2list)+'\n')
+        
+    # D2 for d
+    f=2
+    Qlist=numpy.arange(1.2,25.,0.2)    
+    flist=[f for i in range(len(Qlist))]
+    D2list=harpy.D2List(Qlist,flist)
+    
+    with open(path_to_save+"D2/d2_d."+str(n).zfill(4), 'w') as file:
+        file.write(', '.join("{:.10f}".format(item) for item in D2list)+'\n')
+        
+    # D2 for s
+    f=3
+    Qlist=numpy.arange(1.2,25.,0.2)    
+    flist=[f for i in range(len(Qlist))]
+    D2list=harpy.D2List(Qlist,flist)
+    
+    with open(path_to_save+"D2/d2_s."+str(n).zfill(4), 'w') as file:
+        file.write(', '.join("{:.10f}".format(item) for item in D2list)+'\n')
+        
+    # D2 for c
+    f=4
+    Qlist=numpy.arange(1.2,25.,0.2)    
+    flist=[f for i in range(len(Qlist))]
+    D2list=harpy.D2List(Qlist,flist)
+    
+    with open(path_to_save+"D2/d2_c."+str(n).zfill(4), 'w') as file:
+        file.write(', '.join("{:.10f}".format(item) for item in D2list)+'\n')
+    
 
 #%%
-#### Plot G2 vs. Q
-Q=2.5
-f=100
-Xlist=numpy.arange(0.01,1,0.01 )
-Qlist=[Q for i in range(len(Xlist))]
-flist=[f for i in range(len(Qlist))]
+####### Saving G2
+#path_to_save="/data/WorkingFiles/TMD/Fit_Notes/Twist3_25/data/Tw3PDF_4GeV_n4/"
+path_to_save="/data/WorkingFiles/TMD/Fit_Notes/Twist3_25/data_for_plots/"
 
-G2list=harpy.G2List(Xlist,Qlist,flist)
+with open(path_to_save+"AUT/AUT_pip_z1_vsX.csv", 'w') as file:
+    file.write('HERMES pi+, Q=1.7, X=arange(0.02,0.61,0.01), z=0.239, pT=0.14 \n')
+with open(path_to_save+"AUT/AUT_pip_z2_vsX.csv", 'w') as file:
+    file.write('HERMES pi+, Q=1.7, X=arange(0.02,0.61,0.01), z=0.322, pT=0.14 \n')
+with open(path_to_save+"AUT/AUT_pip_z3_vsX.csv", 'w') as file:
+    file.write('HERMES pi+, Q=1.7, X=arange(0.02,0.61,0.01), z=0.423, pT=0.14 \n')
+with open(path_to_save+"AUT/AUT_pip_z4_vsX.csv", 'w') as file:
+    file.write('HERMES pi+, Q=1.7, X=arange(0.02,0.61,0.01), z=0.577, pT=0.14 \n')
+
+with open(path_to_save+"AUT/AUT_pim_z1_vsX.csv", 'w') as file:
+    file.write('HERMES pi-, Q=1.7, X=arange(0.02,0.61,0.01), z=0.239, pT=0.14 \n')
+with open(path_to_save+"AUT/AUT_pim_z2_vsX.csv", 'w') as file:
+    file.write('HERMES pi-, Q=1.7, X=arange(0.02,0.61,0.01), z=0.322, pT=0.14 \n')
+with open(path_to_save+"AUT/AUT_pim_z3_vsX.csv", 'w') as file:
+    file.write('HERMES pi-, Q=1.7, X=arange(0.02,0.61,0.01), z=0.423, pT=0.14 \n')
+with open(path_to_save+"AUT/AUT_pim_z4_vsX.csv", 'w') as file:
+    file.write('HERMES pi-, Q=1.7, X=arange(0.02,0.61,0.01), z=0.577, pT=0.14 \n')
+    
+with open(path_to_save+"AUT/AUT_kp_z1_vsX.csv", 'w') as file:
+    file.write('HERMES K+, Q=1.7, X=arange(0.02,0.61,0.01), z=0.239, pT=0.14 \n')
+with open(path_to_save+"AUT/AUT_kp_z2_vsX.csv", 'w') as file:
+    file.write('HERMES K+, Q=1.7, X=arange(0.02,0.61,0.01), z=0.322, pT=0.14 \n')
+with open(path_to_save+"AUT/AUT_kp_z3_vsX.csv", 'w') as file:
+    file.write('HERMES K+, Q=1.7, X=arange(0.02,0.61,0.01), z=0.423, pT=0.14 \n')
+with open(path_to_save+"AUT/AUT_kp_z4_vsX.csv", 'w') as file:
+    file.write('HERMES K+, Q=1.7, X=arange(0.02,0.61,0.01), z=0.577, pT=0.14 \n')
+    
+with open(path_to_save+"AUT/AUT_km_z1_vsX.csv", 'w') as file:
+    file.write('HERMES K-, Q=1.7, X=arange(0.02,0.61,0.01), z=0.239, pT=0.14 \n')
+with open(path_to_save+"AUT/AUT_km_z2_vsX.csv", 'w') as file:
+    file.write('HERMES K-, Q=1.7, X=arange(0.02,0.61,0.01), z=0.322, pT=0.14 \n')
+with open(path_to_save+"AUT/AUT_km_z3_vsX.csv", 'w') as file:
+    file.write('HERMES K-, Q=1.7, X=arange(0.02,0.61,0.01), z=0.423, pT=0.14 \n')
+with open(path_to_save+"AUT/AUT_km_z4_vsX.csv", 'w') as file:
+    file.write('HERMES K-, Q=1.7, X=arange(0.02,0.61,0.01), z=0.577, pT=0.14 \n')
+
+for n in range(len(repLIST)):
+    print("---->",n)
+    harpy.setNPparameters_tw3(repLIST[n])
+    harpy.UpdateTables(1.0, 105.0)
+    
+    Xlist=numpy.arange(0.02,0.61,0.01)
+    Q=[1.7 for x in Xlist]
+    
+    s=[52. for x in Xlist]    
+    pT=[0.14 for x in Xlist]
+
+    masses=[[0.938,0.139]  for x in Xlist]
+    
+    ### pi+    
+    proc=[[1, 1, 1, 12001] for x in Xlist]
+    wproc=[[1, 1, 1, 2001] for x in Xlist]
+    
+    
+    z=[0.239 for x in Xlist]
+    
+    A=harpy.SIDIS.xSecListBINLESS(proc, s, pT, z, Xlist, Q, masses)
+    B=harpy.SIDIS.xSecListBINLESS(wproc, s, pT, z, Xlist, Q, masses)
+    
+    with open(path_to_save+"AUT/AUT_pip_z1_vsX.csv", 'a') as file:
+        file.write(', '.join("{:.10f}".format(item) for item in (numpy.array(A)/numpy.array(B)))+'\n')
+        
+    z=[0.322 for x in Xlist]
+    
+    A=harpy.SIDIS.xSecListBINLESS(proc, s, pT, z, Xlist, Q, masses)
+    B=harpy.SIDIS.xSecListBINLESS(wproc, s, pT, z, Xlist, Q, masses)
+    
+    with open(path_to_save+"AUT/AUT_pip_z2_vsX.csv", 'a') as file:
+        file.write(', '.join("{:.10f}".format(item) for item in (numpy.array(A)/numpy.array(B)))+'\n')
+    
+    z=[0.423 for x in Xlist]
+    
+    A=harpy.SIDIS.xSecListBINLESS(proc, s, pT, z, Xlist, Q, masses)
+    B=harpy.SIDIS.xSecListBINLESS(wproc, s, pT, z, Xlist, Q, masses)
+    
+    with open(path_to_save+"AUT/AUT_pip_z3_vsX.csv", 'a') as file:
+        file.write(', '.join("{:.10f}".format(item) for item in (numpy.array(A)/numpy.array(B)))+'\n')
+    
+    z=[0.577 for x in Xlist]
+    
+    A=harpy.SIDIS.xSecListBINLESS(proc, s, pT, z, Xlist, Q, masses)
+    B=harpy.SIDIS.xSecListBINLESS(wproc, s, pT, z, Xlist, Q, masses)
+    
+    with open(path_to_save+"AUT/AUT_pip_z4_vsX.csv", 'a') as file:
+        file.write(', '.join("{:.10f}".format(item) for item in (numpy.array(A)/numpy.array(B)))+'\n')
+        
+    ### pi-    
+    proc=[[1, 1, -1, 12001] for x in Xlist]
+    wproc=[[1, 1, -1, 2001] for x in Xlist]
+    
+    
+    z=[0.239 for x in Xlist]
+    
+    A=harpy.SIDIS.xSecListBINLESS(proc, s, pT, z, Xlist, Q, masses)
+    B=harpy.SIDIS.xSecListBINLESS(wproc, s, pT, z, Xlist, Q, masses)
+    
+    with open(path_to_save+"AUT/AUT_pim_z1_vsX.csv", 'a') as file:
+        file.write(', '.join("{:.10f}".format(item) for item in (numpy.array(A)/numpy.array(B)))+'\n')
+        
+    z=[0.322 for x in Xlist]
+    
+    A=harpy.SIDIS.xSecListBINLESS(proc, s, pT, z, Xlist, Q, masses)
+    B=harpy.SIDIS.xSecListBINLESS(wproc, s, pT, z, Xlist, Q, masses)
+    
+    with open(path_to_save+"AUT/AUT_pim_z2_vsX.csv", 'a') as file:
+        file.write(', '.join("{:.10f}".format(item) for item in (numpy.array(A)/numpy.array(B)))+'\n')
+    
+    z=[0.423 for x in Xlist]
+    
+    A=harpy.SIDIS.xSecListBINLESS(proc, s, pT, z, Xlist, Q, masses)
+    B=harpy.SIDIS.xSecListBINLESS(wproc, s, pT, z, Xlist, Q, masses)
+    
+    with open(path_to_save+"AUT/AUT_pim_z3_vsX.csv", 'a') as file:
+        file.write(', '.join("{:.10f}".format(item) for item in (numpy.array(A)/numpy.array(B)))+'\n')
+    
+    z=[0.577 for x in Xlist]
+    
+    A=harpy.SIDIS.xSecListBINLESS(proc, s, pT, z, Xlist, Q, masses)
+    B=harpy.SIDIS.xSecListBINLESS(wproc, s, pT, z, Xlist, Q, masses)
+    
+    with open(path_to_save+"AUT/AUT_pim_z4_vsX.csv", 'a') as file:
+        file.write(', '.join("{:.10f}".format(item) for item in (numpy.array(A)/numpy.array(B)))+'\n')
+
+
+    ### K+    
+    proc=[[1, 1, 2, 12001] for x in Xlist]
+    wproc=[[1, 1, 2, 2001] for x in Xlist]
+    
+    
+    z=[0.239 for x in Xlist]
+    
+    A=harpy.SIDIS.xSecListBINLESS(proc, s, pT, z, Xlist, Q, masses)
+    B=harpy.SIDIS.xSecListBINLESS(wproc, s, pT, z, Xlist, Q, masses)
+    
+    with open(path_to_save+"AUT/AUT_kp_z1_vsX.csv", 'a') as file:
+        file.write(', '.join("{:.10f}".format(item) for item in (numpy.array(A)/numpy.array(B)))+'\n')
+        
+    z=[0.322 for x in Xlist]
+    
+    A=harpy.SIDIS.xSecListBINLESS(proc, s, pT, z, Xlist, Q, masses)
+    B=harpy.SIDIS.xSecListBINLESS(wproc, s, pT, z, Xlist, Q, masses)
+    
+    with open(path_to_save+"AUT/AUT_kp_z2_vsX.csv", 'a') as file:
+        file.write(', '.join("{:.10f}".format(item) for item in (numpy.array(A)/numpy.array(B)))+'\n')
+    
+    z=[0.423 for x in Xlist]
+    
+    A=harpy.SIDIS.xSecListBINLESS(proc, s, pT, z, Xlist, Q, masses)
+    B=harpy.SIDIS.xSecListBINLESS(wproc, s, pT, z, Xlist, Q, masses)
+    
+    with open(path_to_save+"AUT/AUT_kp_z3_vsX.csv", 'a') as file:
+        file.write(', '.join("{:.10f}".format(item) for item in (numpy.array(A)/numpy.array(B)))+'\n')
+    
+    z=[0.577 for x in Xlist]
+    
+    A=harpy.SIDIS.xSecListBINLESS(proc, s, pT, z, Xlist, Q, masses)
+    B=harpy.SIDIS.xSecListBINLESS(wproc, s, pT, z, Xlist, Q, masses)
+    
+    with open(path_to_save+"AUT/AUT_kp_z4_vsX.csv", 'a') as file:
+        file.write(', '.join("{:.10f}".format(item) for item in (numpy.array(A)/numpy.array(B)))+'\n')
+        
+    ### K-    
+    proc=[[1, 1, -2, 12001] for x in Xlist]
+    wproc=[[1, 1, -2, 2001] for x in Xlist]
+    
+    
+    z=[0.239 for x in Xlist]
+    
+    A=harpy.SIDIS.xSecListBINLESS(proc, s, pT, z, Xlist, Q, masses)
+    B=harpy.SIDIS.xSecListBINLESS(wproc, s, pT, z, Xlist, Q, masses)
+    
+    with open(path_to_save+"AUT/AUT_km_z1_vsX.csv", 'a') as file:
+        file.write(', '.join("{:.10f}".format(item) for item in (numpy.array(A)/numpy.array(B)))+'\n')
+        
+    z=[0.322 for x in Xlist]
+    
+    A=harpy.SIDIS.xSecListBINLESS(proc, s, pT, z, Xlist, Q, masses)
+    B=harpy.SIDIS.xSecListBINLESS(wproc, s, pT, z, Xlist, Q, masses)
+    
+    with open(path_to_save+"AUT/AUT_km_z2_vsX.csv", 'a') as file:
+        file.write(', '.join("{:.10f}".format(item) for item in (numpy.array(A)/numpy.array(B)))+'\n')
+    
+    z=[0.423 for x in Xlist]
+    
+    A=harpy.SIDIS.xSecListBINLESS(proc, s, pT, z, Xlist, Q, masses)
+    B=harpy.SIDIS.xSecListBINLESS(wproc, s, pT, z, Xlist, Q, masses)
+    
+    with open(path_to_save+"AUT/AUT_km_z3_vsX.csv", 'a') as file:
+        file.write(', '.join("{:.10f}".format(item) for item in (numpy.array(A)/numpy.array(B)))+'\n')
+    
+    z=[0.577 for x in Xlist]
+    
+    A=harpy.SIDIS.xSecListBINLESS(proc, s, pT, z, Xlist, Q, masses)
+    B=harpy.SIDIS.xSecListBINLESS(wproc, s, pT, z, Xlist, Q, masses)
+    
+    with open(path_to_save+"AUT/AUT_km_z4_vsX.csv", 'a') as file:
+        file.write(', '.join("{:.10f}".format(item) for item in (numpy.array(A)/numpy.array(B)))+'\n')

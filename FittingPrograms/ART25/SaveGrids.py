@@ -590,7 +590,11 @@ for i in range(N_replicas_max+1):
                                                Xrange=DataProcessor.SaveTMDGrid.XrangeFF_default,PDF="uTMDFF",h=2)
     #DataProcessor.SaveTMDGrid.SaveGrid_kT(SAVEPATH2+"_"+"{:04d}".format(i)+".dat",Qrange=Qrange)
     #DataProcessor.SaveTMDGrid.SaveGrid_Q(SAVEPATH3+"_"+"{:04d}".format(i)+".dat",Qrange=Qrange)
-    
+#%%
+for i in range(51):
+    print("Replica:"+ "{:04d}".format(i))
+    rSet.SetReplica(i)
+    DataProcessor.SaveTMDGrid.SaveGrid_kT(SAVEPATH2+"_"+"{:04d}".format(i)+".dat",Qrange=Qrange)
 #%%
 for i in range(N_replicas_max+1):
     print("Replica:"+ "{:04d}".format(i))
@@ -628,11 +632,20 @@ for i in range(N_replicas_max+1):
 #%%
 sys.exit()    
 #%%
-
+Qrange= [1.00, 1.11803, 1.22474, 1.4, 1.58114, 1.78885, 2., 2.23607, 2.52982, 2.82843,
+         3.16228, 3.4641, 4.75, 5.09902, 6.32456, 7.1, 8., 10., 11.1803, 12.2475,
+         14., 15.8114, 17.8885, 20., 22.3607, 25.2982, 28.2843, 31.6228, 34.641, 47.5,
+         50.9902, 63.2456, 71, 80, 100, 111.803, 122.475, 140, 158.114, 178.885, 
+         200.]
 #######################################
 # Save Grid specification (special)
 #######################################
-GRIDNAMEs="ART25_uTMDPDF_Q_dd"
+GRIDNAMEs="ART25_uTMDPDF_Q"
 SAVEPATHs="/data/WorkingFiles/TMD/Fit_Notes/ART25/TMDgrids/"+GRIDNAMEs+"/"+GRIDNAMEs
 
-DataProcessor.SaveTMDGrid.SaveGrid_Q(SAVEPATHs+"_0000.dat",Qrange=Qrange,includeGluon=True)
+#DataProcessor.SaveTMDGrid.SaveGrid_Q(SAVEPATHs+"_0000.dat",Qrange=Qrange,includeGluon=True)
+
+for i in range(0+1):
+    print("Replica:"+ "{:04d}".format(i))
+    rSet.SetReplica(i)
+    DataProcessor.SaveTMDGrid.SaveGrid_Q(SAVEPATHs+"_"+"{:04d}".format(i)+".dat",Qrange=Qrange,includeGluon=True)

@@ -220,6 +220,9 @@ harpy.setNPparameters([1.5, 0.083931, 0.030641, 0.0,
                        0.774759, 1.5565, 1.1863, 0.692877, -0.569062, 
                        0.0, 0.0])
 
+#print(DataProcessor.harpyInterface.ComputeXSec(setDY.points[0]))
+#sys.exit()
+
 DataProcessor.harpyInterface.PrintChi2Table(setSIDIS,printDecomposedChi2=True)
 DataProcessor.harpyInterface.PrintChi2Table(setDY,printDecomposedChi2=True)
 

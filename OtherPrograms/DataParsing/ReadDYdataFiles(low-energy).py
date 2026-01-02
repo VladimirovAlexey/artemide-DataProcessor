@@ -58,7 +58,7 @@ DataCurrent.comment="E288 (200) data"
 DataCurrent.reference="Phys.Rev.D 23 (1981) 604"
 
 DataCurrent.isNormalized=False
-proc_current=[2,1,1,101]
+proc_current=[1,1,1,101]
 s_current=19.42**2
 y_current=[0.1,0.7]
 lumUncertainty=0.25
@@ -121,7 +121,7 @@ DataCurrent.comment="E288 (300) data"
 DataCurrent.reference="Phys.Rev.D 23 (1981) 604"
 
 DataCurrent.isNormalized=False
-proc_current=[2,1,1,101]
+proc_current=[1,1,1,101]
 s_current=23.73**2
 y_current=[0.21-0.3,0.21+0.3]
 lumUncertainty=0.25
@@ -186,7 +186,7 @@ DataCurrent.comment="E288 (400) data"
 DataCurrent.reference="Phys.Rev.D 23 (1981) 604"
 
 DataCurrent.isNormalized=False
-proc_current=[2,1,1,101]
+proc_current=[1,1,1,101]
 s_current=27.43**2
 y_current=[0.03-0.3,0.03+0.3]
 lumUncertainty=0.25
