@@ -249,7 +249,7 @@ for i in range(len(data_from_f)):
 print("Done.  =>     Create points & append to data set ...")
 DataCurrent=DataProcessor.DataSet.DataSet('E772',"DY")
 DataCurrent.comment="E772 data"
-DataCurrent.reference="Phys.Rev.D 50 (1994) 3-38 + Erratum D60 (1999) 119903"
+DataCurrent.reference="Phys.Rev.D 50 (1994) 3038 + Erratum D60 (1999) 119903"
 
 DataCurrent.isNormalized=False
 proc_current=[2,1,1,102]
@@ -267,10 +267,18 @@ for j in range(4):
         p["process"]=proc_current
         p["s"]=s_current
         p["qT"]=[data_from_f[i][0]-0.125,data_from_f[i][0]+0.125]
-        # 0.31.. is for 1/pi from invariant cross-secX
-        p["thFactor"]=1/(p["qT"][1]**2-p["qT"][0]**2)/(y_current[1]-y_current[0])*0.3183098861838
+        p["<qT>"]=(p["qT"][0]+p["qT"][1])*0.5
+        
         p["Q"]=Q_current
+        p["<Q>"]=(p["Q"][0]+p["Q"][1])*0.5
         p["y"]=y_current
+        p["<y>"]=(p["y"][0]+p["y"][1])*0.5
+        
+        # 0.31.. is for 1/pi from invariant cross-secX
+        # furthermore, invariant cross-section is to be multiplied by 2E/sqrt[s]=x1+x2=sqrt[4(Q^2+qT^2)/s+xF^2]
+        ffactor=numpy.sqrt(4*(p["<Q>"]**2+p["<qT>"]**2)/p["s"]+p["<y>"]**2)*0.3183098861838
+        p["thFactor"]=1/(p["qT"][1]**2-p["qT"][0]**2)/(y_current[1]-y_current[0])*ffactor
+        
         p["xSec"]=data_from_f[i][3+3*j]
         p["includeCuts"]=False
         p["uncorrErr"].append((data_from_f[i][4+3*j]-data_from_f[i][5+3*j])/2.)
@@ -313,10 +321,17 @@ for j in range(4):
         p["process"]=proc_current
         p["s"]=s_current
         p["qT"]=[data_from_f[i][0]-0.125,data_from_f[i][0]+0.125]
-        # 0.31.. is for 1/pi from invariant cross-secX
-        p["thFactor"]=1/(p["qT"][1]**2-p["qT"][0]**2)/(y_current[1]-y_current[0])*0.3183098861838
+        p["<qT>"]=(p["qT"][0]+p["qT"][1])*0.5
+        
         p["Q"]=Q_current
+        p["<Q>"]=(p["Q"][0]+p["Q"][1])*0.5
         p["y"]=y_current
+        p["<y>"]=(p["y"][0]+p["y"][1])*0.5
+        
+        # 0.31.. is for 1/pi from invariant cross-secX
+        # furthermore, invariant cross-section is to be multiplied by 2E/sqrt[s]=x1+x2=sqrt[4(Q^2+qT^2)/s+xF^2]
+        ffactor=numpy.sqrt(4*(p["<Q>"]**2+p["<qT>"]**2)/p["s"]+p["<y>"]**2)*0.3183098861838
+        p["thFactor"]=1/(p["qT"][1]**2-p["qT"][0]**2)/(y_current[1]-y_current[0])*ffactor
         p["xSec"]=data_from_f[i][3+3*j]
         p["includeCuts"]=False
         p["uncorrErr"].append((data_from_f[i][4+3*j]-data_from_f[i][5+3*j])/2.)        
@@ -364,7 +379,7 @@ DataCurrent.comment="E605 data"
 DataCurrent.reference="Phys.Rev.D 43 (1991) 2815"
 
 DataCurrent.isNormalized=False
-proc_current=[2,1,1,102]
+proc_current=[2,1,1,101]
 s_current=38.76**2
 y_current=[-0.1,0.2]
 lumUncertainty=0.15
@@ -379,10 +394,20 @@ for i in range(len(data_from_f)):
     p["process"]=proc_current
     p["s"]=s_current
     p["qT"]=[data_from_f[i][0]-0.1,data_from_f[i][0]+0.1]
-    # 0.31.. is for 1/pi from invariant cross-secX
-    p["thFactor"]=1/(p["qT"][1]**2-p["qT"][0]**2)/(y_current[1]-y_current[0])*0.3183098861838
+    p["<qT>"]=(p["qT"][0]+p["qT"][1])*0.5
+    
     p["Q"]=Q_current
+    p["<Q>"]=(Q_current[0]+Q_current[1])*0.5
+    
     p["y"]=y_current
+    p["<y>"]=0.1 #### This value is specifyed in the text
+    
+    # 0.31.. is for 1/pi from invariant cross-secX
+    # furthermore, invariant cross-section is to be multiplied by 2E/sqrt[s]=x1+x2=sqrt[4(Q^2+qT^2)/s+xF^2]
+    ## all this is avaluated at xf=0.1
+    ffactor=numpy.sqrt(4*(p["<Q>"]**2+p["<qT>"]**2)/p["s"]+p["<y>"]**2)*0.3183098861838
+    p["thFactor"]=1/(p["qT"][1]**2-p["qT"][0]**2)/(y_current[1]-y_current[0])*ffactor
+    
     p["xSec"]=data_from_f[i][3]
     p["includeCuts"]=False
     p["uncorrErr"].append((data_from_f[i][4]+data_from_f[i][5])/2.)
@@ -427,10 +452,24 @@ for i in range(len(data_from_f)):
     p["process"]=proc_current
     p["s"]=s_current
     p["qT"]=[data_from_f[i][0]-0.1,data_from_f[i][0]+0.1]
-    # 0.31.. is for 1/pi from invariant cross-secX
-    p["thFactor"]=1/(p["qT"][1]**2-p["qT"][0]**2)/(y_current[1]-y_current[0])*0.3183098861838
+    p["<qT>"]=(p["qT"][0]+p["qT"][1])*0.5
+    
+    ### 0.31.. is for 1/pi from invariant cross-secX
+    ###p["thFactor"]=1/(p["qT"][1]**2-p["qT"][0]**2)/(y_current[1]-y_current[0])*0.3183098861838
+    
     p["Q"]=Q_current
+    p["<Q>"]=(Q_current[0]+Q_current[1])*0.5    
+    
     p["y"]=y_current
+    p["<y>"]=0.1 #### This value is specifyed in the text
+    
+    # 0.31.. is for 1/pi from invariant cross-secX
+    # furthermore, invariant cross-section is to be multiplied by 2E/sqrt[s]=x1+x2=sqrt[4(Q^2+qT^2)/s+xF^2]
+    ## all this is avaluated at xf=0.1
+    ffactor=numpy.sqrt(4*(p["<Q>"]**2+p["<qT>"]**2)/p["s"]+p["<y>"]**2)*0.3183098861838
+    p["thFactor"]=1/(p["qT"][1]**2-p["qT"][0]**2)/(y_current[1]-y_current[0])*ffactor
+    
+    
     p["includeCuts"]=False
     p["xSec"]=data_from_f[i][3]
     p["uncorrErr"].append((data_from_f[i][4]+data_from_f[i][5])/2.)
@@ -476,10 +515,23 @@ for i in range(len(data_from_f)):
     p["process"]=proc_current
     p["s"]=s_current
     p["qT"]=[data_from_f[i][0]-0.1,data_from_f[i][0]+0.1]
-    # 0.31.. is for 1/pi from invariant cross-secX
-    p["thFactor"]=1/(p["qT"][1]**2-p["qT"][0]**2)/(y_current[1]-y_current[0])*0.3183098861838
+    p["<qT>"]=(p["qT"][0]+p["qT"][1])*0.5
+    
+    ### 0.31.. is for 1/pi from invariant cross-secX
+    ###p["thFactor"]=1/(p["qT"][1]**2-p["qT"][0]**2)/(y_current[1]-y_current[0])*0.3183098861838
+    
     p["Q"]=Q_current
+    p["<Q>"]=(Q_current[0]+Q_current[1])*0.5    
+    
     p["y"]=y_current
+    p["<y>"]=0.1 #### This value is specifyed in the text
+    
+    # 0.31.. is for 1/pi from invariant cross-secX
+    # furthermore, invariant cross-section is to be multiplied by 2E/sqrt[s]=x1+x2=sqrt[4(Q^2+qT^2)/s+xF^2]
+    ## all this is avaluated at xf=0.1
+    ffactor=numpy.sqrt(4*(p["<Q>"]**2+p["<qT>"]**2)/p["s"]+p["<y>"]**2)*0.3183098861838
+    p["thFactor"]=1/(p["qT"][1]**2-p["qT"][0]**2)/(y_current[1]-y_current[0])*ffactor   
+    
     p["includeCuts"]=False
     p["xSec"]=data_from_f[i][3]
     p["uncorrErr"].append((data_from_f[i][4]+data_from_f[i][5])/2.)
@@ -524,10 +576,23 @@ for i in range(len(data_from_f)):
     p["process"]=proc_current
     p["s"]=s_current
     p["qT"]=[data_from_f[i][0]-0.1,data_from_f[i][0]+0.1]
-    # 0.31.. is for 1/pi from invariant cross-secX
-    p["thFactor"]=1/(p["qT"][1]**2-p["qT"][0]**2)/(y_current[1]-y_current[0])*0.3183098861838
+    p["<qT>"]=(p["qT"][0]+p["qT"][1])*0.5
+    
+    ### 0.31.. is for 1/pi from invariant cross-secX
+    ###p["thFactor"]=1/(p["qT"][1]**2-p["qT"][0]**2)/(y_current[1]-y_current[0])*0.3183098861838
+    
     p["Q"]=Q_current
+    p["<Q>"]=(Q_current[0]+Q_current[1])*0.5    
+    
     p["y"]=y_current
+    p["<y>"]=0.1 #### This value is specifyed in the text
+    
+    # 0.31.. is for 1/pi from invariant cross-secX
+    # furthermore, invariant cross-section is to be multiplied by 2E/sqrt[s]=x1+x2=sqrt[4(Q^2+qT^2)/s+xF^2]
+    ## all this is avaluated at xf=0.1
+    ffactor=numpy.sqrt(4*(p["<Q>"]**2+p["<qT>"]**2)/p["s"]+p["<y>"]**2)*0.3183098861838
+    p["thFactor"]=1/(p["qT"][1]**2-p["qT"][0]**2)/(y_current[1]-y_current[0])*ffactor   
+    
     p["includeCuts"]=False
     p["xSec"]=data_from_f[i][3]
     p["uncorrErr"].append((data_from_f[i][4]+data_from_f[i][5])/2.)
@@ -574,10 +639,23 @@ for i in range(len(data_from_f)):
     p["process"]=proc_current
     p["s"]=s_current
     p["qT"]=[data_from_f[i][0]-0.1,data_from_f[i][0]+0.1]
-    # 0.31.. is for 1/pi from invariant cross-secX
-    p["thFactor"]=1/(p["qT"][1]**2-p["qT"][0]**2)/(y_current[1]-y_current[0])*0.3183098861838
+    p["<qT>"]=(p["qT"][0]+p["qT"][1])*0.5
+    
+    ### 0.31.. is for 1/pi from invariant cross-secX
+    ###p["thFactor"]=1/(p["qT"][1]**2-p["qT"][0]**2)/(y_current[1]-y_current[0])*0.3183098861838
+    
     p["Q"]=Q_current
+    p["<Q>"]=(Q_current[0]+Q_current[1])*0.5    
+    
     p["y"]=y_current
+    p["<y>"]=0.1 #### This value is specifyed in the text
+    
+    # 0.31.. is for 1/pi from invariant cross-secX
+    # furthermore, invariant cross-section is to be multiplied by 2E/sqrt[s]=x1+x2=sqrt[4(Q^2+qT^2)/s+xF^2]
+    ## all this is avaluated at xf=0.1
+    ffactor=numpy.sqrt(4*(p["<Q>"]**2+p["<qT>"]**2)/p["s"]+p["<y>"]**2)*0.3183098861838
+    p["thFactor"]=1/(p["qT"][1]**2-p["qT"][0]**2)/(y_current[1]-y_current[0])*ffactor   
+    
     p["includeCuts"]=False
     p["xSec"]=data_from_f[i][3]
     p["uncorrErr"].append((data_from_f[i][4]+data_from_f[i][5])/2.)

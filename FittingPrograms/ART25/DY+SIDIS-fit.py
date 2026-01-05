@@ -166,6 +166,7 @@ def cutFunc(p):
                 return False , p
         elif(p["id"][0:4] == "E772"):
             if(p["Q"][0]<10):#these bins seems broken
+                #pass
                 return False , p
         elif(p["id"][0:4] == "E615"):
             if(9<p["<Q>"]<11.2):#UPSILON resonance-bin
@@ -343,13 +344,13 @@ from iminuit import Minuit
 #                        0.774759, 1.5565, 1.1863, 0.692877, -0.569062, 
 #                        0.0, 0.0])
 
-initialValues=([1.5, 0.038969, 0.030641, 0.0, 
-                       0.51638, 0.2073, 0.478567, 0.373111, 
-                       2.407, 0.221996, 3.7876, 0.128, 
-                       0.403343, 0.5, 1.0, 1.0, 
-                       0.69769, 0.712969, -0.133895, -0.841651, 0.846846,
-                       0.774759, 1.5565, 1.1863, 0.692877, -0.569062, 
-                       0.0, 0.0])
+initialValues=([1.5, 0.069952, 0.030591, 0.0, 
+                       0.343842, 0.011714, 0.588161, 0.012262, 
+                       7.682, 22.6267, 3.2397, 0.015181, 
+                       0.052558, 1.2e-05, 1.0, 1.0, 
+                       0.700419, 0.669345, -0.058065, -0.667958, 
+                       0.863101, 0.7739, 1.396, 1.3471, 
+                       0.654023, -0.490042, 0.0, 0.1])
 
 initialErrors=(0.1,0.1,0.1,0.1,
                 0.5,  1.0, 0.1,  1.0,
@@ -371,16 +372,16 @@ parametersToMinimize=(True, False,False,True,
                       False, False, False,False,
                       False, False, False, False,
                       False, False, True,True,
-                      True,True,True,True,
-                      True,True,True,True,
-                      True,True,True,True)
-                      #False, False, False,False,
-                      #False, False, False,False,
-                      #False, False, True,True)
+                      #True,True,True,True,
+                      #True,True,True,True,
+                      #True,True,True,True)
+                      False, False, False,False,
+                      False, False, False,False,
+                      False, False, True,True)
 
 #%%
 
-m = Minuit(chi2DY, initialValues)
+m = Minuit(chi2, initialValues)
 
 m.errors=initialErrors
 m.limits=searchLimits
