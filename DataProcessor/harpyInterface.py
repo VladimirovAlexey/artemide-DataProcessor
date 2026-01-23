@@ -21,6 +21,7 @@ def ComputeXSec(data,method="default"):
     method : String, optional
         Parameters for evaluation of xSec. The default is "default".
         default = usual one
+        
         binless = evaluated with avarage values of bins only
 
     Returns
@@ -43,6 +44,7 @@ def _ComputeXSec_Data(data,method="default"):
     data can be: DataSet or DataMultiSet
     methods are:
         default = usual one
+        noPartitioning = ignore the split into qT-parts
         binless = evaluated with avarage values of bins only. Multiplied by area of the bin
         central = evaluated with avarage values of bins only. No further modifications.
         approximate = evaluated with approximate procedure (very few points per bin integration)
@@ -56,7 +58,27 @@ def _ComputeXSec_Data(data,method="default"):
                                     [d["Q"] for d in data.points],
                                     [d["y"] for d in data.points],
                                     [d["includeCuts"] for d in data.points],
-                                    [d["cutParams"] for d in data.points])
+                                    [d["cutParams"] for d in data.points],True)
+            
+        elif data.processType=="SIDIS":
+            XX=harpy.SIDIS.xSecList([d["process"] for d in data.points],
+                                    [d["s"] for d in data.points],
+                                    [d["pT"] for d in data.points],
+                                    [d["z"] for d in data.points],
+                                    [d["x"] for d in data.points],
+                                    [d["Q"] for d in data.points],
+                                    [d["includeCuts"] for d in data.points],
+                                    [d["cutParams"] for d in data.points],
+                                    [[d["M_target"],d["M_product"]] for d in data.points])
+    elif method=="noPartitioning":
+        if data.processType == "DY":
+            XX=harpy.DY.xSecList([d["process"] for d in data.points],
+                                    [d["s"] for d in data.points],
+                                    [d["qT"] for d in data.points],
+                                    [d["Q"] for d in data.points],
+                                    [d["y"] for d in data.points],
+                                    [d["includeCuts"] for d in data.points],
+                                    [d["cutParams"] for d in data.points],False)
             
         elif data.processType=="SIDIS":
             XX=harpy.SIDIS.xSecList([d["process"] for d in data.points],
@@ -147,7 +169,7 @@ def _ComputeXSec_Point(p,method="default"):
     if method=="default":        
         if p["type"] == "DY":
             XX1=harpy.DY.xSecList([p["process"]],[p["s"]],[p["qT"]],[p["Q"]],
-                                    [p["y"]],[p["includeCuts"]],[p["cutParams"]])
+                                    [p["y"]],[p["includeCuts"]],[p["cutParams"]],False)
             
         elif p["type"]=="SIDIS":
             XX1=harpy.SIDIS.xSecList([p["process"]],[p["s"]],[p["pT"]],[p["z"]],

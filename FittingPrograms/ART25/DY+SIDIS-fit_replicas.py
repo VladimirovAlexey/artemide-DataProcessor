@@ -223,9 +223,10 @@ harpy.setNPparameters([1.5, 0.083931, 0.030641, 0.0,
 #print(DataProcessor.harpyInterface.ComputeXSec(setDY.points[0]))
 #sys.exit()
 
-DataProcessor.harpyInterface.PrintChi2Table(setSIDIS,printDecomposedChi2=True)
-DataProcessor.harpyInterface.PrintChi2Table(setDY,printDecomposedChi2=True)
-
+#DataProcessor.harpyInterface.PrintChi2Table(setSIDIS,printDecomposedChi2=True)
+DataProcessor.harpyInterface.PrintChi2Table(setDY,printDecomposedChi2=True,method="noPartitioning")
+#%%
+exit()
 #%%
 #### Minimize SIDIS
 from iminuit import Minuit
