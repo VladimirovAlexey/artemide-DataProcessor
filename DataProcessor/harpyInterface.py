@@ -259,7 +259,7 @@ def ComputeChi2(data,method="default"):
     else:
         raise ValueError("data-argument maust be DataSet or DataMultiSet")
 
-def PrintChi2Table(data,method="default",printSysShift=True,printDecomposedChi2=False):
+def PrintChi2Table(data,norma=[],method="default",printSysShift=True,printDecomposedChi2=False):
     """
     Compute and print the values of chi^2/Npt for experiments
 
@@ -267,6 +267,8 @@ def PrintChi2Table(data,method="default",printSysShift=True,printDecomposedChi2=
     ----------
     data : DataSet or DataMultiSet
         The data for which the computation is made
+    norma : The set to which we normalize. 
+        If not present, no normalizations are done.
     method : string, optional
         The method of computation of xSection.
         The default is "default".
@@ -288,6 +290,10 @@ def PrintChi2Table(data,method="default",printSysShift=True,printDecomposedChi2=
     
     YY=ComputeXSec(data,method)
     
+    if isinstance(norma,DataSet.DataSet) or isinstance(norma,DataMultiSet.DataMultiSet):
+        YY2=ComputeXSec(norma,method)
+        YY=numpy.array(YY)/numpy.array(YY2)
+        
     ZZ=data.chi2(YY)
     
     if isinstance(data,DataSet.DataSet):
