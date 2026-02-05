@@ -161,7 +161,9 @@ setA4=theDataA4.CutData(cutFunc)
 print('Loaded ', setA4.numberOfSets, 'data sets with', sum([i.numberOfPoints for i in setA4.sets]), 'points.')
 
 ### Load the data for A4UU
-theDataA4UU=DataProcessor.DataMultiSet.DataMultiSet("DYset",loadThisDataDY(["A8_Auu_0y1","A8_Auu_1y2","A8_Auu_2y35"]))
+theDataA4UU=DataProcessor.DataMultiSet.DataMultiSet("DYset",loadThisDataDY([
+    "A8_Auu_0y1","A8_Auu_1y2","A8_Auu_2y35",
+    "CMS8-Auu-00y10","CMS8-Auu-10y21"]))
 setA4UU=theDataA4UU.CutData(cutFunc) 
 
 print('Loaded ', setA4UU.numberOfSets, 'data sets with', sum([i.numberOfPoints for i in setA4UU.sets]), 'points.')
@@ -173,6 +175,37 @@ DataProcessor.harpyInterface.PrintChi2Table(setA4,norma=setA4UU,printDecomposedC
 
 #Values are not correct because A4 data is normalized with unpol data so we need to consider this in our chi2 function
 
+#%%
+# Loading the DY data set
+
+theData=DataProcessor.DataMultiSet.DataMultiSet("DYset",loadThisDataDY([
+                          'CDF1', 'CDF2', 'D01', 'D02', 'D02m', 
+                          #'A7-00y10', 'A7-10y20','A7-20y24',
+                          'A8-00y04', 'A8-04y08', 'A8-08y12', 'A8-12y16', 'A8-16y20', 'A8-20y24', 
+                          'A8-46Q66', 'A8-116Q150', 
+                          'A13-norm',
+                          'CMS7', 'CMS8', 
+                          'CMS13-00y04','CMS13-04y08','CMS13-08y12','CMS13-12y16','CMS13-16y24',
+                          #'CMS13_dQ_50to76',
+                          'CMS13_dQ_106to170',
+                          'CMS13_dQ_170to350',
+                          'CMS13_dQ_350to1000',
+                          'LHCb7', 'LHCb8', 'LHCb13_dy(2021)', 
+                          'PHE200', 'STAR510', 
+                          'E228-200', 'E228-300', 'E228-400', 
+                          'E772',
+                          'E605',
+                          'D0run1-W','CDFrun1-W',
+                          "A8_A4_0y1","A8_A4_1y2","A8_A4_2y35",
+                          "CMS8-A4-00y10","CMS8-A4-10y21",
+                          "A8_Auu_0y1","A8_Auu_1y2","A8_Auu_2y35",
+                          "CMS8-Auu-00y10","CMS8-Auu-10y21"
+                          ]))
+
+setDYcomplete=theData.CutData(cutFunc) 
+
+print('Loaded ', setDYcomplete.numberOfSets, 'data sets with', sum([i.numberOfPoints for i in setDYcomplete.sets]), 'points.')
+#print('Loaded ', setDYfit.numberOfSets, 'data sets with', sum([i.numberOfPoints for i in setDYfit.sets]), 'points.')
 #%%
 #######################################
 # Minimisation
@@ -190,15 +223,22 @@ def chi_2DY(x):
     
     print('np set =',["{:8.3f}".format(i) for i in x])        
 
+    YY=DataProcessor.harpyInterface.ComputeXSec(setDYcomplete)
+    ccDY2,cc3=setDY.chi2(YY[0:setDY.numberOfPoints])
+    
+    A4=numpy.array(YY[setDY.numberOfPoints:setDY.numberOfPoints+setA4.numberOfPoints]
+                   )/numpy.array(YY[setDY.numberOfPoints+setA4.numberOfPoints:setDY.numberOfPoints+2*setA4.numberOfPoints])
+    ccA4,cc4=setA4.chi2(A4)
+    
     # chi2 computation for the unpolDY data sets
-    YY=DataProcessor.harpyInterface.ComputeXSec(setDY)
-    ccDY2,cc3=setDY.chi2(YY)
+    #YY=DataProcessor.harpyInterface.ComputeXSec(setDY)
+    #ccDY2,cc3=setDY.chi2(YY)
     
     # chi2 computation for the A4 DY_angular data set
-    YA4=DataProcessor.harpyInterface.ComputeXSec(setA4)
-    YA4UU=DataProcessor.harpyInterface.ComputeXSec(setA4UU)
-    A4=numpy.array(YA4)/numpy.array(YA4UU)
-    ccA4,cc4=setA4.chi2(A4)
+    #YA4=DataProcessor.harpyInterface.ComputeXSec(setA4)
+    #YA4UU=DataProcessor.harpyInterface.ComputeXSec(setA4UU)
+    #A4=numpy.array(YA4)/numpy.array(YA4UU)
+    #ccA4,cc4=setA4.chi2(A4)
     
     cc=(ccDY2+ccA4)/(setDY.numberOfPoints+setA4.numberOfPoints)
     
@@ -228,9 +268,9 @@ from iminuit import Minuit
 #                 7.191, 43.949, -2.783, 0.003,
 #                 0.476, 0.169, 0.0, 0.0])
 
-initialValues=([1.5, 0.088, 0.059, 0.0, 
-                0.85, 0.39, 0.14, 0.015,
-                 0.01, 0.01, 0.639, 9.5,
+initialValues=([1.5, 0.088, 0.05, 0.0, 
+                0.5, 0.1, 0.5, 0.1,
+                 0.0, 0.0, 0.25, 0.1,
                  0.0, 0.0, 0.0, 0.0])
 
 # initialErrors=(0.1,0.1,0.1,0.1,
@@ -239,19 +279,19 @@ initialValues=([1.5, 0.088, 0.059, 0.0,
 #                 0.1,  1.0, 1.0,  1.0)
 
 initialErrors=(0.1,0.1,0.1,0.1,
-                0.1,  1.0, 0.1,  1.0,
-                0.1,  0.1, 0.1,  1.0,
-                0.1,  1.0, 1.0,  1.0)
+                0.1,  0.1, 0.1,  0.1,
+                0.1,  0.1, 0.1,  0.1,
+                0.1,  0.1, 0.1,  1.0)
 
 # searchLimits=((1.0,2.5),(0.005,0.15) ,(0.0,0.1), (-5.,5.),
 #               (0.0001,2.), (0.0001,2.),(0.0001,2.),(0.0001,2.),
 #               (0.0,10.), (0.0001,50.),(-10.,10.),(0.0001,10.),
 #               (0.0001,10.), (0.0001,10.),(0.,100.),(0.,100.))
 
-searchLimits=((1.0,2.5),(0.005,0.15) ,(0.0,0.1), (-5.,5.),
+searchLimits=((1.0,2.5),(0.005,0.1) ,(0.0,0.1), (-5.,5.),
               (0.0001,2.), (0.0001,2.),(0.0001,2.),(0.0001,2.),
-              (0.0001,100.), (0.0001,100.),(0.0001,10.),(0.0001,100.),
-              (0.0001,10.), (0.0001,10.),(0.,100.),(0.,100.))
+              (-100.,100.), (-100.,100.),(0.0001,10.),(0.0001,100.),
+              (-100.,100.), (-100.,100.),(0.,100.),(0.,100.))
               
 # True= FIX
 # parametersToMinimize=(True, False,False,True,
@@ -262,7 +302,7 @@ searchLimits=((1.0,2.5),(0.005,0.15) ,(0.0,0.1), (-5.,5.),
 parametersToMinimize=(True, False,False,True,
                       False, False, False,False,
                       False, False, False, False,
-                      True, True, True,True)
+                      False, False, True,True)
 
 #%%
 
@@ -287,6 +327,7 @@ valsDY=list(m.values)
 chi_2DY(m.values)
 
 DataProcessor.harpyInterface.PrintChi2Table(setDY,printDecomposedChi2=True)
+DataProcessor.harpyInterface.PrintChi2Table(setA4,norma=setA4UU,printDecomposedChi2=True)
 
 print([round(x,1 if x >100 else 4 if x>1 else 6) for x in list(m.values)])
 
