@@ -69,7 +69,7 @@ def _ComputeXSec_Data(data,method="default"):
                                     [d["Q"] for d in data.points],
                                     [d["includeCuts"] for d in data.points],
                                     [d["cutParams"] for d in data.points],
-                                    [[d["M_target"],d["M_product"]] for d in data.points])
+                                    [[d["M_target"],d["M_product"]] for d in data.points],True)
     elif method=="noPartitioning":
         if data.processType == "DY":
             XX=harpy.DY.xSecList([d["process"] for d in data.points],
@@ -89,7 +89,7 @@ def _ComputeXSec_Data(data,method="default"):
                                     [d["Q"] for d in data.points],
                                     [d["includeCuts"] for d in data.points],
                                     [d["cutParams"] for d in data.points],
-                                    [[d["M_target"],d["M_product"]] for d in data.points])
+                                    [[d["M_target"],d["M_product"]] for d in data.points],False)
     elif method=="binless":
         if data.processType == "DY":
             XX1=harpy.DY.xSecListBINLESS([d["process"] for d in data.points],
