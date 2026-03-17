@@ -26,7 +26,9 @@ import DataProcessor.DataMultiSet
 
 MAINPATH=ROOT_DIR 
 
-replicaFile =MAINPATH+"FittingPrograms/ART25_KPC/REPLICAS/RADscanLP.dat"
+#replicaFile =MAINPATH+"FittingPrograms/ART25_KPC/REPLICAS/RADscanLP.dat"
+#replicaFile="/data/WorkingFiles/TMD/Fit_Notes/ART26/ScanOfCS/"+"RADscanLP_model2_2_NNPDF.dat"
+replicaFile="/data/WorkingFiles/TMD/Fit_Notes/ART26/ScanOfCS/"+"RADscanLP_model2_0.dat"
 #%%
 #######################################
 #Initialize artemide
@@ -34,6 +36,7 @@ replicaFile =MAINPATH+"FittingPrograms/ART25_KPC/REPLICAS/RADscanLP.dat"
 import harpy
 
 path_to_constants=MAINPATH+"FittingPrograms/ART25_KPC/ConstantsFiles/ART_LP.atmde"
+#path_to_constants=MAINPATH+"FittingPrograms/ART25_KPC/ConstantsFiles/ART_LP_NNPDF.atmde"
 
 
 harpy.initialize(path_to_constants)
@@ -189,63 +192,48 @@ from iminuit import Minuit
 
 #---- PDFbias-like row
 
-# initialValues=([1.5, 0.0369, 0.015, 0.0, 
-#                 0.486, 0.041, 0.569, 0.15,
-#                 1.0, 2., 1.0, 0.16,
-#                 0.24, 0.07, 0.0, 0.0])
-
-# initialValues=([1.5, 0.092, 0.055, 0.0, 
-#                 0.393, 0.103, 0.665, 0.999,
-#                 7.191, 43.949, -2.783, 0.003,
-#                 0.476, 0.169, 0.0, 0.0])
-
+# initialValues=([1.5, 0.065, 0.098, 0.0, 
+#                 0.8, 1.3, 0.4, 0.4, 
+#                 25., 25., 1.8,0.5,
+#                 0., 0., 0., 0.])
 initialValues=([1.5, 0.065, 0.098, 0.0, 
-                0.94, 0.33, 0.78, 2.0,
-                -0.26, 0.58, 0.92, 2.07, 0.37, -0.76,
-                 0.15, -.77, 0.0, 0.0])
-
-# initialErrors=(0.1,0.1,0.1,0.1,
-#                 0.1,  1.0, 0.1,  1.0,
-#                 0.1,  1.0, 0.1,  1.0,
-#                 0.1,  1.0, 1.0,  1.0)
+                0.57, 0.023, 0.38, 8.5, 
+                37., 1.18, 1.27, 1.237,
+                0.1,0.1,0.1,0.1
+                ])
 
 initialErrors=(0.1,0.1,0.1,0.1,
-                0.1,  0.1, 0.1,  0.1,
-                0.1,  0.1, 0.1,  0.1,
-                0.1,  0.1, 0.1,  1.0)
+                0.1,  0.11, 0.1,  0.1,
+                1.,  1., 1.,  1.,
+                0.2,  0.2, 0.2,  1.0)
 
-# searchLimits=((1.0,2.5),(0.005,0.15) ,(0.0,0.1), (-5.,5.),
-#               (0.0001,2.), (0.0001,2.),(0.0001,2.),(0.0001,2.),
-#               (0.0,10.), (0.0001,50.),(-10.,10.),(0.0001,10.),
-#               (0.0001,10.), (0.0001,10.),(0.,100.),(0.,100.))
 
-searchLimits=((1.0,2.5),(0.005,0.1) ,(0.0,0.1), (-5.,5.),
+searchLimits=((1.0,2.5),(0.005,0.2) ,(0.0,0.2), (-5.,5.),
               (0.0001,100.), (0.0001,100.),(0.0001,100.),(0.0001,100.),
-              (-100.,100.), (-100.,100.),(0.0001,10.),(0.0001,100.),
-              (-100.,100.), (-100.,100.),(0.,100.),(0.,100.))
+              (0.0001,100.), (0.0001,100.),(0.0001,100.),(0.0001,100.),
+             (0.0000,100.), (-100.,100.),(0.0001,100.),(0.0001,100.))
+              #(-100.,100.), (-100.,100.),(0.0001,10.),(0.0001,100.),
+              #(-100.,100.), (-100.,100.),(0.,100.),(0.,100.))
               
 # True= FIX
-# parametersToMinimize=(True, False,False,True,
-#                       False, False, False,False,
-#                       True, False, True, False,
-#                       False, False, True,True)
-
 parametersToMinimize=(True, True,True,True,
                       False, False, False,False,
                       False, False, False, False,
-                      False, False, True,True)
+                      True, True, True,True)
 
 #%%
-initialValues0=initialValues
-for i in range(8):
-    for j in range(6):
-        c0=0.02+0.01*i
-        c1=0.10+0.01*j
+import copy
+initialValues0=copy.deepcopy(initialValues)
+for i in range(13):
+    for j in range(16):        
+        c0=0.01+0.01*i
+        c1=0.0+0.01*j
         
-        if(j==0):
-            initialValues=([1.5, c0, c1, 0.0]+initialValues0[4:16])
-        else:
-            initialValues=([1.5, c0, c1, 0.0]+initialValues[4:16])
+        initialValues=([1.5, c0, c1, 0.0]+initialValues0[4:16])
+        # if(j==0):
+        #     initialValues=([1.5, c0, c1, 0.0]+initialValues0[4:16])
+        # else:
+        #     initialValues=([1.5, c0, c1, 0.0]+initialValues[4:16])
 
         m = Minuit(chi_2DY, initialValues)
         
@@ -269,12 +257,13 @@ for i in range(8):
         
         DataProcessor.harpyInterface.PrintChi2Table(setDY,printDecomposedChi2=True)
 
-
-
         print([round(x,1 if x >100 else 4 if x>1 else 6) for x in list(m.values)])
         
         ## compute the chi2 for true data full
-        mainDY, mainDY2 =DataProcessor.harpyInterface.ComputeChi2(setDY)  
+        
+        YY=DataProcessor.harpyInterface.ComputeXSec(setDY)
+        mainDY, mainDY2=setDY.chi2(YY)
+        shifts=setDY.DetermineAvarageSystematicShift(YY)
         print("Central chi^2  computed.)")
         
         ## save to file
@@ -284,63 +273,25 @@ for i in range(8):
         ### list of chi^2 for experiments( DY),list of chi^2 for experiments( SIDIS), 
         ### PDFreplica, FFpi-replica, FFk-replica,
         ### list of NP-parameters] 
-        f.write(str([mainDY,mainDY2, list(m.values)])+"\n")
+        f.write(str([mainDY,mainDY2, list(m.values),shifts])+"\n")
         f.close()  
         
-        initialValues=list(m.values)
-        if(i==0): initialValues0=list(m.values)
-
-#%%
-for j in range(15):
-   c0=0.01
-   c1=0.01+0.01*j
-   
-   if(j==0):
-       initialValues=([1.5, c0, c1, 0.0]+initialValues0[4:16])
-   else:
-       initialValues=([1.5, c0, c1, 0.0]+initialValues[4:16])
-
-   m = Minuit(chi_2DY, initialValues)
-   
-   print(m.params)
-   chi_2DY(m.values)
-   
-   m = Minuit(chi_2DY, initialValues)
-   m.errors=initialErrors
-   m.limits=searchLimits
-   m.fixed=parametersToMinimize
-   m.errordef=1
-   m.tol=0.0001*setDY.numberOfPoints*10000 ### the last 0.0001 is to compensate MINUIT def
-   m.strategy=1
-   m.migrad()
-   
-   print(m.params)
-   
-   valsDY=list(m.values)
-   
-   chi_2DY(m.values)
-   
-   DataProcessor.harpyInterface.PrintChi2Table(setDY,printDecomposedChi2=True)
-
-
-
-   print([round(x,1 if x >100 else 4 if x>1 else 6) for x in list(m.values)])
-   
-   ## compute the chi2 for true data full
-   mainDY, mainDY2 =DataProcessor.harpyInterface.ComputeChi2(setDY)  
-   print("Central chi^2  computed.)")
-   
-   ## save to file
-   f=open(replicaFile,"a+")
-   print('SAVING >>  ',f.name)
-   ### [total chi^2(full data DY),total chi^2(full data SIDIS), 
-   ### list of chi^2 for experiments( DY),list of chi^2 for experiments( SIDIS), 
-   ### PDFreplica, FFpi-replica, FFk-replica,
-   ### list of NP-parameters] 
-   f.write(str([mainDY,mainDY2, list(m.values)])+"\n")
-   f.close()  
-   
-   initialValues=list(m.values)
+        # initialValues=copy.deepcopy(list(m.values))
+        # if(i==0): initialValues0=copy.deepcopy(list(m.values))
 
 #%%
 sys.exit()
+
+#%%
+for i in range(100):
+    x=10**(-i*0.04)
+    pdf=harpy.get_uPDF(x,10.,1)
+    print("{",x,",",pdf[3],",",pdf[4],",",pdf[6],",",pdf[7],"},")
+    
+#%%
+harpy.setNPparameters_uTMDPDF(0*numpy.array(inARRAY_uTMDPDF))
+b=2.
+for i in range(100):
+    x=10**(-i*0.04)
+    pdf=harpy.get_uTMDPDF(x,b,1)
+    print("{",x,",",pdf[3],",",pdf[4],",",pdf[6],",",pdf[7],"},")

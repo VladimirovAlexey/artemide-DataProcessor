@@ -16,8 +16,8 @@ DATAP_DIR = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', '..')
 SNOWFLAKE_DIR = ROOT_DIR+"artemide/harpy/"
 MODEL_DIR = ROOT_DIR+"artemide/Models/ART25/Replica-files/"
 
-logFile=DATAP_DIR+"FittingPrograms/Tw3_FIT/log7.log"
-repFile=DATAP_DIR+"FittingPrograms/Tw3_FIT/replicas_7.dat"
+logFile=DATAP_DIR+"FittingPrograms/Tw3_FIT/log8.log"
+repFile=DATAP_DIR+"FittingPrograms/Tw3_FIT/replicas_8.dat"
 
 import sys
 import numpy
@@ -254,9 +254,13 @@ print('Loaded ', setALT.numberOfSets, 'data sets with', sum([i.numberOfPoints fo
 # harpy.setNPparameters_SiversTMDPDF([0.5,0.0])
 # harpy.setNPparameters_wgtTMDPDF([0.5,0.0])
 #%%
-harpy.setNPparameters_tw3([5.7019, 1.10442, -1.34357, 1.03315, 7.16511, -0.351023, 3.50304, \
--0.412292, -1.81263, -8.88206, -16.5434, -1.19804, -6.93412, \
--5.04158, -2.37763, 0.832746, 0.330435, 0.])
+harpy.setNPparameters_tw3([5.7019, 1.10442, 5.7019,  -1.34357,
+                           1.03315, 7.16511, -0.351023, 
+                           3.50304, -0.412292, -1.81263, 
+                           -8.88206, -16.5434, -1.19804, 
+                           -6.93412, -5.04158, -2.37763, 
+                                       0.832746, 0.330435])
+
 
 harpy.UpdateTables(1.0, 105.0)
 
@@ -288,8 +292,8 @@ def chi2(x):
     startT=time.time()
     harpy.setNPparameters_tw3(x[0:18])
     harpy.UpdateTables(1.0, 105.0)
-    harpy.setNPparameters_SiversTMDPDF([x[18],0.0])
-    harpy.setNPparameters_wgtTMDPDF([x[18],0.0])
+    harpy.setNPparameters_SiversTMDPDF([0.5,0.0])
+    harpy.setNPparameters_wgtTMDPDF([0.5,0.0])
     print('np set =['+", ".join(["{:8.3f}".format(i) for i in x])+"]")
             
     YY=DataProcessor.snowInterface_N2.ComputeXSec(setD2)
@@ -321,34 +325,33 @@ def chi2(x):
 from iminuit import Minuit
 
 #---- PDFbias-like row (0.083931)
-initialValues=(5.4 ,1.2, -1.2, 
-                0.79, 4.5, -0.127, 2.8, 
-                -0.34, -0.94, -5.519, -11., 
-                -0.8, -1.,3.0, -1.5,
-                -1.0, -1.2, 0.0, 
-                0.5)
+initialValues=(5., 1.1, 5.,  -1.3,
+               1.0, 7.1, -0.4, 
+               3.5, -0.4, -1.8,
+               -8.8, -14., -1.2, 
+               -6.9, -5.0, -2.3, 
+               0.8, 0.3)
 
-initialErrors=(0.5, 0.1, 0.5,
-                0.5, 3.5, 1.0, 2.,
-                0.1, 2.0, 3.5, 9.,
-                0.5, 5.0, 2.0, 
-                2.0, 2.0, 2.0, 0.1, 
-                0.1)
-searchLimits=((1.,10.),(0.1,10.),(-10.,0.95),
+initialErrors=(0.5, 0.1, 0.5, 0.5,
+                1., 1., 1., 
+                1., 1., 1., 
+                1., 1., 1., 
+                1., 1., 1., 
+                1., 1.)
+searchLimits=((1.,10.),(0.1,10.), (1.,10.) ,(-10.,0.95),
               (-50.,50.), (-50.,50.), (-50.,50.),
               (-50.,50.), (-50.,50.), (-50.,50.),
               (-50.,50.), (-50.,50.), (-50.,50.),
               (-50.,50.), (-50.,50.), (-50.,50.),
-              (-50.,50.), (-50.,50.), (-50.,50.),
-              (0.01,0.8))
+              (-50.,50.), (-50.,50.))
               
 # True= FIX
-parametersToMinimize=(False, False,False,
-                      False, False,False,False,
-                      False, False, False,False,
-                      False, False,False, False,
-                      False, False,True,
-                      True)
+parametersToMinimize=(False, False,False,False,
+                      False, False,False,
+                      False, False, False,
+                      False, False,False,
+                      False, False,False,
+                      False, False)
 
 #Default: None. If set to None, Minuit assumes the cost function is computed in double precision. 
 #If the precision of the cost function is lower (because it computes in single precision, for example) 
@@ -377,8 +380,8 @@ def MinForReplica():
         startT=time.time()
         harpy.setNPparameters_tw3(x[0:18])
         harpy.UpdateTables(1.0, 105.0)
-        harpy.setNPparameters_SiversTMDPDF([x[18],0.0])
-        harpy.setNPparameters_wgtTMDPDF([x[18],0.0])
+        harpy.setNPparameters_SiversTMDPDF([0.5,0.0])
+        harpy.setNPparameters_wgtTMDPDF([0.5,0.0])
         print('np set =['+", ".join(["{:8.3f}".format(i) for i in x])+"]")
                 
         YY=DataProcessor.snowInterface_N2.ComputeXSec(setD2rep)
@@ -468,7 +471,7 @@ setALT0=theDataW.CutData(cutFunc_TMD)
 # Save to log.
 #######################################
 
-NumberOfReplicas=100
+NumberOfReplicas=200
 
 ART25replica=0
 rSet.SetReplica(0)

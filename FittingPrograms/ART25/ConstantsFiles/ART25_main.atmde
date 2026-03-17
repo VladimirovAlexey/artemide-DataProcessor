@@ -146,7 +146,7 @@
    1.0000000000000000E-006
 *p2  : The smallest value of b (for smaller OPE is frozen)
    0.000001
-*p3  : The smoothing parmaeters for small-b stabilization
+*p3  : The smoothing parameters for small-b stabilization
    0.01
  
  
