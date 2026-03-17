@@ -36,7 +36,7 @@
 *1   :
  
 *p1  : Path to the directory with LHA-tables
-/home/alexey/LHAPDF/share/LHAPDF
+/home/alexey/WorkingFiles/LHAPDF/share/LHAPDF
 *p2  : Name of LHA set for alphaQCD
  MSHT20_REP
  
