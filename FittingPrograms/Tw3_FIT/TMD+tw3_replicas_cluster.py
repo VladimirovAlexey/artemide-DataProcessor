@@ -25,6 +25,14 @@ if('/data/arTeMiDe_Repository/artemide/harpy' in sys.path):
     sys.path.remove('/data/arTeMiDe_Repository/artemide/harpy')
 sys.path.append(DATAP_DIR)
 sys.path.append(SNOWFLAKE_DIR)
+
+
+os.environ["OMP_NUM_THREADS"] = "8"
+os.environ["OPENBLAS_NUM_THREADS"] = "8"
+os.environ["MKL_NUM_THREADS"] = "8"
+os.environ["VECLIB_MAXIMUM_THREADS"] = "8"
+os.environ["NUMEXPR_NUM_THREADS"] = "8"
+
 #%%
 import DataProcessor.harpyInterface
 import DataProcessor.snowInterface_N2
