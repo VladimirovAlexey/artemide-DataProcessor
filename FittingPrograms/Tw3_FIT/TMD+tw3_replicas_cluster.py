@@ -59,7 +59,7 @@ harpy.UpdateTables(1.0, 105.0)
 
 import DataProcessor.ArtemideReplicaSet
 
-path_to_constants=DATAP_DIR+"FittingPrograms/Tw3_FIT/INI/TMD+tw3.atmde"
+path_to_constants=DATAP_DIR+"FittingPrograms/Tw3_FIT/INI/TMD+tw3_forCluster.atmde"
 
 
 harpy.initialize(path_to_constants)
