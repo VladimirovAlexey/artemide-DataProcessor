@@ -43,7 +43,7 @@ import harpy
 #######################################
 #Initialize snowflake
 #######################################
-path_to_INI=DATAP_DIR+"FittingPrograms/Tw3_FIT/INI/snowflake_forRep.ini"
+path_to_INI=DATAP_DIR+"FittingPrograms/Tw3_FIT/INI/snowflake_forCluster.ini"
 #path_to_INI=DATAP_DIR+"FittingPrograms/Tw3_FIT/INI/TEST.ini"
 #path_to_INI=DATAP_DIR+"FittingPrograms/Tw3_FIT/INI/TEST_16x8.ini"
 harpy.initialize_snowflake(path_to_INI)
