@@ -477,12 +477,12 @@ setALT0=theDataW.CutData(cutFunc_TMD)
 # Save to log.
 #######################################
 
-NumberOfReplicas=5
+NumberOfReplicas=1
 
 ART25replica=0
 rSet.SetReplica(0)
 
-SaveToLog(" =============================NEW START===================================================")
+#SaveToLog(" =============================NEW START===================================================")
 
 for i in range(NumberOfReplicas):
     print('---------------------------------------------------------------')
