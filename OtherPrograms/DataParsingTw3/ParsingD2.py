@@ -74,7 +74,7 @@ lumUncertainty=0.0
 ##DataCurrent.normErr.append(lumUncertainty)
 
 p=DataProcessor.Point.CreateD2Point(DataCurrent.name+'.'+str(0))
-p["process"]=11
+p["process"]=11  #u-d
 p["Q"]=Q_current
 p["<Q>"]=2.0
 p["s"]=4.0
@@ -86,7 +86,7 @@ DataCurrent.AddPoint(p)
 
 
 p=DataProcessor.Point.CreateD2Point(DataCurrent.name+'.'+str(1))
-p["process"]=12
+p["process"]=12  #u+d
 p["Q"]=Q_current
 p["<Q>"]=2.0
 p["s"]=4.0
@@ -140,6 +140,75 @@ print("Done.  ")
 
 DataCurrent.SaveToCSV(path_to_save+DataCurrent.name+".csv")
 
+
+#%%
+
+print("Making D2 by QCDSF...")
+
+DataCurrent=DataProcessor.DataSet.DataSet('QCDSF_d2',"D2")
+DataCurrent.comment="Taken from text in page 3.)"
+DataCurrent.reference="arXiv:2408.03621"
+
+DataCurrent.isNormalized=False
+Q_current=[1.95,2.05]
+lumUncertainty=0.0
+##DataCurrent.normErr.append(lumUncertainty)
+
+p=DataProcessor.Point.CreateD2Point(DataCurrent.name+'.'+str(0))
+p["process"]=100
+p["Q"]=Q_current
+p["<Q>"]=2.0
+p["s"]=4.0
+p["xSec"]=0.046
+p["uncorrErr"]=[0.007,0.016]
+p["corrErr"]=[]
+p["thFactor"]=2.
+DataCurrent.AddPoint(p)
+
+
+p=DataProcessor.Point.CreateD2Point(DataCurrent.name+'.'+str(1))
+p["process"]=101
+p["Q"]=Q_current
+p["<Q>"]=2.0
+p["s"]=4.0
+p["xSec"]=0.023
+p["uncorrErr"]=[0.005,0.008]
+p["corrErr"]=[]
+p["thFactor"]=2.
+DataCurrent.AddPoint(p)
+
+print("Done.  ")
+
+DataCurrent.SaveToCSV(path_to_save+DataCurrent.name+".csv")
+
+#%%
+
+print("Making D2 by GHMP26...")
+
+DataCurrent=DataProcessor.DataSet.DataSet('GHMP26_d2',"D2")
+DataCurrent.comment="Taken from eqn.(30).)"
+DataCurrent.reference="arXiv:2604.00143"
+
+DataCurrent.isNormalized=False
+Q_current=[1.95,2.05]
+lumUncertainty=0.0
+##DataCurrent.normErr.append(lumUncertainty)
+
+p=DataProcessor.Point.CreateD2Point(DataCurrent.name+'.'+str(0))
+p["process"]=11 #u-d
+p["Q"]=Q_current
+p["<Q>"]=2.0
+p["s"]=4.0
+p["xSec"]=0.0024
+p["uncorrErr"]=[0.0046]
+p["corrErr"]=[]
+p["thFactor"]=1.
+DataCurrent.AddPoint(p)
+
+
+print("Done.  ")
+
+DataCurrent.SaveToCSV(path_to_save+DataCurrent.name+".csv")
 
 #%%
 print("Making D2 by E143 (1995)...")

@@ -148,9 +148,23 @@ setDY=theData.CutData(cutFunc)
 print('Loaded ', setDY.numberOfSets, 'data sets with', sum([i.numberOfPoints for i in setDY.sets]), 'points.')
 #print('Loaded ', setDYfit.numberOfSets, 'data sets with', sum([i.numberOfPoints for i in setDYfit.sets]), 'points.')
 
+#%%
+#import DataProcessor.ArtemideReplicaSet
+#
+#rSet=DataProcessor.ArtemideReplicaSet.ReadRepFile("/data/arTeMiDe_Repository/artemide/Models/ART25/Replica-files/ART25_main.rep")
+###rSet.SetReplica(0)
 
 #%%
 #Table of chi2 for initial values of ART25 for unpolarized 
+
+harpy.setNPparameters([1.5, 0.07, 0.05, 0., 0.571175, 0.0232996, 0.384436, 8.45683, 
+37.8618, 1.18309, 1.27365, 1.23721, 0.0001, 0.0001, 0.0001, 0.0001])
+
+#### art25 DY
+harpy.setNPparameters([1.5,0.0859102,0.030294,0.0,
+ 0.48622, 0.0411753, 0.569024, 0.146933,
+ 5.26034, 21.1222, 7.71185, 0.1565,
+ 0.240061, 0.0691505, 1.0, 1.0])
 
 DataProcessor.harpyInterface.PrintChi2Table(setDY,printDecomposedChi2=True)
 

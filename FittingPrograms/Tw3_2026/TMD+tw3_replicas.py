@@ -16,8 +16,8 @@ DATAP_DIR = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', '..')
 SNOWFLAKE_DIR = ROOT_DIR+"artemide/harpy/"
 MODEL_DIR = ROOT_DIR+"artemide/Models/ART25/Replica-files/"
 
-logFile=DATAP_DIR+"FittingPrograms/Tw3_FIT/log9.log"
-repFile=DATAP_DIR+"FittingPrograms/Tw3_FIT/replicas_9.dat"
+logFile=DATAP_DIR+"FittingPrograms/Tw3_2026/LOGS/log_1.log"
+repFile=DATAP_DIR+"FittingPrograms/Tw3_2026/REPS/replicas_1.dat"
 
 import sys
 import numpy
@@ -35,12 +35,10 @@ import harpy
 #######################################
 #Initialize snowflake
 #######################################
-path_to_INI=DATAP_DIR+"FittingPrograms/Tw3_FIT/INI/snowflake_forRep.ini"
-#path_to_INI=DATAP_DIR+"FittingPrograms/Tw3_FIT/INI/TEST.ini"
-#path_to_INI=DATAP_DIR+"FittingPrograms/Tw3_FIT/INI/TEST_16x8.ini"
+path_to_INI=DATAP_DIR+"FittingPrograms/Tw3_2026/INI/snowflake_forRep.ini"
 harpy.initialize_snowflake(path_to_INI)
 
-NP_par=numpy.zeros(18)+0.2
+NP_par=numpy.zeros(24)+0.2
 harpy.setNPparameters_tw3(NP_par)
 harpy.UpdateTables(1.0, 105.0)
 
@@ -51,7 +49,7 @@ harpy.UpdateTables(1.0, 105.0)
 
 import DataProcessor.ArtemideReplicaSet
 
-path_to_constants=DATAP_DIR+"FittingPrograms/Tw3_FIT/INI/TMD+tw3.atmde"
+path_to_constants=DATAP_DIR+"FittingPrograms/Tw3_2026/INI/TMD+tw3.atmde"
 
 
 harpy.initialize(path_to_constants)
@@ -268,46 +266,16 @@ theDataW=DataProcessor.DataMultiSet.DataMultiSet("ALTset",loadThisDataWGT([
 setALT=theDataW.CutData(cutFunc_TMD) 
 
 print('Loaded ', setALT.numberOfSets, 'data sets with', sum([i.numberOfPoints for i in setALT.sets]), 'points.')
-#%%
-# harpy.setNPparameters_tw3([3.0,0.0, 
-#                 0.0,0.,0.0,0.,
-#                 -0.0,0.,0.0,0.,
-#                 0.0,0.,0.0,0.,
-#                 0.0,0.,0.0,0.])
 
-# harpy.UpdateTables(1.0, 105.0)
-
-# # harpy.setNPparameters_SiversTMDPDF([0.5,0.0])
-# # harpy.setNPparameters_wgtTMDPDF([0.5,0.0])
-#%%
-# harpy.setNPparameters_tw3([3.0,0.0, 
-#                 0.05,0.,0.0,0.,
-#                 -0.06,0.,0.0,0.,
-#                 0.0,0.,0.0,0.,
-#                 0.0,0.,0.0,0.])
-
-# harpy.UpdateTables(1.0, 105.0)
-
-# harpy.setNPparameters_SiversTMDPDF([0.5,0.0])
-# harpy.setNPparameters_wgtTMDPDF([0.5,0.0])
 #%%
 harpy.setNPparameters_tw3([5.7019, 1.10442, 5.7019,  -1.34357,
-                           1.03315, 7.16511, -0.351023, 
-                           3.50304, -0.412292, -1.81263, 
-                           -8.88206, -16.5434, -1.19804, 
-                           -6.93412, -5.04158, -2.37763, 
-                                       0.832746, 0.330435])
-
-
-harpy.UpdateTables(1.0, 105.0)
-
-harpy.setNPparameters_SiversTMDPDF([0.5,0.0])
-harpy.setNPparameters_wgtTMDPDF([0.5,0.0])
-
-#%%
-harpy.setNPparameters_tw3([5.56381, 1.46109, 6.21778, -1.59906, 1.14039, 9.23121, 1.1695, \
-4.64369, -0.605915, -1.35079, -10.8193, -26.6788, -1.43903, -9.86322, \
-2.16003, -2.62645, -4.57353, 1.06299])
+                           1.03315, 0.0, 7.16511, 0.0,
+                           -0.351023, 3.50304, 
+                           -0.412292, 0.0, -1.81263, 0.0,
+                           -8.88206, -16.5434, 
+                           -1.19804, 0.0, -6.93412, 0.0,
+                           -5.04158, -2.37763, 
+                           0.832746, 0.330435])
 
 
 harpy.UpdateTables(1.0, 105.0)
@@ -320,7 +288,7 @@ DataProcessor.snowInterface_N2.PrintChi2Table(setD2,printDecomposedChi2=False)
 DataProcessor.snowInterface_N2.PrintChi2Table(setG2,printDecomposedChi2=False)
 
 DataProcessor.harpyInterface.PrintChi2Table(setSivers,method="central",printSysShift=False)
-DataProcessor.harpyInterface.PrintChi2Table(setSiversDY,method="central",printSysShift=False)
+DataProcessor.harpyInterface.PrintChi2Table(setSiversDY,printSysShift=False)
 DataProcessor.harpyInterface.PrintChi2Table(setALT,method="central",printSysShift=False)
 
 #%%
@@ -329,7 +297,7 @@ DataProcessor.harpyInterface.PrintChi2Table(setALT,method="central",printSysShif
 #######################################
 import time
 
-totN=setD2.numberOfPoints+setG2.numberOfPoints+setSivers.numberOfPoints+setALT.numberOfPoints
+totN=setD2.numberOfPoints+setG2.numberOfPoints+setSivers.numberOfPoints+setSiversDY.numberOfPoints+setALT.numberOfPoints
 
 def deformation(c):
     #v=0.3
@@ -339,10 +307,10 @@ def deformation(c):
 def chi2(x):
     
     startT=time.time()
-    harpy.setNPparameters_tw3(x[0:18])
+    harpy.setNPparameters_tw3(x[0:24])
     harpy.UpdateTables(1.0, 105.0)
-    harpy.setNPparameters_SiversTMDPDF([x[18],0.0])
-    harpy.setNPparameters_wgtTMDPDF([x[18],0.0])
+    harpy.setNPparameters_SiversTMDPDF([x[24],0.0])
+    harpy.setNPparameters_wgtTMDPDF([x[24],0.0])
     print('np set =['+", ".join(["{:8.3f}".format(i) for i in x])+"]")
             
     YY=DataProcessor.snowInterface_N2.ComputeXSec(setD2)
@@ -375,32 +343,44 @@ from iminuit import Minuit
 
 #---- PDFbias-like row (0.083931)
 initialValues=(5., 1.1, 5.,  -1.3,
-               1.0, 7.1, -0.4, 
-               3.5, -0.4, -1.8,
-               -8.8, -14., -1.2, 
-               -6.9, -5.0, -2.3, 
-               0.8, 0.3 ,0.5)
+               1.0, 0.0, 7.1, 0.0,
+               -0.4, 3.5, 
+               -0.4, 0.0,-1.8,0.0,
+               -8.8, -14., 
+               -1.2, 0.0,-6.9,0.0,
+               -5.0, -2.3, 
+               0.8, 0.3 ,
+               0.5)
 
 initialErrors=(0.5, 0.1, 0.5, 0.5,
-                1., 1., 1., 
-                1., 1., 1., 
-                1., 1., 1., 
-                1., 1., 1., 
-                1., 1.,0.1)
+                1., 1., 1., 1., 
+                1., 1., 
+                1., 1., 1., 1., 
+                1., 1.,  
+                1., 1., 1., 1., 
+                1., 1.,  
+                1., 1.,
+                0.1)
 searchLimits=((1.,10.),(0.1,10.), (1.,10.) ,(-10.,0.95),
-              (-50.,50.), (-50.,50.), (-50.,50.),
-              (-50.,50.), (-50.,50.), (-50.,50.),
-              (-50.,50.), (-50.,50.), (-50.,50.),
-              (-50.,50.), (-50.,50.), (-50.,50.),
-              (-50.,50.), (-50.,50.),(0.1,3.))
+              (-50.,50.), (-50.,50.), (-50.,50.),(-50.,50.),
+              (-50.,50.), (-50.,50.), 
+              (-50.,50.), (-50.,50.), (-50.,50.),(-50.,50.),
+              (-50.,50.), (-50.,50.), 
+              (-50.,50.), (-50.,50.), (-50.,50.),(-50.,50.),
+              (-50.,50.), (-50.,50.), 
+              (-50.,50.), (-50.,50.),
+              (0.1,3.))
               
 # True= FIX
 parametersToMinimize=(False, False,False,False,
-                      False, False,False,
-                      False, False, False,
-                      False, False,False,
-                      False, False,False,
-                      False, False,False)
+                      False, False,False,False,
+                      False, False,
+                      False, False,False,False,
+                      False, False,
+                      False, False,False,False,
+                      False, False,
+                      False, False,
+                      False)
 
 #Default: None. If set to None, Minuit assumes the cost function is computed in double precision. 
 #If the precision of the cost function is lower (because it computes in single precision, for example) 
@@ -418,7 +398,8 @@ tolToMinuit=0.1*totN
 # Generate replica of data and compute chi2
 #######################################
 def MinForReplica():
-    global setD20,setG20,setSivers0,setALT0,initialValues,initialErrors,searchLimits,parametersToMinimize,ART25replica
+    global setD20,setG20,setSivers0,setSiversDY0,setALT0,\
+            initialValues,initialErrors,searchLimits,parametersToMinimize,ART25replica
         
     def repchi_2(x):     
         
@@ -427,11 +408,11 @@ def MinForReplica():
             sys.exit()
         
         startT=time.time()
-        harpy.setNPparameters_tw3(x[0:18])
+        harpy.setNPparameters_tw3(x[0:24])
         harpy.UpdateTables(1.0, 105.0)
         #harpy.UpdateTables(1.0, 10.5)
-        harpy.setNPparameters_SiversTMDPDF([x[18],0.0])
-        harpy.setNPparameters_wgtTMDPDF([x[18],0.0])
+        harpy.setNPparameters_SiversTMDPDF([x[24],0.0])
+        harpy.setNPparameters_wgtTMDPDF([x[24],0.0])
         print('np set =['+", ".join(["{:8.3f}".format(i) for i in x])+"]")
                 
         YY=DataProcessor.snowInterface_N2.ComputeXSec(setD2rep)
@@ -446,13 +427,17 @@ def MinForReplica():
         ccSivers,cc3=setSiversrep.chi2(YY)    
         #ccSivers=0.
         
+        YY=DataProcessor.harpyInterface.ComputeXSec(setSiversDYrep)
+        ccSiversDY,cc3=setSiversDYrep.chi2(YY)    
+        #ccSivers=0.
+        
         YY=DataProcessor.harpyInterface.ComputeXSec(setALTrep,method="central")
         ccWGT,cc3=setALTrep.chi2(YY)
         #ccWGT=0.
         
         chiTOTAL=(deformation(ccD2/setD2.numberOfPoints)+
                   deformation(ccG2/setG2.numberOfPoints)+
-                  deformation(ccSivers/setSivers.numberOfPoints)+
+                  deformation((ccSivers+ccSiversDY)/(setSivers.numberOfPoints+setSiversDY.numberOfPoints))+                  
                   deformation(ccWGT/setALT.numberOfPoints))*totN
 
         if chiTOTAL>1000000.:
@@ -460,17 +445,20 @@ def MinForReplica():
         
         
         endT=time.time()
-        print(':->',ccD2/setD2.numberOfPoints,
-              " ",ccG2/setG2.numberOfPoints,
-              " ",ccSivers/setSivers.numberOfPoints,
-              " ",ccWGT/setALT.numberOfPoints,
-              "    time=",endT-startT)
+        print(':->    ',"{:.4f}".format(chiTOTAL/totN),"    = ("
+              "{:.2f}".format(ccD2/setD2.numberOfPoints),
+              " + ","{:.2f}".format(ccG2/setG2.numberOfPoints),
+              " + ","{:.2f}".format(ccSivers/setSivers.numberOfPoints),
+              " + ","{:.2f}".format(ccSiversDY/setSiversDY.numberOfPoints),
+              " + ","{:.2f}".format(ccWGT/setALT.numberOfPoints),
+              ")    time=",endT-startT)
         return chiTOTAL
 
     
     setD2rep=setD20.GenerateReplica()
     setG2rep=setG20.GenerateReplica()
     setSiversrep=setSivers0.GenerateReplica()
+    setSiversDYrep=setSiversDY0.GenerateReplica()
     setALTrep=setALT0.GenerateReplica()
     
     localM = Minuit(repchi_2, initialValues)
@@ -517,6 +505,7 @@ rSet.SetReplica(0)
 setD20=theDataD2.CutData(cutFunc) 
 setG20=theDataG2.CutData(cutFunc) 
 setSivers0=theDataS.CutData(cutFunc_TMD)
+setSiversDY0=theDataSdy.CutData(cutFunc_TMD)
 setALT0=theDataW.CutData(cutFunc_TMD) 
 
 #######################################
@@ -530,7 +519,7 @@ NumberOfReplicas=350
 ART25replica=0
 rSet.SetReplica(0)
 
-SaveToLog(" =============================NEW START===================================================")
+#SaveToLog(" =============================NEW START===================================================")
 
 for i in range(NumberOfReplicas):
     print('---------------------------------------------------------------')
@@ -541,7 +530,7 @@ for i in range(NumberOfReplicas):
     ## reset PDF        
     ART25replica=numpy.random.randint(rSet.numberOfReplicas)
     print("Start computation with ART25 replica "+str(ART25replica))
-    SaveToLog("Start computation with ART25 replica "+str(ART25replica))
+    #SaveToLog("Start computation with ART25 replica "+str(ART25replica))
     
     rSet.SetReplica(ART25replica) 
     print("Minimization started.")
@@ -550,6 +539,7 @@ for i in range(NumberOfReplicas):
     setD20=theDataD2.CutData(cutFunc) 
     setG20=theDataG2.CutData(cutFunc) 
     setSivers0=theDataS.CutData(cutFunc_TMD)
+    setSiversDY0=theDataSdy.CutData(cutFunc_TMD)
     setALT0=theDataW.CutData(cutFunc_TMD) 
     
     
@@ -564,6 +554,7 @@ for i in range(NumberOfReplicas):
     mainD2, mainD2_2 =DataProcessor.snowInterface_N2.ComputeChi2(setD2)    
     mainG2, mainG2_2 =DataProcessor.snowInterface_N2.ComputeChi2(setG2)    
     mainSiv, mainSiv_2 =DataProcessor.harpyInterface.ComputeChi2(setSivers,method="central")    
+    mainSivDY, mainSivDY_2 =DataProcessor.harpyInterface.ComputeChi2(setSiversDY)    
     mainALT, mainALT_2 =DataProcessor.harpyInterface.ComputeChi2(setALT,method="central") 
     print("Central chi^2  computed.)")
     
@@ -574,6 +565,6 @@ for i in range(NumberOfReplicas):
     ### list of chi^2 for experiments( DY),list of chi^2 for experiments( SIDIS), 
     ### PDFreplica, FFpi-replica, FFk-replica,
     ### list of NP-parameters] 
-    f.write(str([mainD2,mainG2,mainSiv,mainALT,
-                 mainD2_2,mainG2_2,mainSiv_2,mainALT_2,ART25replica,repRes[1]])+"\n")
+    f.write(str([mainD2,mainG2,mainSiv,mainSivDY, mainALT,
+                 mainD2_2,mainG2_2,mainSiv_2,mainSivDY_2,mainALT_2,ART25replica,repRes[1]])+"\n")
     f.close()  

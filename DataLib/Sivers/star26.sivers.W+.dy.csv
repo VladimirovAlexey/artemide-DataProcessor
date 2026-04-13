@@ -1,0 +1,15 @@
+Name,star26.sivers.W+.dy
+Comment,STAR AN for W+ (differential in y) TAKEN FROM THE PLOT
+Reference,????.????
+Process type,DY
+Number of points,3
+Number of uncorr.errors,1
+Number of corr.errors,0
+Number of norm.errors,1
+List of norm.errors (relative),0.014
+Total cross-section nomalized,False
+List of points 
+Point id,process id,weightProcess,s[GeV^2],<Q>[GeV],Qmin[GeV],Qmax[GeV],<y>,yMin,yMax,<qT>[GeV],qTMin[GeV],qTMax[GeV],xSec,Uncorr.Err.0,Th.Factor,FiducialCuts,kCut1[GeV],kCut2[GeV],etaMin,etaMax
+star26.sivers.W+.dy.0,1 / 1 / 1 / 10004,1 / 1 / 1 / 4,250000.0,80.38,50.379999999999995,110.38,-0.38,-0.6,-0.2,5.25,0.5,10.0,-0.052,0.065,1.0,False,25.0,25.0,-1.0,1.0
+star26.sivers.W+.dy.1,1 / 1 / 1 / 10004,1 / 1 / 1 / 4,250000.0,80.38,50.379999999999995,110.38,0.0,-0.2,0.2,5.25,0.5,10.0,0.073,0.046,1.0,False,25.0,25.0,-1.0,1.0
+star26.sivers.W+.dy.2,1 / 1 / 1 / 10004,1 / 1 / 1 / 4,250000.0,80.38,50.379999999999995,110.38,0.38,0.2,0.6,5.25,0.5,10.0,-0.106,0.036,1.0,False,25.0,25.0,-1.0,1.0
