@@ -284,6 +284,18 @@ harpy.setNPparameters_SiversTMDPDF([0.5,0.0])
 harpy.setNPparameters_wgtTMDPDF([0.5,0.0])
 
 #%%
+harpy.setNPparameters_tw3([6.02889, 1.80943, 5.94243, -1.64152, 1.38313, 1.84317, 6.55815, \
+0.587521, -0.414991, 3.87324, -0.647569, -1.04194, 3.3807, -1.50536, \
+-8.50641, -13.1764, -0.74414, 3.31015, -6.80776, 0.715115, -4.10758, \
+-2.68135, 0.484923, 0.988009])
+
+
+harpy.UpdateTables(1.0, 105.0)
+
+harpy.setNPparameters_SiversTMDPDF([0.81,0.0])
+harpy.setNPparameters_wgtTMDPDF([0.81,0.0])
+
+#%%
 DataProcessor.snowInterface_N2.PrintChi2Table(setD2,printDecomposedChi2=False)
 DataProcessor.snowInterface_N2.PrintChi2Table(setG2,printDecomposedChi2=False)
 
@@ -320,22 +332,27 @@ def chi2(x):
     ccG2,cc3=setG2.chi2(YY)    
     
     YY=DataProcessor.harpyInterface.ComputeXSec(setSivers,method="central")
-    ccSivers,cc3=setSivers.chi2(YY)    
+    ccSivers,cc3=setSivers.chi2(YY)
+    
+    YY=DataProcessor.harpyInterface.ComputeXSec(setSiversDY)
+    ccSiversDY,cc3=setSiversDY.chi2(YY)    
     
     YY=DataProcessor.harpyInterface.ComputeXSec(setALT,method="central")
     ccWGT,cc3=setALT.chi2(YY)
     
     chiTOTAL=(deformation(ccD2/setD2.numberOfPoints)+
               deformation(ccG2/setG2.numberOfPoints)+
-              deformation(ccSivers/setSivers.numberOfPoints)+
+              deformation((ccSivers+ccSiversDY)/(setSivers.numberOfPoints+setSiversDY.numberOfPoints))+                  
               deformation(ccWGT/setALT.numberOfPoints))*totN
-    
+   
     endT=time.time()
-    print(':->',ccD2/setD2.numberOfPoints,
-          " ",ccG2/setG2.numberOfPoints,
-          " ",ccSivers/setSivers.numberOfPoints,
-          " ",ccWGT/setALT.numberOfPoints,
-          "    time=",endT-startT)
+    print(':->    ',"{:.4f}".format(chiTOTAL/totN),"    = ("
+          "{:.2f}".format(ccD2/setD2.numberOfPoints),
+          " + ","{:.2f}".format(ccG2/setG2.numberOfPoints),
+          " + ","{:.2f}".format(ccSivers/setSivers.numberOfPoints),
+          " + ","{:.2f}".format(ccSiversDY/setSiversDY.numberOfPoints),
+          " + ","{:.2f}".format(ccWGT/setALT.numberOfPoints),
+          ")    time=",endT-startT)
     return chiTOTAL
 
 #%%
@@ -429,7 +446,7 @@ def MinForReplica():
         
         YY=DataProcessor.harpyInterface.ComputeXSec(setSiversDYrep)
         ccSiversDY,cc3=setSiversDYrep.chi2(YY)    
-        #ccSivers=0.
+        #ccSiversDY=0.
         
         YY=DataProcessor.harpyInterface.ComputeXSec(setALTrep,method="central")
         ccWGT,cc3=setALTrep.chi2(YY)

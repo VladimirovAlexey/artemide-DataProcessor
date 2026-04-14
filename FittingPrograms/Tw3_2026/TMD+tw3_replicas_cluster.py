@@ -16,8 +16,8 @@ DATAP_DIR = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', '..')
 SNOWFLAKE_DIR = ROOT_DIR+"artemide/harpy/"
 MODEL_DIR = ROOT_DIR+"artemide/Models/ART25/Replica-files/"
 
-logFile=DATAP_DIR+"FittingPrograms/Tw3_2026/LOGS/log_1.log"
-repFile=DATAP_DIR+"FittingPrograms/Tw3_2026/REPS/replicas_1.dat"
+logFile=DATAP_DIR+"FittingPrograms/Tw3_2026/LOGS/log_1c.log"
+repFile=DATAP_DIR+"FittingPrograms/Tw3_2026/REPS/replicas_1c.dat"
 
 import sys
 import numpy
@@ -329,20 +329,25 @@ def chi2(x):
     YY=DataProcessor.harpyInterface.ComputeXSec(setSivers,method="central")
     ccSivers,cc3=setSivers.chi2(YY)    
     
+    YY=DataProcessor.harpyInterface.ComputeXSec(setSiversDY)
+    ccSiversDY,cc3=setSiversDY.chi2(YY) 
+    
     YY=DataProcessor.harpyInterface.ComputeXSec(setALT,method="central")
     ccWGT,cc3=setALT.chi2(YY)
     
     chiTOTAL=(deformation(ccD2/setD2.numberOfPoints)+
               deformation(ccG2/setG2.numberOfPoints)+
-              deformation(ccSivers/setSivers.numberOfPoints)+
+              deformation((ccSivers+ccSiversDY)/(setSivers.numberOfPoints+setSiversDY.numberOfPoints))+                  
               deformation(ccWGT/setALT.numberOfPoints))*totN
-    
+   
     endT=time.time()
-    print(':->',ccD2/setD2.numberOfPoints,
-          " ",ccG2/setG2.numberOfPoints,
-          " ",ccSivers/setSivers.numberOfPoints,
-          " ",ccWGT/setALT.numberOfPoints,
-          "    time=",endT-startT)
+    print(':->    ',"{:.4f}".format(chiTOTAL/totN),"    = ("
+          "{:.2f}".format(ccD2/setD2.numberOfPoints),
+          " + ","{:.2f}".format(ccG2/setG2.numberOfPoints),
+          " + ","{:.2f}".format(ccSivers/setSivers.numberOfPoints),
+          " + ","{:.2f}".format(ccSiversDY/setSiversDY.numberOfPoints),
+          " + ","{:.2f}".format(ccWGT/setALT.numberOfPoints),
+          ")    time=",endT-startT)
     return chiTOTAL
 
 #%%

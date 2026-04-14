@@ -3592,7 +3592,7 @@ for i in range(len(data_current1)):
      # make up a point
     p = DataProcessor.Point.CreateG2Point(DataCurrent.name + '.' + str(i))
     #print (DataCurrent.name+'.'+str(i))
-    p["process"]=102
+    p["process"]=101 # it is neutron!
     p["s"]=s_current  
     p["<Q>"]=numpy.sqrt(data_current1[i][1])     
     p["Q"]=[Qbin1[i][0],Qbin1[i][1]]
@@ -3624,7 +3624,7 @@ for i in range(len(data_current2)):
      # make up a point
     p = DataProcessor.Point.CreateG2Point(DataCurrent.name + '.' + str(i))
     #print (DataCurrent.name+'.'+str(i))
-    p["process"]=102
+    p["process"]=101  # it is neutron!
     p["s"]=s_current  
     p["<Q>"]=numpy.sqrt(data_current2[i][1])     
     p["Q"]=[Qbin2[i][0],Qbin2[i][1]]
