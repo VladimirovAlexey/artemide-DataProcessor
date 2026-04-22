@@ -16,8 +16,8 @@ DATAP_DIR = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', '..')
 SNOWFLAKE_DIR = ROOT_DIR+"artemide/harpy/"
 MODEL_DIR = ROOT_DIR+"artemide/Models/ART25/Replica-files/"
 
-logFile=DATAP_DIR+"FittingPrograms/Tw3_2026/LOGS/log_1c.log"
-repFile=DATAP_DIR+"FittingPrograms/Tw3_2026/REPS/replicas_1c.dat"
+logFile=DATAP_DIR+"FittingPrograms/Tw3_2026/LOGS/log_3c.log"
+repFile=DATAP_DIR+"FittingPrograms/Tw3_2026/REPS/replicas_3c.dat"
 
 import sys
 import numpy
@@ -37,12 +37,11 @@ import DataProcessor.harpyInterface
 import DataProcessor.snowInterface_N2
 import DataProcessor.DataMultiSet
 import harpy
-
 #%%
 #######################################
 #Initialize snowflake
 #######################################
-path_to_INI=DATAP_DIR+"FittingPrograms/Tw3_2026/INI/snowflake_forCluster.ini"
+path_to_INI=DATAP_DIR+"FittingPrograms/Tw3_2026/INI/snowflake_forRep.ini"
 harpy.initialize_snowflake(path_to_INI)
 
 NP_par=numpy.zeros(24)+0.2
@@ -56,7 +55,7 @@ harpy.UpdateTables(1.0, 105.0)
 
 import DataProcessor.ArtemideReplicaSet
 
-path_to_constants=DATAP_DIR+"FittingPrograms/Tw3_2026/INI/TMD+tw3_forCluster.atmde"
+path_to_constants=DATAP_DIR+"FittingPrograms/Tw3_2026/INI/TMD+tw3.atmde"
 
 
 harpy.initialize(path_to_constants)
@@ -157,12 +156,20 @@ def cutFunc_TMD(p):
     
     if p["type"]=="SIDIS":   
         deltaTEST=0.35        
-        if(p["<pT>"]/p["<z>"]<0.7):
+        if(p["<pT>"]/p["<z>"]<0.0):
             delta=0.0
             #delta=p["<pT>"]/p["<z>"]/p["<Q>"]        
         else:
             delta=p["<pT>"]/p["<z>"]/p["<Q>"]        
         
+    if "compass23" in p["id"]:
+        deltaTEST=0.5
+    if "compass08" in p["id"]:
+        deltaTEST=0.47
+    if "jlab" in p["id"]:
+        deltaTEST=0.45
+    if "JLab" in p["id"]:
+        deltaTEST=0.45
     
     if delta<deltaTEST:
         pNew=copy.deepcopy(p)    
@@ -173,13 +180,13 @@ def cutFunc_TMD(p):
             normX=DataProcessor.harpyInterface.ComputeXSec(pNew)        
         else:
             print("Are you crazy?")
-        p["thFactor"]=p["thFactor"]/normX        
+        p["thFactor"]=p["thFactor"]/normX        #### this minus is because of star
     
     #### This is because star measures AN
-    #if p["id"][0:4]=="star":
-    #    p["thFactor"]=-p["thFactor"]        
-    #if p["type"]=="DY":
-    #    p["thFactor"]=-p["thFactor"]        
+    if "star" in p["id"]:
+        p["thFactor"]=+p["thFactor"]
+    
+    
         
 #    return delta<0.5 and p.qT_avarage<80
     return delta<deltaTEST and p["<Q>"]>1.41, p
@@ -327,17 +334,18 @@ def chi2(x):
     ccG2,cc3=setG2.chi2(YY)    
     
     YY=DataProcessor.harpyInterface.ComputeXSec(setSivers,method="central")
-    ccSivers,cc3=setSivers.chi2(YY)    
+    ccSivers,cc3=setSivers.chi2(YY)
     
-    YY=DataProcessor.harpyInterface.ComputeXSec(setSiversDY)
-    ccSiversDY,cc3=setSiversDY.chi2(YY) 
+    #YY=DataProcessor.harpyInterface.ComputeXSec(setSiversDY)
+    #ccSiversDY,cc3=setSiversDY.chi2(YY)    
+    ccSiversDY=0.
     
     YY=DataProcessor.harpyInterface.ComputeXSec(setALT,method="central")
     ccWGT,cc3=setALT.chi2(YY)
     
     chiTOTAL=(deformation(ccD2/setD2.numberOfPoints)+
               deformation(ccG2/setG2.numberOfPoints)+
-              deformation((ccSivers+ccSiversDY)/(setSivers.numberOfPoints+setSiversDY.numberOfPoints))+                  
+              deformation((ccSivers+ccSiversDY)/(setSivers.numberOfPoints+0*setSiversDY.numberOfPoints))+                  
               deformation(ccWGT/setALT.numberOfPoints))*totN
    
     endT=time.time()
@@ -354,15 +362,16 @@ def chi2(x):
 from iminuit import Minuit
 
 #---- PDFbias-like row (0.083931)
-initialValues=(5., 1.1, 5.,  -1.3,
-               1.0, 0.0, 7.1, 0.0,
+initialValues=(6.7, 1.5, 6.9,  -1.3,
+               1.7, 3.1, 7.1, -0.18,
                -0.4, 3.5, 
-               -0.4, 0.0,-1.8,0.0,
-               -8.8, -14., 
-               -1.2, 0.0,-6.9,0.0,
-               -5.0, -2.3, 
-               0.8, 0.3 ,
+               -1.2, -2.0,-3.8,-1.0,
+               -7.8, -14., 
+               1.5, 0.0,-2.8,0.0,
+               -0.6, -2.3, 
+               0.8, 0.8 ,
                0.5)
+
 
 initialErrors=(0.5, 0.1, 0.5, 0.5,
                 1., 1., 1., 1., 
@@ -372,7 +381,9 @@ initialErrors=(0.5, 0.1, 0.5, 0.5,
                 1., 1., 1., 1., 
                 1., 1.,  
                 1., 1.,
-                0.1)
+                0.0)
+
+
 searchLimits=((1.,10.),(0.1,10.), (1.,10.) ,(-10.,0.95),
               (-50.,50.), (-50.,50.), (-50.,50.),(-50.,50.),
               (-50.,50.), (-50.,50.), 
@@ -392,7 +403,9 @@ parametersToMinimize=(False, False,False,False,
                       False, False,False,False,
                       False, False,
                       False, False,
-                      False)
+                      True)
+
+
 
 #Default: None. If set to None, Minuit assumes the cost function is computed in double precision. 
 #If the precision of the cost function is lower (because it computes in single precision, for example) 
@@ -439,9 +452,9 @@ def MinForReplica():
         ccSivers,cc3=setSiversrep.chi2(YY)    
         #ccSivers=0.
         
-        YY=DataProcessor.harpyInterface.ComputeXSec(setSiversDYrep)
-        ccSiversDY,cc3=setSiversDYrep.chi2(YY)    
-        #ccSivers=0.
+        #YY=DataProcessor.harpyInterface.ComputeXSec(setSiversDYrep)
+        #ccSiversDY,cc3=setSiversDYrep.chi2(YY)    
+        ccSiversDY=0.
         
         YY=DataProcessor.harpyInterface.ComputeXSec(setALTrep,method="central")
         ccWGT,cc3=setALTrep.chi2(YY)
@@ -449,7 +462,7 @@ def MinForReplica():
         
         chiTOTAL=(deformation(ccD2/setD2.numberOfPoints)+
                   deformation(ccG2/setG2.numberOfPoints)+
-                  deformation((ccSivers+ccSiversDY)/(setSivers.numberOfPoints+setSiversDY.numberOfPoints))+                  
+                  deformation((ccSivers+ccSiversDY)/(setSivers.numberOfPoints+0*setSiversDY.numberOfPoints))+                  
                   deformation(ccWGT/setALT.numberOfPoints))*totN
 
         if chiTOTAL>1000000.:
@@ -473,7 +486,9 @@ def MinForReplica():
     setSiversDYrep=setSiversDY0.GenerateReplica()
     setALTrep=setALT0.GenerateReplica()
     
-    localM = Minuit(repchi_2, initialValues)
+    initialValues0=initialValues+(2*numpy.random.rand(25)-1)*initialErrors
+    
+    localM = Minuit(repchi_2, initialValues0)
     
     localM.errors=initialErrors
     localM.limits=searchLimits
@@ -561,8 +576,9 @@ for i in range(NumberOfReplicas):
     print("Minimization finished.")    
     SaveToLog(" Minization with ART25 replica "+str(ART25replica)+" completed.")
     
-    harpy.UpdateTables(1.0, 105.0)
+    #harpy.UpdateTables(1.0, 105.0)
     ## compute the chi2 for true data full
+    chi2(repRes[1])
     mainD2, mainD2_2 =DataProcessor.snowInterface_N2.ComputeChi2(setD2)    
     mainG2, mainG2_2 =DataProcessor.snowInterface_N2.ComputeChi2(setG2)    
     mainSiv, mainSiv_2 =DataProcessor.harpyInterface.ComputeChi2(setSivers,method="central")    
