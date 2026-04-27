@@ -41,7 +41,7 @@ import harpy
 #######################################
 #Initialize snowflake
 #######################################
-path_to_INI=DATAP_DIR+"FittingPrograms/Tw3_2026/INI/snowflake_forRep.ini"
+path_to_INI=DATAP_DIR+"FittingPrograms/Tw3_2026/INI/snowflake_forCluster.ini"
 harpy.initialize_snowflake(path_to_INI)
 
 NP_par=numpy.zeros(24)+0.2
@@ -55,7 +55,7 @@ harpy.UpdateTables(1.0, 105.0)
 
 import DataProcessor.ArtemideReplicaSet
 
-path_to_constants=DATAP_DIR+"FittingPrograms/Tw3_2026/INI/TMD+tw3.atmde"
+path_to_constants=DATAP_DIR+"FittingPrograms/Tw3_2026/INI/TMD+tw3_forCluster.atmde"
 
 
 harpy.initialize(path_to_constants)

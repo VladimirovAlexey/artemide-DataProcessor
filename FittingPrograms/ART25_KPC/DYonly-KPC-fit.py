@@ -31,8 +31,8 @@ MAINPATH=ROOT_DIR
 #######################################
 import harpy
 
-#path_to_constants=MAINPATH+"FittingPrograms/ART25/ConstantsFiles/ART25_main.atmde"
-path_to_constants=MAINPATH+"FittingPrograms/ART25_KPC/ConstantsFiles/ART_KPC.atmde"
+#path_to_constants=MAINPATH+"FittingPrograms/ART25_KPC/ConstantsFiles/ART_KPC.atmde"
+path_to_constants=MAINPATH+"FittingPrograms/ART25_KPC/ConstantsFiles/ART_LP.atmde"
 
 
 harpy.initialize(path_to_constants)
